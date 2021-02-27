@@ -1,0 +1,6 @@
+[submodule "libkmint"]
+	path = libkmint
+	url = git@git.sr.ht:~qqlq/libkmint
+[submodule "libkmintx"]
+	path = libkmintx
+	url = git@git.sr.ht:~qqlq/libkmintx
