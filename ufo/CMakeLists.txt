@@ -20,7 +20,8 @@ add_library(ufo-common STATIC
   src/kmint/ufo/node_algorithm.cpp
   src/kmint/ufo/play.cpp
   src/kmint/a_star/a_star.cpp
-  src/kmint/a_star/heuristics.cpp)
+  src/kmint/a_star/heuristics.cpp
+  src/kmint/force_driven_entities/forces.cpp)
 
 target_compile_features(ufo-common PUBLIC cxx_std_17)
 target_link_libraries(ufo-common PRIVATE kmint)
