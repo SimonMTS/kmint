@@ -4,6 +4,7 @@
 
 namespace student {
 
+// todo this is probably not a good way to do this
 kmint::math::vector2d forces::stay_on_map(const kmint::ufo::human &human) {
     const auto &closest =
         kmint::ufo::find_closest_node_to(human.graph_, human.location());
@@ -34,8 +35,8 @@ kmint::math::vector2d forces::normalize(const kmint::math::vector2d &vector) {
     // }
 }
 
+// todo this is just a tmp implementation, should be redone properly
 kmint::math::vector2d forces::cohesion(const kmint::ufo::human &human) {
-    // std::cout << human.other_humans->size() << "\n";
     kmint::math::vector2d sum = kmint::math::vector2d{0, 0};
     int count = 0;
 
@@ -51,7 +52,7 @@ kmint::math::vector2d forces::cohesion(const kmint::ufo::human &human) {
             dist = res;
         }
 
-        if (dist < 400) {
+        if (dist < 50) {
             sum += other_human.get().location() - human.location();
             count++;
         }
@@ -63,6 +64,42 @@ kmint::math::vector2d forces::cohesion(const kmint::ufo::human &human) {
     } else {
         return {0, 0};
     }
+}
+
+// todo this is just a tmp implementation, should be redone properly
+kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
+    kmint::math::vector2d sum = kmint::math::vector2d{0, 0};
+    int count = 0;
+
+    for (auto &other_human : *human.other_humans) {
+        if (other_human.get().location() == human.location()) continue;
+
+        int dist;
+        {
+            int pxdist = 16;
+            int x = other_human.get().location().x() - human.location().x();
+            int y = other_human.get().location().y() - human.location().y();
+            int res = sqrt(pow(x, 2) + pow(y, 2));  // / pxdist;
+            dist = res;
+        }
+
+        if (dist < 15) {
+            sum -= (other_human.get().location() - human.location()) * 2;
+            count++;
+        }
+    }
+
+    if (count > 0) {
+        sum /= count;
+        return sum;
+    } else {
+        return {0, 0};
+    }
+}
+
+// todo
+kmint::math::vector2d forces::alignment(const kmint::ufo::human &human) {
+    return {0, 0};
 }
 
 }  // namespace student

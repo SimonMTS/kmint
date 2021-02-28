@@ -28,9 +28,11 @@ void human::act(delta_time dt) {
     t_since_move_ += dt;
     if (to_seconds(t_since_move_) >= 0.1) {
         math::vector2d heading = this->heading;
-
-        heading += ::student::forces::stay_on_map(*this);
+        // todo use a proper merging method here
+        heading += ::student::forces::stay_on_map(*this) * 10;
         heading += ::student::forces::wander(*this);
+        heading += ::student::forces::separation(*this);
+        heading += ::student::forces::alignment(*this);
         heading += ::student::forces::cohesion(*this);
 
         heading = ::student::forces::normalize(heading);

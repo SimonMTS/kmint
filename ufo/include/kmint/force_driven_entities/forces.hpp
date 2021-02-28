@@ -14,6 +14,8 @@ class forces {
    public:
     static kmint::math::vector2d stay_on_map(const kmint::ufo::human &human);
     static kmint::math::vector2d wander(const kmint::ufo::human &human);
+    static kmint::math::vector2d separation(const kmint::ufo::human &human);
+    static kmint::math::vector2d alignment(const kmint::ufo::human &human);
     static kmint::math::vector2d cohesion(const kmint::ufo::human &human);
     static kmint::math::vector2d normalize(const kmint::math::vector2d &vector);
 
