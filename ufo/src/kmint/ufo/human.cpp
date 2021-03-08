@@ -22,7 +22,9 @@ math::vector2d random_location() {
 human::human(map::map_graph &g)
     : play::free_roaming_actor{random_location()},
       graph_{g},
-      drawable_{*this, human_image()} {}
+      drawable_{*this, human_image()} {
+    EntityType = "human";
+}
 
 void human::act(delta_time dt) {
     t_since_move_ += dt;

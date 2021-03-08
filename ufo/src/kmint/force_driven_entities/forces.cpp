@@ -40,7 +40,10 @@ kmint::math::vector2d forces::cohesion(const kmint::ufo::human &human) {
     kmint::math::vector2d sum = kmint::math::vector2d{0, 0};
     int count = 0;
 
+    if (human.removed()) return {0, 0};
+
     for (auto &other_human : *human.other_humans) {
+        if (other_human.get().removed()) continue;
         if (other_human.get().location() == human.location()) continue;
 
         int dist;
@@ -71,7 +74,10 @@ kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
     kmint::math::vector2d sum = kmint::math::vector2d{0, 0};
     int count = 0;
 
+    if (human.removed()) return {0, 0};
+
     for (auto &other_human : *human.other_humans) {
+        if (other_human.get().removed()) continue;
         if (other_human.get().location() == human.location()) continue;
 
         int dist;

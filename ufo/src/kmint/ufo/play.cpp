@@ -54,9 +54,9 @@ int play() {
                              tank_type::green);
     s.build_actor<ufo::andre>(graph, ufo::random_node_of_kind(m, 'R'));
     s.build_actor<ufo::saucer>(saucer_type::blue);
-    s.build_actor<ufo::saucer>(saucer_type::green);
-    s.build_actor<ufo::saucer>(saucer_type::beige);
-    s.build_actor<ufo::saucer>(saucer_type::yellow);
+   // s.build_actor<ufo::saucer>(saucer_type::green);
+   // s.build_actor<ufo::saucer>(saucer_type::beige);
+   // s.build_actor<ufo::saucer>(saucer_type::yellow);
 
     // Maak een event_source aan (hieruit kun je alle events halen, zoals
     // toetsaanslagen)

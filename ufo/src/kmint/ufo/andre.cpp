@@ -20,7 +20,9 @@ graphics::image andre_image() {
 andre::andre(map::map_graph &g, map::map_node &initial_node)
     : play::map_bound_actor{initial_node},
       drawable_{*this, graphics::image{andre_image()}},
-      graph_{g} {}
+      graph_{g} {
+    EntityType = "andre";
+}
 
 void andre::act(delta_time dt) {
     t_since_move_ += dt;
