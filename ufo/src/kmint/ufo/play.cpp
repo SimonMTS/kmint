@@ -50,11 +50,20 @@ int play() {
 
     s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'),
                              tank_type::red);
+
     s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'),
                              tank_type::green);
     s.build_actor<ufo::andre>(graph, ufo::random_node_of_kind(m, 'R'));
-    s.build_actor<ufo::saucer>(saucer_type::blue);
-   // s.build_actor<ufo::saucer>(saucer_type::green);
+
+     ufo::tank *tank1 = dynamic_cast<ufo::tank*>(s.actors_[102].get());
+     ufo::tank *tank2 = dynamic_cast<ufo::tank*>(s.actors_[103].get());
+     ufo::andre *andre = dynamic_cast<ufo::andre*>(s.actors_[104].get());
+
+     tank1->Andre = andre;
+     tank2->Andre = andre;
+
+     s.build_actor<ufo::saucer>(saucer_type::blue);
+    // s.build_actor<ufo::saucer>(saucer_type::green);
    // s.build_actor<ufo::saucer>(saucer_type::beige);
    // s.build_actor<ufo::saucer>(saucer_type::yellow);
 

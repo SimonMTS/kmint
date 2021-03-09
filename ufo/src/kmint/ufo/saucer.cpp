@@ -89,6 +89,10 @@ void saucer::act(delta_time dt) {
     if (state == hunthuman) {
         AttackHuman();
     }
+
+    if (state == hunttank) {
+        AttackTank();
+   }
     //location(location() + v_ * to_seconds(dt));
     //for (std::size_t ix{}; ix < num_colliding_actors(); ++ix) {
     //    auto &other = colliding_actor(ix);
@@ -124,10 +128,10 @@ bool saucer::HumanNearby() {
 }
 
 void saucer::Wander(delta_time dt) {
-    //if (TankNearby()) {
-    //    HuntTank();
-    //    return;
-    //}
+    if (TankNearby()) {
+        HuntTank(dt);
+        return;
+    }
 
     if (HumanNearby()) {
         HuntHuman(dt);
@@ -148,7 +152,7 @@ void saucer::HuntHuman(delta_time dt) {
     }
     std::cout << "HuntHuman" << std::endl; 
 
-    GetNearestHuman();
+    GetNearest("human");
 
     math::vector2d desired = target->location() - location(); 
     
@@ -159,7 +163,26 @@ void saucer::HuntHuman(delta_time dt) {
     NextLocation = location() + steer;
 
 }
-void saucer::HuntTank(delta_time dt) { std::cout << "HuntTank" << std::endl; }
+void saucer::HuntTank(delta_time dt) { 
+ state = hunttank;
+
+    if (!TankNearby()) {
+        Wander(dt);
+        return;
+    }
+    std::cout << "HuntTank" << std::endl;
+
+    GetNearest("tank");
+
+    math::vector2d desired = target->location() - location();
+
+    // TODO Normalise() en Limit()
+    // Ufo aanpassen aan de snelheid van de human
+    math::vector2d steer = (desired * 0.5);
+
+    NextLocation = location() + steer;
+
+}
 void saucer::AttackHuman() {
     for (auto i = begin_perceived(); i != end_perceived(); ++i) {
         if (i->EntityType != "human") continue;
@@ -174,7 +197,23 @@ void saucer::AttackHuman() {
         
     }
 }
-void saucer::AttackTank() {}
+void saucer::AttackTank() {
+
+ for (auto i = begin_perceived(); i != end_perceived(); ++i) {
+        if (i->EntityType != "tank") continue;
+        play::actor &tank = *i;
+
+        float distance =
+            std::sqrt(std::pow(location().x() - tank.location().x(), 2) +
+                      std::pow(location().y() - tank.location().y(), 2));
+        //  if (distance < eatRange && !pig.isSafe) {
+
+        if (distance < 30) {
+            std::cout << "AttackTank" << std::endl;
+            tank.remove();
+        }
+    }
+}
 void saucer::Move() { location(NextLocation); }
 math::vector2d saucer::GetRandomVelocity() {
     float xspeed = 20.f * RandomInt(-1, 1);
@@ -194,7 +233,7 @@ bool cmp(std::pair<play::actor *, int> a, std::pair<play::actor *, int> b) {
     return false;
 }
 
-void saucer::GetNearestHuman() {
+void saucer::GetNearest(std::string type) {
     std::priority_queue<std::pair<play::actor *, int>,
                         std::vector<std::pair<play::actor *, int>>,
                         std::function<bool(std::pair<play::actor *, int>,
@@ -203,7 +242,7 @@ void saucer::GetNearestHuman() {
 
     // Zet alle humans in de radius in een priority queue en pop de eerste
     for (auto i = begin_perceived(); i != end_perceived(); ++i) {
-        if (i->EntityType != "human") continue;
+        if (i->EntityType != type) continue;
         play::actor &human = *i;
         //if (!pig.isSafe) {
             float distance = std::sqrt(std::pow(location().x() - human.location().x(), 2) + std::pow(location().y() - human.location().y(), 2));

@@ -28,6 +28,8 @@ tank::tank(map::map_graph& g, map::map_node& initial_node, tank_type t)
 }
 
 void tank::act(delta_time dt) {
+    std::cout << Andre->location() << std::endl;
+
 	t_since_move_ += dt;
 	if (to_seconds(t_since_move_) >= 1) {
 		// pick random edge

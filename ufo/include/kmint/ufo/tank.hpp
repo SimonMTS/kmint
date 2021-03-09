@@ -26,11 +26,13 @@ public:
   // geeft het bereik aan waarbinnen een tank
   // andere actors kan waarnemen.
   scalar perception_range() const override { return 200.f; }
+  play::actor* Andre;
 
-private:
+ private:
   play::image_drawable drawable_;
   delta_time t_since_move_{};
   tank_type type_;
+
 };
 
 } // namespace ufo

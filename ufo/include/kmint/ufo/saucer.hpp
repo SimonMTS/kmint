@@ -34,7 +34,7 @@ private:
   void AttackHuman();
   void AttackTank();
   void Move();
-  void GetNearestHuman();
+  void GetNearest(std::string type);
   math::vector2d GetRandomVelocity();
   int RandomInt(float Min, float Max);
 
