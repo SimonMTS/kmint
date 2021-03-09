@@ -138,7 +138,7 @@ void saucer::Wander(delta_time dt) {
         return;
     }
 
-    std::cout << "Wander" << std::endl;
+    //std::cout << "Wander" << std::endl;
     NextLocation = location() + GetRandomVelocity() * to_seconds(dt);
 
 }
@@ -150,7 +150,7 @@ void saucer::HuntHuman(delta_time dt) {
         Wander(dt);
         return;
     }
-    std::cout << "HuntHuman" << std::endl; 
+    //std::cout << "HuntHuman" << std::endl; 
 
     GetNearest("human");
 
@@ -170,7 +170,7 @@ void saucer::HuntTank(delta_time dt) {
         Wander(dt);
         return;
     }
-    std::cout << "HuntTank" << std::endl;
+    //std::cout << "HuntTank" << std::endl;
 
     GetNearest("tank");
 
@@ -209,7 +209,7 @@ void saucer::AttackTank() {
         //  if (distance < eatRange && !pig.isSafe) {
 
         if (distance < 30) {
-            std::cout << "AttackTank" << std::endl;
+            //std::cout << "AttackTank" << std::endl;
             tank.remove();
         }
     }

@@ -46,6 +46,7 @@ node_list a_star::find_path(map_node &start, const map_node &end,
                 path.push_back(parent);
             }
 
+            path.pop_back(); // Huidige locatie verwijderen
             return path;
         }
 

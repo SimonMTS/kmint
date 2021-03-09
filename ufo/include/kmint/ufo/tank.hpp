@@ -29,10 +29,24 @@ public:
   play::actor* Andre;
 
  private:
+
+  enum State { wander, flee, gotoEMP, gotoShield };
+  State state = wander;
+  void Wander();
+  void Flee();
+  void GoToEMP();
+  void GoToShield();
+  void Move();
+  void MoveTo(const int nodeid);
+
+  int weight = 1;
+  map::map_edge* next_edge = nullptr;
+  map::map_edge* last_edge = nullptr;
+
   play::image_drawable drawable_;
   delta_time t_since_move_{};
   tank_type type_;
-
+  map::map_graph& graph;
 };
 
 } // namespace ufo

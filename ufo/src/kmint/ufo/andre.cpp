@@ -34,7 +34,7 @@ void andre::act(delta_time dt) {
             graph_.untag_all();
             this->path = student::a_star::find_path(
                 node(), find_node_of_kind(graph_, this->goal_node), graph_,
-                ::student::heuristics::euclidean_distance);
+                ufo::student::heuristics::euclidean_distance);
         }
 
         this->node(this->path[this->path.size() - 2].get());
