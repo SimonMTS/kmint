@@ -30,6 +30,11 @@ tank::tank(map::map_graph& g, map::map_node& initial_node, tank_type t)
     EntityType = "tank";
 }
 
+bool cmpp(std::pair<play::actor*, int> a, std::pair<play::actor*, int> b) {
+    if (a.second > b.second) return true;
+    return false;
+}
+
 void tank::act(delta_time dt) {
     //std::cout << Andre->location() << std::endl;
 
@@ -37,7 +42,10 @@ void tank::act(delta_time dt) {
 	if (to_seconds(t_since_move_) >= 1) {
             graph.untag_all();
 
-            std::cout << "Act" << std::endl;
+            if (state == wander) {
+                SenseUFO();
+            }
+
             switch (state) {
                 case wander:
                     Wander();
@@ -54,22 +62,79 @@ void tank::act(delta_time dt) {
             }
 
             Move();
+            SetSprite();
 	}
 }
 
 void tank::Wander(){ 
-    MoveTo(492);
-    //next_edge = &node()[random_int(0, node().num_edges())]; 
-
+    state = wander;
+    next_edge = &node()[random_int(0, node().num_edges())]; 
 
 };
-void tank::Flee(){};
+
+
+void tank::SenseUFO() {
+    this->ufos.clear();
+    std::vector<play::actor*> ufos;
+    for (auto i = begin_perceived(); i != end_perceived(); ++i) {
+        if (i->EntityType == "ufo") {
+            play::actor &ufo = *i;
+            ufos.push_back(&ufo);
+
+        }
+    }
+    std::cout << "Senseufo" << ufos.size() << std::endl;
+    if (ufos.size() == 0) return;
+
+    this->ufos = ufos;
+    
+    int number = RandomInt(0, 100);
+    if (number >= 100 - FleeChance) {
+        Flee();
+    } else if (number >= 100 - FleeChance - EMPChance) {
+    } else if (number <= ShieldChance) {
+    }
+}
+
+
+void tank::Flee() {
+    state = flee;
+    std::cout << "Flee" << fleecount << std::endl;
+    play::actor*ToFleeFrom = GetNearestUFO(ufos);
+
+    if (fleecount < 10) {
+        MoveAwayFrom(ToFleeFrom);
+        fleecount++;
+    } else {
+        fleecount = 0;
+        Wander();
+    }
+};
 void tank::GoToEMP(){};
 void tank::GoToShield(){};
 
+play::actor* tank::GetNearestUFO(std::vector<play::actor*> ufos) {
+
+      std::priority_queue<std::pair<play::actor*, int>,
+                        std::vector<std::pair<play::actor*, int>>,
+                        std::function<bool(std::pair<play::actor*, int>,
+                           std::pair<play::actor*, int>)>>
+        queue(cmpp);
+
+
+    for (int i = 0; i < ufos.size(); i++) {
+        float distance = std::sqrt(std::pow(node().location().x()- ufos[i]->location().x(),2) + std::pow(node().location().y()- ufos[i]->location().y(), 2));
+        queue.push(std::make_pair(ufos[i], distance));
+    } 
+
+     if (!queue.empty()) {
+        return queue.top().first;
+    }
+}
+
 void tank::Move() { 
     if (next_edge != last_edge) {
-        weight = next_edge->weight() * 5;
+        weight = next_edge->weight();
         last_edge = next_edge;
     }
 
@@ -108,6 +173,40 @@ void tank::MoveTo(const int nodeid) {
         }
     }
     //std::cout << "Moveto" << next_edge << std::endl;
+}
+
+void tank::MoveAwayFrom(play::actor* actor) {
+    float distance = INT_MIN;
+    map::map_edge *edge = nullptr;
+    for (int i = 0; i < this->node().num_edges(); i++) {
+            float currdistance = std::sqrt(
+            std::pow(node().location().x() - actor->location().x(), 2) +
+            std::pow(node().location().y() - actor->location().y(), 2));
+
+        if (currdistance > distance) {
+            distance = currdistance;
+            edge = &node()[i];
+        }
+    }
+    if (edge != nullptr) {
+        next_edge = edge;
+    } else {
+        throw "MoveAwayFrom nullptr";
+    }
+}
+
+void tank::SetSprite() {
+    if (state == wander) {
+        drawable_.set_tint({255,255, 255});
+    }
+
+    else if (state == flee) {
+        drawable_.set_tint({0, 0, 0});
+    } else if (state == gotoEMP) {
+        drawable_.set_tint({153, 50, 204});
+    } else if (state == gotoShield) {
+        drawable_.set_tint({0, 0, 0});
+    }
 }
 
 } // namespace kmint::ufo

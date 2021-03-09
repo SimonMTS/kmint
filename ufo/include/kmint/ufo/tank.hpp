@@ -5,6 +5,8 @@
 #include "kmint/play.hpp"
 #include "kmint/primitives.hpp"
 
+#include <random>
+
 namespace kmint {
 namespace ufo {
 
@@ -38,15 +40,33 @@ public:
   void GoToShield();
   void Move();
   void MoveTo(const int nodeid);
+  void SenseUFO();
+  play::actor* GetNearestUFO(std::vector<play::actor*> ufos);
+  void MoveAwayFrom(play::actor* actor);
+  void SetSprite();
 
+  int FleeChance = 34;
+  int EMPChance = 33;
+  int ShieldChance = 33;
   int weight = 1;
+  int fleecount = 0;
   map::map_edge* next_edge = nullptr;
   map::map_edge* last_edge = nullptr;
+  std::vector<play::actor *> ufos;
+
 
   play::image_drawable drawable_;
   delta_time t_since_move_{};
   tank_type type_;
   map::map_graph& graph;
+
+  // Todo dit op een andere plek zetten
+   int RandomInt(float Min, float Max) {
+      std::random_device rd;
+      std::mt19937 gen(rd());
+      std::uniform_int_distribution<> distr(Min, Max);
+      return distr(gen);
+  }
 };
 
 } // namespace ufo

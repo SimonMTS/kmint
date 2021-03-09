@@ -15,7 +15,7 @@ public:
   bool perceptive() const override { return true; }
 
   scalar collision_range() const override { return 32.0; }
-  scalar perception_range() const override { return 1.0f; }
+  scalar perception_range() const override { return 300.0f; }
 
 
 private:
