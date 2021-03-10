@@ -48,7 +48,7 @@ public:
   int FleeChance = 34;
   int EMPChance = 33;
   int ShieldChance = 33;
-  int weight = 1;
+  int weight = 0;
   int fleecount = 0;
   map::map_edge* next_edge = nullptr;
   map::map_edge* last_edge = nullptr;

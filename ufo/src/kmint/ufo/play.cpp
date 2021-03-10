@@ -63,9 +63,10 @@ int play() {
      tank1->Andre = andre;
      tank2->Andre = andre;
 
-     s.build_actor<ufo::Pickup>(graph, ufo::random_node_of_kind(m, 'T'), ufo::pickup_type::SHIELD);
-
-
+     for (int i = 0; i < 3; i++) {
+         s.build_actor<ufo::Pickup>(graph, ufo::random_node_of_kind(m, 'R'), ufo::pickup_type::SHIELD);
+         s.build_actor<ufo::Pickup>(graph, ufo::random_node_of_kind(m, 'R'), ufo::pickup_type::EMP);
+     }
      s.build_actor<ufo::saucer>(saucer_type::blue);
     // s.build_actor<ufo::saucer>(saucer_type::green);
    // s.build_actor<ufo::saucer>(saucer_type::beige);

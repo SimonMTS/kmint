@@ -70,8 +70,11 @@ void tank::act(delta_time dt) {
 
 void tank::Wander(){ 
     state = wander;
-    next_edge = &node()[random_int(0, node().num_edges())]; 
 
+    if (weight == 0) {
+    
+    next_edge = &node()[random_int(0, node().num_edges())]; 
+    }
 };
 
 
@@ -140,11 +143,12 @@ void tank::Move() {
         last_edge = next_edge;
     }
 
-    if (weight == 1) {
+     weight--;
+    if (weight == 0) {
         node(this->next_edge->to());
-    } else {
-        weight--;
-    }
+    } //else {
+     //   weight--;
+   // }
 
 }
 
@@ -154,9 +158,7 @@ void tank::MoveTo(const int nodeid) {
     kmint::map::map_node &start = this->node();
     ufo::student::node_list nodelist  = ufo::student::a_star::find_path(start, end, this->graph, ufo::student::heuristics::euclidean_distance);
     std::cout << nodelist.size() << std::endl;
-    //if (nodelist.size() == 1) return;
- /*   std::cout << nodelist.size() << std::endl;
-    std::cout << nodelist.front().get().node_id() << std::endl;*/
+
 
     if (nodelist.size() > 1) {
         for (int i = 0; i < this->node().num_edges(); i++) {
