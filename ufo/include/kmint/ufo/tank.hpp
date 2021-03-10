@@ -31,6 +31,8 @@ public:
   play::actor* Andre;
 
   bool UFOAttack();
+  bool attackable = true;
+
  private:
 
   enum State { wander, flee, gotoEMP, gotoShield };
@@ -61,6 +63,8 @@ public:
 
   play::image_drawable drawable_;
   delta_time t_since_move_{};
+  delta_time t_since_attack_{};
+
   tank_type type_;
   map::map_graph& graph;
 

@@ -115,11 +115,18 @@ void saucer::act(delta_time dt) {
 
 bool saucer::TankNearby() {
     for (auto it = begin_perceived(); it != end_perceived(); ++it) {
-        if(it->EntityType == "tank")
-    // Veilige mensen niet laten meetellen
-      //   if (!it->isSafe) {
-            return true;
-       // }
+        if (it->EntityType == "tank") {
+            play::actor &tank = *it;
+            ufo::tank *tank1 = dynamic_cast<ufo::tank *>(&tank);
+
+            if (tank1->attackable) {
+                /*std::cout << "Myloc" << location().x() << "," << location().y()
+                          << " tankloc " << tank1->location().x() << ","
+                          << tank1->location().y() << std::endl;*/
+                return true;
+            }
+        }
+      
     }
     return false;
 }
@@ -181,6 +188,11 @@ void saucer::Wander(delta_time dt) {
 }
 
 void saucer::HuntHuman(delta_time dt) { 
+     if (TankNearby()) {
+        HuntTank(dt);
+        return;
+    }
+
     state = hunthuman;
 
     if (!HumanNearby()) {
@@ -245,7 +257,7 @@ void saucer::AttackTank() {
                       std::pow(location().y() - tank.location().y(), 2));
         //  if (distance < eatRange && !pig.isSafe) {
 
-        if (distance < 30) {
+        if (distance < 30 && tank1->attackable) {
             //std::cout << "AttackTank" << std::endl;
             //tank.remove();
             if (tank1->UFOAttack()) {
@@ -291,11 +303,15 @@ void saucer::GetNearest(std::string type) {
     // Zet alle humans in de radius in een priority queue en pop de eerste
     for (auto i = begin_perceived(); i != end_perceived(); ++i) {
         if (i->EntityType != type) continue;
-        play::actor &human = *i;
-        //if (!pig.isSafe) {
-            float distance = std::sqrt(std::pow(location().x() - human.location().x(), 2) + std::pow(location().y() - human.location().y(), 2));
-            queue.push(std::make_pair(&human, distance));
-       // }
+        play::actor &actor = *i;
+
+        if (i->EntityType == "tank") {
+          ufo::tank *tank = dynamic_cast<ufo::tank *>(&actor);
+            if (!tank->attackable) continue;
+        }
+            float distance = std::sqrt(std::pow(location().x() - actor.location().x(), 2) + std::pow(location().y() - actor.location().y(), 2));
+            queue.push(std::make_pair(&actor, distance));
+    
     }
 
     if (!queue.empty()) {

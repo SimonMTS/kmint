@@ -65,11 +65,16 @@ void tank::act(delta_time dt) {
             t_since_move_ = from_seconds(0);
 
 	}
+
+        if (!attackable) t_since_attack_ += dt;
+        if (to_seconds(t_since_attack_) > 2) {
+            attackable = true;
+            t_since_attack_ = from_seconds(0);
+        }
 }
 
 void tank::Wander(){ 
     state = wander;
-
     if (weight == 0) {
     
     next_edge = &node()[random_int(0, node().num_edges())]; 
@@ -92,13 +97,14 @@ void tank::SenseUFO() {
     this->ufos = ufos;
     
     int number = RandomInt(0, 100);
-    if (number >= 100 - FleeChance) {
+    Flee();
+    /*if (number >= 100 - FleeChance) {
         Flee();
     } else if (number >= 100 - FleeChance - EMPChance) {
         GoToEMP();
     } else if (number <= ShieldChance) {
         GoToShield();
-    }
+    }*/
 }
 
 
@@ -219,9 +225,10 @@ void tank::SetSprite() {
 
 bool tank::UFOAttack() {
     std::cout << "Ufoattack " << damage << std::endl;
+    attackable = false;
     if (EMP) {
-       // EMP = false;
-        return true;
+        EMP = false;
+        return false;
     }
 
     if (LaserShield) {
