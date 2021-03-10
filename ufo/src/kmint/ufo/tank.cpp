@@ -40,7 +40,6 @@ void tank::act(delta_time dt) {
 
 	t_since_move_ += dt;
 	if (to_seconds(t_since_move_) >= 1) {
-            graph.untag_all();
 
             if (state == wander) {
                 SenseUFO();

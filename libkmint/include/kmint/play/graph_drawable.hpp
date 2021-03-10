@@ -53,6 +53,10 @@ private:
       v = 0.5f;
     } else if (tag == graph::node_tag::visited) {
       s = 0.3;
+    } else if (tag == graph::node_tag::path) {
+      h = 290;
+      s = 0.87;
+      v = 1.f;
     }
     return graphics::color::from_hsv(h, s, v);
   }
