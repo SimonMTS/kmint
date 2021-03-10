@@ -63,6 +63,8 @@ void tank::act(delta_time dt) {
 
             Move();
             SetSprite();
+            t_since_move_ = from_seconds(0);
+
 	}
 }
 

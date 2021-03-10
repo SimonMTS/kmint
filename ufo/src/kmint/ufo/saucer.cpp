@@ -158,7 +158,7 @@ void saucer::HuntHuman(delta_time dt) {
     
     // TODO Normalise() en Limit()
     // Ufo aanpassen aan de snelheid van de human
-    math::vector2d steer = (desired * 0.5);
+    math::vector2d steer = (desired * 0.01);
 
     NextLocation = location() + steer;
 

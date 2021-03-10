@@ -14,6 +14,7 @@
 #include "kmint/ufo/resources.hpp"
 #include "kmint/ufo/saucer.hpp"
 #include "kmint/ufo/tank.hpp"
+#include "kmint/ufo/pickup.hpp"
 #include "kmint/ui.hpp"
 
 namespace kmint::ufo {
@@ -61,6 +62,9 @@ int play() {
 
      tank1->Andre = andre;
      tank2->Andre = andre;
+
+     s.build_actor<ufo::Pickup>(graph, ufo::random_node_of_kind(m, 'T'), ufo::pickup_type::SHIELD);
+
 
      s.build_actor<ufo::saucer>(saucer_type::blue);
     // s.build_actor<ufo::saucer>(saucer_type::green);
