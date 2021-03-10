@@ -31,8 +31,10 @@ graphics::image image_for(ufo::pickup_type type) {
 Pickup::Pickup(map::map_graph &g, map::map_node &initial_node, pickup_type type)
     : play::map_bound_actor{initial_node},
       drawable_{*this, graphics::image{image_for(type)}},
-      graph_{g} {
+      graph_{g},
+      node{initial_node} {
     drawable_.set_tint(color_for(type));
+    this->type = type;
 };
 
 void Pickup::act(delta_time dt) { 

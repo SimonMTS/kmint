@@ -26,6 +26,9 @@ class Pickup : public play::map_bound_actor {
     bool perceptive() const override { return true; }
     scalar perception_range() const override { return 200.f; }
 
+    pickup_type type;
+
+    const map::map_node &node;
    private:
     // hoeveel tijd is verstreken sinds de laatste beweging
     delta_time t_since_move_{};

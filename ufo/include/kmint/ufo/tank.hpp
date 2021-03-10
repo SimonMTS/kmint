@@ -4,13 +4,17 @@
 #include "kmint/map/map.hpp"
 #include "kmint/play.hpp"
 #include "kmint/primitives.hpp"
+#include "kmint/ufo/pickup.hpp"
 
 #include <random>
 
 namespace kmint {
+
 namespace ufo {
 
 enum class tank_type { red, green };
+using kmint::map::map_node;
+using node_list = std::vector<std::reference_wrapper<map_node>>;
 
 class tank : public play::map_bound_actor {
 public:
@@ -29,6 +33,7 @@ public:
   // andere actors kan waarnemen.
   scalar perception_range() const override { return 200.f; }
   play::actor* Andre;
+  std::vector<ufo::Pickup*> pickups;
 
   bool UFOAttack();
   bool attackable = true;
@@ -45,6 +50,7 @@ public:
   void MoveTo(const int nodeid);
   void SenseUFO();
   play::actor* GetNearestUFO(std::vector<play::actor*> ufos);
+  void GetNearestPickup(pickup_type type);
   void MoveAwayFrom(play::actor* actor);
   void SetSprite();
 
@@ -60,6 +66,8 @@ public:
   bool EMP = true;
   bool LaserShield = false;
   int damage = 0;
+  int EMPCount = 3;
+  int ShieldCount = 3;
 
   play::image_drawable drawable_;
   delta_time t_since_move_{};
@@ -68,6 +76,10 @@ public:
   tank_type type_;
   map::map_graph& graph;
 
+  ufo::Pickup* target = nullptr;
+  std::vector<std::reference_wrapper<map_node>> path;
+
+  
   // Todo dit op een andere plek zetten
    int RandomInt(float Min, float Max) {
       std::random_device rd;
