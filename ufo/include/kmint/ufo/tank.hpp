@@ -30,6 +30,7 @@ public:
   scalar perception_range() const override { return 200.f; }
   play::actor* Andre;
 
+  bool UFOAttack();
  private:
 
   enum State { wander, flee, gotoEMP, gotoShield };
@@ -54,6 +55,9 @@ public:
   map::map_edge* last_edge = nullptr;
   std::vector<play::actor *> ufos;
 
+  bool EMP = true;
+  bool LaserShield = false;
+  int damage = 0;
 
   play::image_drawable drawable_;
   delta_time t_since_move_{};

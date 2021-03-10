@@ -15,7 +15,7 @@ public:
   bool perceptive() const override { return true; }
 
   scalar collision_range() const override { return 32.0; }
-  scalar perception_range() const override { return 10.0f; }
+  scalar perception_range() const override { return 300.0f; }
 
 
 private:
@@ -26,7 +26,7 @@ private:
 
   delta_time t_since_move_{};
 
-  enum State { hunttank, hunthuman, wander };
+  enum State { hunttank, hunthuman, wander, nomove };
   State state = wander;
   bool TankNearby();
   bool HumanNearby();
@@ -34,6 +34,8 @@ private:
   void Wander(delta_time dt);
   void HuntHuman(delta_time dt);
   void HuntTank(delta_time dt);
+  void NoMove(delta_time dt);
+
   void AttackHuman();
   void AttackTank();
   void Move();

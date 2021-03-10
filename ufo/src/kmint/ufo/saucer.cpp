@@ -6,6 +6,7 @@
 #include <queue>
 
 #include "kmint/ufo/human.hpp"
+#include "kmint/ufo/tank.hpp"
 #include "kmint/force_driven_entities/forces.hpp"
 
 namespace kmint::ufo {
@@ -84,16 +85,22 @@ void saucer::act(delta_time dt) {
         case hunttank:
             HuntTank(dt);
             break;
-    }
-    Edges();
-    Move();
-    if (state == hunthuman) {
-        AttackHuman();
+        case nomove:
+            NoMove(dt);
+            break;
     }
 
-    if (state == hunttank) {
-        AttackTank();
-   }
+    if (state != nomove) {
+        Edges();
+        Move();
+        if (state == hunthuman) {
+            AttackHuman();
+        }
+
+        if (state == hunttank) {
+            AttackTank();
+        }
+    }
     //location(location() + v_ * to_seconds(dt));
     //for (std::size_t ix{}; ix < num_colliding_actors(); ++ix) {
     //    auto &other = colliding_actor(ix);
@@ -126,6 +133,28 @@ bool saucer::HumanNearby() {
         // }
     }
     return false;
+}
+
+void saucer::NoMove(delta_time dt) { 
+    acceleration = {0, 0};
+    t_since_move_ += dt; 
+
+    int time = to_seconds(t_since_move_);
+    if (time % 2 == 0) {
+       drawable_.set_tint({200, 200, 200});
+    }
+    else {
+       drawable_.set_tint({255, 255, 255});
+
+    }
+
+
+    if (time >= 20) {
+        state = wander;
+        t_since_move_ = from_seconds(0);
+        drawable_.set_tint({255, 255, 255});
+
+    }
 }
 
 void saucer::Wander(delta_time dt) {
@@ -210,6 +239,7 @@ void saucer::AttackTank() {
         if (i->EntityType != "tank") continue;
         play::actor &tank = *i;
 
+        ufo::tank *tank1 = dynamic_cast<ufo::tank *>(&tank);
         float distance =
             std::sqrt(std::pow(location().x() - tank.location().x(), 2) +
                       std::pow(location().y() - tank.location().y(), 2));
@@ -217,7 +247,11 @@ void saucer::AttackTank() {
 
         if (distance < 30) {
             //std::cout << "AttackTank" << std::endl;
-            tank.remove();
+            //tank.remove();
+            if (tank1->UFOAttack()) {
+                state = nomove;
+                return;
+            };
         }
     }
 }
@@ -278,26 +312,26 @@ void saucer::Edges() {
 
      // Map borders
     if (location().x() < edgeboundary) {
-        std::cout << "Links";
+        //std::cout << "Links";
         if (velocity.x() < 0) {
             acceleration += math::vector2d{-velocity.x() * 2, 0};
         }
 
     } else if (location().x() > width - edgeboundary) {
-        std::cout << "Rechts";
+        //std::cout << "Rechts";
         if (velocity.x() > 0) {
             acceleration += math::vector2d{-velocity.x() * 2, 0};
         }
     }
 
     if (location().y() < edgeboundary) {
-        std::cout << "Boven" << std::endl;
+        //std::cout << "Boven" << std::endl;
         if (velocity.y() < 0) {
             acceleration += math::vector2d{0, -velocity.y() * 2};
         }
 
     } else if (location().y() > height - edgeboundary) {
-        std::cout << "Onder" << std::endl;
+        //std::cout << "Onder" << std::endl;
         if (velocity.y() > 0) {
            acceleration += math::vector2d{0, -velocity.y() * 2};
         }

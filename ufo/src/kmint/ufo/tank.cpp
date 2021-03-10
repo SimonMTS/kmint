@@ -87,7 +87,6 @@ void tank::SenseUFO() {
 
         }
     }
-    std::cout << "Senseufo" << ufos.size() << std::endl;
     if (ufos.size() == 0) return;
 
     this->ufos = ufos;
@@ -96,7 +95,9 @@ void tank::SenseUFO() {
     if (number >= 100 - FleeChance) {
         Flee();
     } else if (number >= 100 - FleeChance - EMPChance) {
+        GoToEMP();
     } else if (number <= ShieldChance) {
+        GoToShield();
     }
 }
 
@@ -114,8 +115,12 @@ void tank::Flee() {
         Wander();
     }
 };
-void tank::GoToEMP(){};
-void tank::GoToShield(){};
+void tank::GoToEMP(){
+std::cout << "GoToEMP" << std::endl;
+};
+void tank::GoToShield(){
+    std::cout << "GoToShield" << std::endl;
+};
 
 play::actor* tank::GetNearestUFO(std::vector<play::actor*> ufos) {
 
@@ -212,4 +217,20 @@ void tank::SetSprite() {
     }
 }
 
+bool tank::UFOAttack() {
+    std::cout << "Ufoattack " << damage << std::endl;
+    if (EMP) {
+       // EMP = false;
+        return true;
+    }
+
+    if (LaserShield) {
+        LaserShield = false;
+        damage += 20;
+        return false;
+    }
+
+    damage += 50;
+    return false;
+};
 } // namespace kmint::ufo
