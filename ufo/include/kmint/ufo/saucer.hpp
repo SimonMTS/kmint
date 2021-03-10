@@ -15,14 +15,17 @@ public:
   bool perceptive() const override { return true; }
 
   scalar collision_range() const override { return 32.0; }
-  scalar perception_range() const override { return 1.0f; }
+  scalar perception_range() const override { return 10.0f; }
 
 
 private:
   play::image_drawable drawable_;
   saucer_type type_;
-  math::vector2d v_{};
-	
+  math::vector2d velocity{};
+  math::vector2d acceleration{};
+
+  delta_time t_since_move_{};
+
   enum State { hunttank, hunthuman, wander };
   State state = wander;
   bool TankNearby();
@@ -35,9 +38,11 @@ private:
   void AttackTank();
   void Move();
   void GetNearest(std::string type);
-  math::vector2d GetRandomVelocity();
+  void SetWanderDirection();
+  void Edges();
   int RandomInt(float Min, float Max);
 
+  math::vector2d WanderDirection;
   play::actor *target;
 
 

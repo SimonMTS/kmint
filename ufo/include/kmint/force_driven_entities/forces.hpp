@@ -18,7 +18,7 @@ class forces {
     static kmint::math::vector2d alignment(const kmint::ufo::human &human);
     static kmint::math::vector2d cohesion(const kmint::ufo::human &human);
     static kmint::math::vector2d normalize(const kmint::math::vector2d &vector);
-
+    static kmint::math::vector2d limit(const kmint::math::vector2d &vector);
    private:
     static std::default_random_engine generator;
     static std::uniform_real_distribution<float> distribution;

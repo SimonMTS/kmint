@@ -108,4 +108,14 @@ kmint::math::vector2d forces::alignment(const kmint::ufo::human &human) {
     return {0, 0};
 }
 
+kmint::math::vector2d forces::limit(const kmint::math::vector2d &v) {
+    kmint::math::vector2d temp = v;
+    int maxforce = 2;
+    float m = sqrt(v.x() * v.x() + v.y() * v.y());
+    if (m > maxforce) {
+        temp = {v.x() / m, v.y() / m};
+    }
+    return temp;
+};
+
 }  // namespace student

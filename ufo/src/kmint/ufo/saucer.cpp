@@ -6,6 +6,7 @@
 #include <queue>
 
 #include "kmint/ufo/human.hpp"
+#include "kmint/force_driven_entities/forces.hpp"
 
 namespace kmint::ufo {
 
@@ -65,9 +66,10 @@ math::vector2d velocity_for(saucer_type type) {
 saucer::saucer(saucer_type type)
     : play::free_roaming_actor{location_for(type)},
       drawable_{*this, image_for(type)},
-      v_{velocity_for(type)},
+      velocity{velocity_for(type)},
       type_{type} {
     EntityType = "ufo";
+    SetWanderDirection();
 }
 
 void saucer::act(delta_time dt) {
@@ -83,9 +85,8 @@ void saucer::act(delta_time dt) {
             HuntTank(dt);
             break;
     }
-
+    Edges();
     Move();
-
     if (state == hunthuman) {
         AttackHuman();
     }
@@ -138,9 +139,16 @@ void saucer::Wander(delta_time dt) {
         return;
     }
 
-    //std::cout << "Wander" << std::endl;
-    NextLocation = location() + GetRandomVelocity() * to_seconds(dt);
+    t_since_move_ += dt;
 
+    //std::cout << "Wander" << std::endl;
+    //NextLocation = location() + WanderDirection * 0.01;
+
+    acceleration += WanderDirection * 0.01;
+    if (to_seconds(t_since_move_) >= 1) {
+        SetWanderDirection();
+        t_since_move_ = from_seconds(0);
+    }
 }
 
 void saucer::HuntHuman(delta_time dt) { 
@@ -160,7 +168,7 @@ void saucer::HuntHuman(delta_time dt) {
     // Ufo aanpassen aan de snelheid van de human
     math::vector2d steer = (desired * 0.01);
 
-    NextLocation = location() + steer;
+    acceleration += steer;
 
 }
 void saucer::HuntTank(delta_time dt) { 
@@ -178,10 +186,9 @@ void saucer::HuntTank(delta_time dt) {
 
     // TODO Normalise() en Limit()
     // Ufo aanpassen aan de snelheid van de human
-    math::vector2d steer = (desired * 0.5);
+    math::vector2d steer = (desired * 0.01);
 
-    NextLocation = location() + steer;
-
+    acceleration += steer;
 }
 void saucer::AttackHuman() {
     for (auto i = begin_perceived(); i != end_perceived(); ++i) {
@@ -214,12 +221,19 @@ void saucer::AttackTank() {
         }
     }
 }
-void saucer::Move() { location(NextLocation); }
-math::vector2d saucer::GetRandomVelocity() {
+void saucer::Move() { 
+    velocity += acceleration;
+
+    velocity = student::forces::limit(velocity);
+    math::vector2d nextpos = location() + velocity;
+    location(nextpos);
+    acceleration *= 0;
+}
+void saucer::SetWanderDirection() {
     float xspeed = 20.f * RandomInt(-1, 1);
     float yspeed = 20.f * RandomInt(-1, 1);
 
-    return {xspeed, yspeed};
+    WanderDirection = {xspeed, yspeed};
 }
 
 int saucer::RandomInt(float Min, float Max) {
@@ -253,6 +267,88 @@ void saucer::GetNearest(std::string type) {
     if (!queue.empty()) {
         target = queue.top().first;
     }
+}
+
+void saucer::Edges() {
+    kmint::scalar width = 1024;
+    kmint::scalar height = 768;
+    math::vector2d correction = math::vector2d{0, 0};
+
+    int edgeboundary = 25;
+
+     // Map borders
+    if (location().x() < edgeboundary) {
+        std::cout << "Links";
+        if (velocity.x() < 0) {
+            acceleration += math::vector2d{-velocity.x() * 2, 0};
+        }
+
+    } else if (location().x() > width - edgeboundary) {
+        std::cout << "Rechts";
+        if (velocity.x() > 0) {
+            acceleration += math::vector2d{-velocity.x() * 2, 0};
+        }
+    }
+
+    if (location().y() < edgeboundary) {
+        std::cout << "Boven" << std::endl;
+        if (velocity.y() < 0) {
+            acceleration += math::vector2d{0, -velocity.y() * 2};
+        }
+
+    } else if (location().y() > height - edgeboundary) {
+        std::cout << "Onder" << std::endl;
+        if (velocity.y() > 0) {
+           acceleration += math::vector2d{0, -velocity.y() * 2};
+        }
+    }
+    //std::cout << std::endl;
+    //if (desired != math::vector2d{0, 0}) {
+    //    // desired = Normalize(desired);
+    //    //  desired *= 20;
+    //    math::vector2d steer = desired - v_;
+    //    // steer = Limit(steer, flock->maxForce);
+
+    //    v_ += steer;
+    //}
+
+
+
+
+
+
+
+
+
+
+
+
+    //// Map borders
+    //if (location().x() < edgeboundary) {
+    //    desired = math::vector2d{ 20, v_.y()};
+
+    //} else if (location().x() > width - edgeboundary) {
+    //    desired = math::vector2d{-20, v_.y()};
+    //    //velocity = math::vector2d{0, 0};
+    //}
+
+    //if (location().y() < edgeboundary) {
+    //    desired = math::vector2d{v_.x(), 20};
+    //   // velocity = math::vector2d{0, 0};
+
+    //} else if (location().y() > height - edgeboundary) {
+    //    desired = math::vector2d{v_.x(), -20};
+    //  //  velocity = math::vector2d{0, 0};
+    //}
+
+    //  if (desired != math::vector2d{0, 0}) {
+    //   // desired = Normalize(desired);
+    //  //  desired *= 20;
+    //    math::vector2d steer = desired - v_;
+    //   // steer = Limit(steer, flock->maxForce);
+    //    
+    //    v_ += steer;
+    //}
 }
 
   }  // namespace kmint::ufo
