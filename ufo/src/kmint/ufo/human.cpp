@@ -24,12 +24,12 @@ human::human(map::map_graph &g)
       graph_{g},
       drawable_{*this, human_image()} {
     EntityType = "human";
-    /*CohesionWeight = RandomNumber(0, 1);
+    CohesionWeight = RandomNumber(0, 1);
     SeparationWeight = RandomNumber(0, 1);
     AlignmentWeight = RandomNumber(0, 1);
     RedTankWeight = RandomNumber(-1, 1);
     GreenTankWeight = RandomNumber(-1, 1);
-    UfoWeight = RandomNumber(-1, 1);*/
+    UfoWeight = RandomNumber(-1, 1);
 }
 
 void human::act(delta_time dt) {
@@ -78,12 +78,12 @@ void human::Forces() {
 
 
 
-   /* greent = greent * GreenTankWeight;
+    greent = greent * GreenTankWeight;
     redt = redt * RedTankWeight;
     ufo0 = ufo0 * UfoWeight;
     ufo1 = ufo1 * UfoWeight;
     ufo2 = ufo2 * UfoWeight;
-    ufo3 = ufo3 * UfoWeight;*/
+    ufo3 = ufo3 * UfoWeight;
 
     acceleration +=  greent + redt + ufo0 + ufo1 + ufo2 + ufo3;
 }
