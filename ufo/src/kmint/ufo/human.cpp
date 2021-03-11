@@ -59,7 +59,6 @@ void human::Move() {
 }
 void human::Forces() {
 
-    float d = ::student::forces::distance(*this, *greentank);
     math::vector2d s = ::student::forces::separation(*this);
     math::vector2d a = ::student::forces::alignment(*this);
     math::vector2d c = ::student::forces::cohesion(*this);
@@ -72,7 +71,7 @@ void human::Forces() {
     //b = b * BoatWeight;
     //p = p * PredatorWeight;
 
-    acceleration += s;
+    acceleration += a + c;
    // acceleration += s + a + c;
 }
 
