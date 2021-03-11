@@ -57,13 +57,40 @@ kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
     if (human.removed()) return steer;
 
     for (auto &other_human : *human.other_humans) {
-        if (&other_human == nullptr) {
-            std::cout << "other human is nullptr" << std::endl;
-        }
+        if (&other_human == nullptr) continue;
         if (other_human.get().removed()) continue;
-        if (other_human.get().location() == human.location()) continue;
 
-        float d = distance(human, other_human);
+          if (&other_human == nullptr) {
+            std::cout << "&other_human is nullptr" << std::endl;
+        }
+          if (&other_human.get() == nullptr) {
+            std::cout << "&other_human.get() is nullptr" << std::endl;
+        }
+          if (&human == nullptr) {
+              std::cout << "&human is nullptr" << std::endl;
+          }
+          if (human.id == 0) {
+              std::cout << &other_human << std::endl;
+              std::cout << other_human.get().removed() << std::endl;
+              std::cout << &other_human << std::endl;
+              std::cout << &other_human.get() << std::endl;
+              std::cout << other_human.get().location() << std::endl;
+              std::cout << std::endl;
+
+          }
+    
+          
+ 
+       // if (other_human.get().location() == human.location()) continue;
+          float d;
+         
+
+        try {
+               d = distance(human, other_human);
+        } catch (...) {
+            std::cout << "Unknown error" << std::endl;
+            return steer;
+        }
 
         if ((d > 0) && (d < human.DesiredSeparationDistance)) {
             kmint::math::vector2d diff = kmint::math::vector2d{0, 0};
@@ -96,9 +123,6 @@ kmint::math::vector2d forces::alignment(const kmint::ufo::human &human) {
 
     int count = 0;
     for (auto &other_human : *human.other_humans) {
-         if (&other_human == nullptr) {
-            std::cout << "other human is nullptr" << std::endl;
-        }
         if (other_human.get().removed()) continue;
         if (other_human.get().location() == human.location()) continue;
 

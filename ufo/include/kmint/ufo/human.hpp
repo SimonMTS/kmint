@@ -22,7 +22,7 @@ class human : public kmint::play::free_roaming_actor {
     math::vector2d heading{1, 0};
     std::vector<std::reference_wrapper<ufo::human>> *other_humans;
     bool isSafeTank = false;
-
+    int id = 1;
 
     //std::vector<ufo::door> doors;
     std::vector<play::actor*> ufos;
@@ -43,10 +43,22 @@ class human : public kmint::play::free_roaming_actor {
     math::vector2d velocity{0, 0};
    private:
 
+    float CohesionWeight;    //    0 tot 1
+    float SeparationWeight;  //    0 tot 1
+    float AlignmentWeight;   //	   0 tot 1
+    float RedTankWeight;     //   -1 tot 1;
+    float GreenTankWeight;   //   -1 tot 1;
+    float UfoWeight;         //   -1 tot 1;
+    float DoorWeight;        //   -1 tot 1;
+
     void Forces();
     void Move();
     play::image_drawable drawable_;
     delta_time t_since_move_{};
+
+     float RandomNumber(float Min, float Max) {
+        return ((float(rand()) / float(RAND_MAX)) * (Max - Min)) + Min;
+    }
 };
 
 }  // namespace kmint::ufo

@@ -24,6 +24,12 @@ human::human(map::map_graph &g)
       graph_{g},
       drawable_{*this, human_image()} {
     EntityType = "human";
+    CohesionWeight = RandomNumber(0, 1);
+    SeparationWeight = RandomNumber(0, 1);
+    AlignmentWeight = RandomNumber(0, 1);
+    RedTankWeight = RandomNumber(-1, 1);
+    GreenTankWeight = RandomNumber(-1, 1);
+    UfoWeight = RandomNumber(-1, 1);
 }
 
 void human::act(delta_time dt) {
@@ -58,6 +64,7 @@ void human::Move() {
     }
 }
 void human::Forces() {
+    if (this->removed()) return;
 
     math::vector2d s = ::student::forces::separation(*this);
     math::vector2d a = ::student::forces::alignment(*this);
@@ -69,17 +76,18 @@ void human::Forces() {
     math::vector2d ufo2 = ::student::forces::attacted_to(*this, *ufos[2], true);
     math::vector2d ufo3 = ::student::forces::attacted_to(*this, *ufos[3], true);
 
-    //math::vector2d b = BoatSeparation();
-   // math::vector2d p = PredatorSeparation();
 
-    //s = s * SeparationWeight;
-    //a = a * AlignmentWeight;
-    //c = c * CohesionWeight;
-    //b = b * BoatWeight;
-    //p = p * PredatorWeight;
+   // s = s * SeparationWeight;
+   // a = a * AlignmentWeight;
+   // c = c * CohesionWeight;
+    greent = greent * GreenTankWeight;
+    redt = redt * RedTankWeight;
+    ufo0 = ufo0 * UfoWeight;
+    ufo1 = ufo1 * UfoWeight;
+    ufo2 = ufo2 * UfoWeight;
+    ufo3 = ufo3 * UfoWeight;
 
-    acceleration += ufo0 + (ufo1 * -1) + ufo2 + (ufo3 * -1);
-   // acceleration += s + a + c;
+    acceleration +=  greent + redt + ufo0 + ufo1 + ufo2 + ufo3;
 }
 
 }  // namespace kmint::ufo

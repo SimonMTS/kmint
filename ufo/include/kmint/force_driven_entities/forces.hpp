@@ -3,7 +3,7 @@
 
 #include <random>
 
-#include "../../ufo/include/kmint/ufo/human.hpp"
+#include "kmint/ufo/human.hpp"
 #include "../../ufo/include/kmint/ufo/node_algorithm.hpp"
 #include "kmint/map/map.hpp"
 #include "kmint/math/vector2d.hpp"
