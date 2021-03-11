@@ -126,7 +126,7 @@ kmint::math::vector2d forces::alignment(const kmint::ufo::human &human) {
     }
 }
 
-kmint::math::vector2d forces::attacted_to_tank(const kmint::ufo::human& human, const kmint::play::actor& actor, bool red) {
+kmint::math::vector2d forces::attacted_to(const kmint::ufo::human& human, const kmint::play::actor& actor, bool tank) {
     kmint::math::vector2d steer{0, 0};
     int count = 0;
 
@@ -134,10 +134,10 @@ kmint::math::vector2d forces::attacted_to_tank(const kmint::ufo::human& human, c
 
     int desireddistance = 0;
 
-    if (red) {
-        desireddistance = human.DesiredRedTankDistance;
+    if (tank) {
+        desireddistance = human.DesiredTankDistance;
     } else {
-        desireddistance = human.DesiredGreenTankDistance;
+        desireddistance = human.DesiredUfoDistance;
     }
 
     if ((d > 0) && (d < desireddistance)) {
