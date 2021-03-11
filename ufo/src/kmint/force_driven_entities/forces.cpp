@@ -70,19 +70,16 @@ kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
               std::cout << "&human is nullptr" << std::endl;
           }
           if (human.id == 0) {
-              std::cout << &other_human << std::endl;
-              std::cout << other_human.get().removed() << std::endl;
-              std::cout << &other_human << std::endl;
-              std::cout << &other_human.get() << std::endl;
-              std::cout << other_human.get().location() << std::endl;
-              std::cout << std::endl;
+             // std::cout << human.other_humans->size() << std::endl;
 
           }
     
           
  
-       // if (other_human.get().location() == human.location()) continue;
-          float d;
+        if (other_human.get().location() == human.location()) continue;
+        
+        
+        float d;
          
 
         try {

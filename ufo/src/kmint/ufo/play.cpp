@@ -41,12 +41,15 @@ int play() {
     }
 
     int skip = 2;  // terrible solution
+    int id = 0;
     std::vector<std::reference_wrapper<ufo::human>> humans;
     for (auto &actor : s) {
         if (skip-- > 0) continue;
         ufo::human &h = dynamic_cast<ufo::human &>(actor);
         humans.push_back(h);
         h.other_humans = &humans;
+        h.id = id;
+        id++;
     }
 
     s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'),
