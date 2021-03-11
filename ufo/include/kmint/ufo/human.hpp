@@ -20,7 +20,7 @@ class human : public kmint::play::free_roaming_actor {
     scalar perception_range() const override { return 30.0f; }
     map::map_graph &graph_;
     math::vector2d heading{1, 0};
-    std::vector<std::reference_wrapper<ufo::human>> *other_humans;
+    std::vector<ufo::human*> other_humans;
     bool isSafeTank = false;
     int id = 1;
 

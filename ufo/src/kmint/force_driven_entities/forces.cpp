@@ -28,17 +28,17 @@ kmint::math::vector2d forces::wander(const kmint::ufo::human &human) {
 kmint::math::vector2d forces::cohesion(const kmint::ufo::human &human) {
     kmint::math::vector2d sum = kmint::math::vector2d{0, 0};
     int count = 0;
-    for (auto &other_human : *human.other_humans) {
+    for (auto &other_human : human.other_humans) {
         if (&other_human == nullptr) {
             std::cout << "other human is nullptr" << std::endl;
         }
-        if (other_human.get().removed()) continue;
-        if (other_human.get().location() == human.location()) continue;
+        if (other_human->removed()) continue;
+        if (other_human->location() == human.location()) continue;
 
-        float d = distance(human, other_human);
+        float d = distance(human, *other_human);
 
         if ((d > 0) && (d < human.DesiredCohesionDistance)) {
-            sum += other_human.get().location();
+            sum += other_human->location();
             count++;
         }
         
@@ -56,25 +56,25 @@ kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
 
     if (human.removed()) return steer;
 
-    for (auto &other_human : *human.other_humans) {
-        if (&other_human == nullptr) continue;
-        if (other_human.get().removed()) continue;
+    for (int i = 0; i < human.other_humans.size(); i++) {
+        if (human.other_humans[i] == nullptr) continue;
+        if (human.other_humans[i]->removed()) continue;
 
-          if (&other_human == nullptr) {
+          if (human.other_humans[i] == nullptr) {
             std::cout << "&other_human is nullptr" << std::endl;
         }
-          if (&other_human.get() == nullptr) {
+          if (human.other_humans[i] == nullptr) {
             std::cout << "&other_human.get() is nullptr" << std::endl;
         }
           if (&human == nullptr) {
               std::cout << "&human is nullptr" << std::endl;
           }
           if (human.id == 0) {
-              std::cout << &other_human << std::endl;
-              std::cout << other_human.get().removed() << std::endl;
-              std::cout << &other_human << std::endl;
-              std::cout << &other_human.get() << std::endl;
-              std::cout << other_human.get().location() << std::endl;
+              std::cout << &human.other_humans[i] << std::endl;
+              std::cout << human.other_humans[i]->removed() << std::endl;
+              std::cout << &human.other_humans[i] << std::endl;
+              std::cout << &human.other_humans[i] << std::endl;
+              std::cout << human.other_humans[i]->location() << std::endl;
               std::cout << std::endl;
 
           }
@@ -86,7 +86,7 @@ kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
          
 
         try {
-               d = distance(human, other_human);
+              d = distance(human, *human.other_humans[i]);
         } catch (...) {
             std::cout << "Unknown error" << std::endl;
             return steer;
@@ -94,7 +94,7 @@ kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
 
         if ((d > 0) && (d < human.DesiredSeparationDistance)) {
             kmint::math::vector2d diff = kmint::math::vector2d{0, 0};
-            diff = human.location() - other_human.get().location();
+            diff = human.location() - human.other_humans[i]->location();
             diff = normalize(diff);
             diff = diff / d;
             steer += diff;
@@ -122,15 +122,15 @@ kmint::math::vector2d forces::alignment(const kmint::ufo::human &human) {
     kmint::math::vector2d sum{0, 0};
 
     int count = 0;
-    for (auto &other_human : *human.other_humans) {
-        if (other_human.get().removed()) continue;
-        if (other_human.get().location() == human.location()) continue;
+    for (auto &other_human : human.other_humans) {
+        if (other_human->removed()) continue;
+        if (other_human->location() == human.location()) continue;
 
 
-        float d = distance(human, other_human);
+        float d = distance(human, *other_human);
 
         if ((d > 0) && (d < human.DesiredAlignmentDistance)) {
-            sum += other_human.get().velocity;
+            sum += other_human->velocity;
             count++;
         }
         

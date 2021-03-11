@@ -36,17 +36,21 @@ int play() {
                                     graphics::image{m.background_image()});
     s.build_actor<play::map_actor>(math::vector2d{0.f, 0.f}, m.graph());
 
+        std::vector<ufo::human *> humans;
+
     for (std::size_t h{0}; h < 100; ++h) {
         s.build_actor<ufo::human>(graph);
+
+        ufo::human *human = dynamic_cast<ufo::human *>(s.actors_[2+h].get());
+        humans.push_back(human);
     }
 
     int skip = 2;  // terrible solution
-    std::vector<std::reference_wrapper<ufo::human>> humans;
     for (auto &actor : s) {
         if (skip-- > 0) continue;
         ufo::human &h = dynamic_cast<ufo::human &>(actor);
-        humans.push_back(h);
-        h.other_humans = &humans;
+        humans.push_back(&h);
+        h.other_humans = humans;
     }
 
     s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'),
