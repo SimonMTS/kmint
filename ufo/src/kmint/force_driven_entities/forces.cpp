@@ -28,20 +28,14 @@ kmint::math::vector2d forces::wander(const kmint::ufo::human &human) {
 kmint::math::vector2d forces::cohesion(const kmint::ufo::human &human) {
     kmint::math::vector2d sum = kmint::math::vector2d{0, 0};
     int count = 0;
-    for (auto &other_human : *human.other_humans) {
-        if (&other_human == nullptr) {
-            std::cout << "other human is nullptr" << std::endl;
+    for (int i = 0; i < human.population->humans.size(); i++) {
+        if (!human.population->humans[i]->removed()) {
+            float d = distance(human, human.population->humans[i]->location());
+            if ((d > 0) && (d < human.DesiredCohesionDistance)) {
+                sum += human.population->humans[i]->location();
+                count++;
+            }
         }
-        if (other_human.get().removed()) continue;
-        if (other_human.get().location() == human.location()) continue;
-
-        float d = distance(human, other_human);
-
-        if ((d > 0) && (d < human.DesiredCohesionDistance)) {
-            sum += other_human.get().location();
-            count++;
-        }
-        
     }
     if (count > 0) {
         sum = sum / count;
@@ -50,55 +44,26 @@ kmint::math::vector2d forces::cohesion(const kmint::ufo::human &human) {
     return kmint::math::vector2d{0, 0};
 }
 
+
+
 kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
-    kmint::math::vector2d steer {0, 0};
+    kmint::math::vector2d steer{0, 0};
     int count = 0;
 
-    if (human.removed()) return steer;
+    for (int i = 0; i < human.population->humans.size(); i++) {
+        if (!human.population->humans[i]->removed()) {
+            float d = distance(human, human.population->humans[i]->location());
 
-    for (auto &other_human : *human.other_humans) {
-        if (&other_human == nullptr) continue;
-        if (other_human.get().removed()) continue;
-
-          if (&other_human == nullptr) {
-            std::cout << "&other_human is nullptr" << std::endl;
-        }
-          if (&other_human.get() == nullptr) {
-            std::cout << "&other_human.get() is nullptr" << std::endl;
-        }
-          if (&human == nullptr) {
-              std::cout << "&human is nullptr" << std::endl;
-          }
-          if (human.id == 0) {
-             // std::cout << human.other_humans->size() << std::endl;
-
-          }
-    
-          
- 
-        if (other_human.get().location() == human.location()) continue;
-        
-        
-        float d;
-         
-
-        try {
-               d = distance(human, other_human);
-        } catch (...) {
-            std::cout << "Unknown error" << std::endl;
-            return steer;
-        }
-
-        if ((d > 0) && (d < human.DesiredSeparationDistance)) {
-            kmint::math::vector2d diff = kmint::math::vector2d{0, 0};
-            diff = human.location() - other_human.get().location();
-            diff = normalize(diff);
-            diff = diff / d;
-            steer += diff;
-            count++;
+            if ((d > 0) && (d < human.DesiredSeparationDistance)) {
+                kmint::math::vector2d diff = kmint::math::vector2d{0, 0};
+                diff = human.location() - human.population->humans[i]->location();
+                diff = normalize(diff);
+                diff = diff / d;
+                steer += diff;
+                count++;
+            }
         }
     }
-
     if (count > 0) {
         steer = steer / float(count);
     }
@@ -115,22 +80,20 @@ kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
 }
 
 
+
 kmint::math::vector2d forces::alignment(const kmint::ufo::human &human) {
     kmint::math::vector2d sum{0, 0};
 
     int count = 0;
-    for (auto &other_human : *human.other_humans) {
-        if (other_human.get().removed()) continue;
-        if (other_human.get().location() == human.location()) continue;
+    for (int i = 0; i < human.population->humans.size(); i++) {
+        if (!human.population->humans[i]->removed()) {
+            float d = distance(human, human.population->humans[i]->location());
 
-
-        float d = distance(human, other_human);
-
-        if ((d > 0) && (d < human.DesiredAlignmentDistance)) {
-            sum += other_human.get().velocity;
-            count++;
+            if ((d > 0) && (d < human.DesiredAlignmentDistance)) {
+                sum += human.population->humans[i]->velocity;
+                count++;
+            }
         }
-        
     }
 
     if (count > 0) {
@@ -205,6 +168,12 @@ float forces::distance(const kmint::ufo::human& human,
     return dist;
 }
 
+float forces::distance(const kmint::ufo::human &human, const kmint::math::vector2d &v) {
+    float dx = human.location().x() -v.x();
+    float dy = human.location().y() - v.y();
+    float dist = sqrt(dx * dx + dy * dy);
+    return dist;
+}
 kmint::math::vector2d forces::normalize(const kmint::math::vector2d &v) {
     float m = sqrt(v.x() * v.x() + v.y() * v.y());
     kmint::math::vector2d temp;

@@ -6,6 +6,9 @@
 
 #include "kmint/math/vector2d.hpp"
 #include "kmint/play.hpp"
+
+class Population;
+
 namespace kmint::ufo {
 
 class human : public kmint::play::free_roaming_actor {
@@ -41,15 +44,17 @@ class human : public kmint::play::free_roaming_actor {
 
     math::vector2d acceleration{0, 0};
     math::vector2d velocity{0, 0};
+
+    Population *population = nullptr;
    private:
 
-    float CohesionWeight;    //    0 tot 1
-    float SeparationWeight;  //    0 tot 1
-    float AlignmentWeight;   //	   0 tot 1
-    float RedTankWeight;     //   -1 tot 1;
-    float GreenTankWeight;   //   -1 tot 1;
-    float UfoWeight;         //   -1 tot 1;
-    float DoorWeight;        //   -1 tot 1;
+    //float CohesionWeight;    //    0 tot 1
+    //float SeparationWeight;  //    0 tot 1
+    //float AlignmentWeight;   //	   0 tot 1
+    //float RedTankWeight;     //   -1 tot 1;
+    //float GreenTankWeight;   //   -1 tot 1;
+    //float UfoWeight;         //   -1 tot 1;
+    //float DoorWeight;        //   -1 tot 1;
 
     void Forces();
     void Move();

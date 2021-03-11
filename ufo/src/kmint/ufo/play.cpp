@@ -16,6 +16,7 @@
 #include "kmint/ufo/tank.hpp"
 #include "kmint/ufo/pickup.hpp"
 #include "kmint/ui.hpp"
+#include "kmint/force_driven_entities/population.hpp"
 
 namespace kmint::ufo {
 
@@ -50,6 +51,17 @@ int play() {
         h.other_humans = &humans;
         h.id = id;
         id++;
+    }
+
+    std::vector<kmint::ufo::human *> hums;
+    for (int i = 0; i < s.actors_.size(); i++) {
+        ufo::human *hum = dynamic_cast<ufo::human *>(s.actors_[i].get());
+
+        if (hum != nullptr) {
+        
+            hums.push_back(hum);
+        }
+
     }
 
     s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'),
@@ -94,12 +106,16 @@ int play() {
      ufos.push_back(s.actors_[113].get());
      ufos.push_back(s.actors_[114].get());
 
+     Population population;
+     population.setPopulation(hums);
+
      for (auto &actor : s) {
          ufo::human *human = dynamic_cast<ufo::human *>(&actor);
          if (human != nullptr) {
              human->redtank = tank1;
              human->greentank = tank2;
              human->ufos = ufos;
+             human->population = &population;
          }
      }
     // Maak een event_source aan (hieruit kun je alle events halen, zoals
@@ -113,6 +129,8 @@ int play() {
         // loop controls is een object met eigenschappen die je kunt gebruiken
         // om de main-loop aan te sturen.
 
+
+        population.Update();
         for (ui::events::event &e : event_source) {
             // event heeft een methode handle_quit die controleert
             // of de gebruiker de applicatie wilt sluiten, en zo ja
