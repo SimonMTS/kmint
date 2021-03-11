@@ -101,16 +101,14 @@ void tank::SenseUFO() {
         Flee();
     } else if (number >= 100 - FleeChance - EMPChance && EMPCount > 0) {
         GoToEMP();
-    } /*
-    } else if (number <= ShieldChance) {
+    } else if (number <= ShieldChance && ShieldCount > 0) {
         GoToShield();
-    }*/
+    }
 }
 
 
 void tank::Flee() {
     state = flee;
-    //std::cout << "Flee" << fleecount << std::endl;
     play::actor*ToFleeFrom = GetNearestUFO(ufos);
 
     if (fleecount < 10) {
@@ -123,81 +121,74 @@ void tank::Flee() {
 };
 void tank::GoToEMP(){
     state = gotoEMP;
-    //std::cout << "GoToEMP" << std::endl;
 
-    if (target == nullptr) {
-        GetNearestPickup(pickup_type::EMP);
-        this->path = student::a_star::find_path(
-            node(), target->node, graph,
-            ufo::student::heuristics::euclidean_distance);
+    GoTo(pickup_type::EMP);
 
-       // std::cout << "MYLOC " << this->node().node_id() << " ";
-        for (int i = 0; i < path.size(); i++) {
-           // std::cout << path[i].get().node_id() << " -> ";
-        }
-
-        //std::cout << std::endl << "Edges " << std::endl;
-        for (int i = 0; i < this->node().num_edges(); i++) {
-            //std::cout << node()[i].to().node_id() << std::endl;
-        }
-    }
-
-    
-    //std::cout << "Path " << path.size() << std::endl;
-
-    for (int i = 0; i < this->node().num_edges(); i++) {
-       // std::cout << node()[i].to().node_id() << " "
-        //          << this->path[this->path.size() - 1].get().node_id()
-        //          << std::endl;
-       if (node()[i].to().node_id() ==
-            this->path[this->path.size() - 1].get().node_id()) {
-            this->path.pop_back();
-
-          //  std::cout << "Made next edge " << node()[i].to().node_id()
-          //            << std::endl;
-            next_edge = &node()[i];
-        }
-    }
-
-    if (this->path.size() < 2) {
+    if (this->path.size() == 0 && target != nullptr) {
         target->remove();
         state = wander;
         EMP = true;
         EMPCount--;
         target = nullptr;
+        std::cout << "Picked up EMP" << std::endl;
+
         return;
     }
-    //std::cout << std::endl;
 };
 void tank::GoToShield(){
     state = gotoShield;
-    std::cout << "GoToShield" << std::endl;
+    
+    GoTo(pickup_type::SHIELD);
 
-    if (target == nullptr) GetNearestPickup(pickup_type::SHIELD);
+    if (this->path.size() == 0 && target != nullptr) {
+        target->remove();
+        state = wander;
+        LaserShield = true;
+        ShieldCount--;
+        target = nullptr;
+
+        std::cout << "Picked up shield" << std::endl;
+        return;
+    }
+
 };
 
+void tank::GoTo(pickup_type type) {
+    if (target == nullptr) {
+        GetNearestPickup(type);
+    }
+
+    for (int i = 0; i < this->node().num_edges(); i++) {
+        if (node()[i].to().node_id() ==
+            this->path[this->path.size() - 1].get().node_id()) {
+            this->path.pop_back();
+            next_edge = &node()[i];
+            return;
+        }
+    }
+}
+
 void tank::GetNearestPickup(pickup_type type) {
-      std::priority_queue<std::pair<play::actor *, int>,
-                      std::vector<std::pair<play::actor *, int>>,
-                      std::function<bool(std::pair<play::actor *, int>,
-                                         std::pair<play::actor *, int>)>>
-      queue(cmpp);
+      std::vector<std::reference_wrapper<map_node>> shortestpath;
 
       for (int i = 0; i < pickups.size(); i++) {
-          if (pickups[i]->type == type && !pickups[i]->removed()) {
-              float distance = std::sqrt(
-                  std::pow(node().location().x() - pickups[i]->location().x(),
-                           2) +
-                  std::pow(node().location().y() - pickups[i]->location().y(),
-                           2));
-              queue.push(std::make_pair(pickups[i], distance));
+          if (pickups[i]->type != type) continue;
+          if (pickups[i]->removed()) continue;
+          if (&pickups[i]->node == nullptr) continue;
+
+          std::vector<std::reference_wrapper<map_node>> currpath;
+        
+          currpath = ufo::student::a_star::find_path(
+              node(), pickups[i]->node, this->graph,
+              ufo::student::heuristics::euclidean_distance);
+
+          if (shortestpath.size() == 0 ||
+              currpath.size() < shortestpath.size()) {
+              shortestpath = currpath;
+              target = pickups[i];
           }
       }
-
-      if (!queue.empty()) {
-          ufo::Pickup *pickup = dynamic_cast<ufo::Pickup *>(queue.top().first);
-          target = pickup;
-      }
+      path = shortestpath;
 }
 
 
@@ -226,18 +217,10 @@ void tank::Move() {
         last_edge = next_edge;
     }
 
-     weight--;
+    weight--;
     if (weight == 0) {
-        // std::cout << "Moving to " << next_edge->to().node_id() << " " << state << std::endl;
         node(this->next_edge->to());
-    } //else {
-     //   weight--;
-   // }
-    std::cout << pickups.size() << std::endl;
-    for (int i = 0; i < pickups.size(); i++) {
-        std::cout << pickups[i]->removed() << std::endl;
-    }
-    std::cout << std::endl;
+    } 
 }
 
 void tank::MoveTo(const int nodeid) {
@@ -302,11 +285,11 @@ void tank::SetSprite() {
 }
 
 bool tank::UFOAttack() {
-    //std::cout << "Ufoattack " << damage << std::endl;
     attackable = false;
     if (EMP) {
+        std::cout << "Ufoattack EMP" << std::endl;
         EMP = false;
-        return false;
+        return true;
     }
 
     if (LaserShield) {
@@ -316,6 +299,7 @@ bool tank::UFOAttack() {
     }
 
     damage += 50;
+
     return false;
 };
 } // namespace kmint::ufo

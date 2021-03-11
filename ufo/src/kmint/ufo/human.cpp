@@ -29,18 +29,18 @@ human::human(map::map_graph &g)
 void human::act(delta_time dt) {
     t_since_move_ += dt;
     if (to_seconds(t_since_move_) >= 0.1) {
-       // math::vector2d heading = this->heading;
+        //math::vector2d heading = this->heading;
         // todo use a proper merging method here
-       // heading += ::student::forces::stay_on_map(*this) * 10;
-       // heading += ::student::forces::wander(*this);
-       // heading += ::student::forces::separation(*this);
-       // heading += ::student::forces::alignment(*this);
-       // heading += ::student::forces::cohesion(*this);
+      /*  heading += ::student::forces::stay_on_map(*this) * 10;
+        heading += ::student::forces::wander(*this);
+        heading += ::student::forces::separation(*this);
+        heading += ::student::forces::alignment(*this);
+        heading += ::student::forces::cohesion(*this);
 
-       // heading = ::student::forces::normalize(heading);
-        //this->heading = heading;
+        heading = ::student::forces::normalize(heading);
+        this->heading = heading;
 
-        //location(location() + this->heading);
+        location(location() + this->heading);*/
         t_since_move_ = from_seconds(0);
     }
 }

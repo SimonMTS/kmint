@@ -74,32 +74,38 @@ saucer::saucer(saucer_type type)
 }
 
 void saucer::act(delta_time dt) {
+    t_since_move_ += dt;
 
-    switch (state) { 
-        case wander:
-            Wander(dt);
-            break;
-        case hunthuman:
-            HuntHuman(dt);
-            break;
-        case hunttank:
-            HuntTank(dt);
-            break;
-        case nomove:
-            NoMove(dt);
-            break;
-    }
+    if (to_seconds(t_since_move_) >= 0.1) {
 
-    if (state != nomove) {
-        Edges();
-        Move();
-        if (state == hunthuman) {
-            AttackHuman();
+        switch (state) { 
+            case wander:
+                Wander(dt);
+                break;
+            case hunthuman:
+                HuntHuman(dt);
+                break;
+            case hunttank:
+                HuntTank(dt);
+                break;
+            case nomove:
+                NoMove(dt);
+                break;
         }
 
-        if (state == hunttank) {
-            AttackTank();
+        if (state != nomove) {
+            Edges();
+            Move();
+            if (state == hunthuman) {
+                AttackHuman();
+            }
+
+            if (state == hunttank) {
+                AttackTank();
+            }
         }
+
+          t_since_move_ = from_seconds(0);
     }
     //location(location() + v_ * to_seconds(dt));
     //for (std::size_t ix{}; ix < num_colliding_actors(); ++ix) {

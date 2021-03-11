@@ -77,6 +77,9 @@ kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
     if (human.removed()) return {0, 0};
 
     for (auto &other_human : *human.other_humans) {
+        if (&other_human == nullptr) {
+            std::cout << "other human is nullptr" << std::endl;
+        }
         if (other_human.get().removed()) continue;
         if (other_human.get().location() == human.location()) continue;
 

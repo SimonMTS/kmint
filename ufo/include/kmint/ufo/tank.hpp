@@ -46,6 +46,7 @@ public:
   void Flee();
   void GoToEMP();
   void GoToShield();
+  void GoTo(pickup_type type);
   void Move();
   void MoveTo(const int nodeid);
   void SenseUFO();
