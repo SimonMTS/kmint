@@ -138,7 +138,7 @@ void tank::GoToEMP(){
         target->available = false;
         target->remove();
         state = wander;
-        EMP = true;
+        LaserShieldCount++;
         target = nullptr;
         std::cout << "Picked up EMP" << std::endl;
 
@@ -154,7 +154,7 @@ void tank::GoToShield(){
         target->available = false;
         target->remove();
         state = wander;
-        LaserShield = true;
+        LaserShieldCount++;
         target = nullptr;
 
         std::cout << "Picked up shield" << std::endl;
@@ -333,14 +333,14 @@ void tank::SetSprite() {
 
 bool tank::UFOAttack() {
     attackable = false;
-    if (EMP) {
+    if (EMPCount > 0) {
         std::cout << "Ufoattack EMP" << std::endl;
-        EMP = false;
+        EMPCount--;
         return true;
     }
 
-    if (LaserShield) {
-        LaserShield = false;
+    if (LaserShieldCount > 0) {
+        LaserShieldCount--;
         damage += 20;
         return false;
     }

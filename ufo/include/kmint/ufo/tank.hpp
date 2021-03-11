@@ -69,9 +69,9 @@ public:
   map::map_edge* last_edge = nullptr;
   std::vector<play::actor *> ufos;
 
-  bool EMP = false;
-  bool LaserShield = false;
-  int damage = 80;
+  int EMPCount = 0;
+  int LaserShieldCount = 0;
+  int damage = 0;
 
   play::image_drawable drawable_;
   delta_time t_since_move_{};
