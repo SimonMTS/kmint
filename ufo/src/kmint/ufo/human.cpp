@@ -77,7 +77,9 @@ void human::Forces() {
     math::vector2d ufo3 = ::student::forces::attacted_to(*this, *ufos[3], true);
 
 
-
+    s = s * SeparationWeight;
+    a = a * AlignmentWeight;
+    c = c * CohesionWeight;
     greent = greent * GreenTankWeight;
     redt = redt * RedTankWeight;
     ufo0 = ufo0 * UfoWeight;
@@ -85,7 +87,7 @@ void human::Forces() {
     ufo2 = ufo2 * UfoWeight;
     ufo3 = ufo3 * UfoWeight;
 
-    acceleration +=  greent + redt + ufo0 + ufo1 + ufo2 + ufo3;
+    acceleration += s + a + c + greent + redt + ufo0 + ufo1 + ufo2 + ufo3;
 }
 
 }  // namespace kmint::ufo

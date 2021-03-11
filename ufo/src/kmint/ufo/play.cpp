@@ -141,6 +141,36 @@ int play() {
                 [&ctl](ui::events::quit_event qe) { ctl.quit = true; });
             e.handle_key_up([&](auto ke) {
                 switch (ke.key) {
+                    case ui::events::key::one:
+                        population.increaseAlignment();
+                        break;
+                    case ui::events::key::two:
+                        population.decreaseAlignment();
+                        break;
+                    case ui::events::key::three:
+                        population.increaseCohesion();
+                        break;
+                    case ui::events::key::four:
+                        population.decreaseCohesion();
+                        break;
+                    case ui::events::key::five:
+                        population.increaseSeparation();
+                        break;
+                    case ui::events::key::six:
+                        population.decreaseSeparation();
+                        break;
+                    case ui::events::key::seven:
+                        population.increaseTank();
+                        break;
+                    case ui::events::key::eight:
+                        population.decreaseTank();
+                        break;
+                    case ui::events::key::nine:
+                        population.increaseUfo();
+                        break;
+                    case ui::events::key::zero:
+                        population.decreaseUfo();
+                        break;
                     case ui::events::key::p:
                         ctl.pause = !ctl.pause;
                         break;

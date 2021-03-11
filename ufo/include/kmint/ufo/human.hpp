@@ -46,15 +46,17 @@ class human : public kmint::play::free_roaming_actor {
     math::vector2d velocity{0, 0};
 
     Population *population = nullptr;
-   private:
 
-    float CohesionWeight;    //    0 tot 1
+        float CohesionWeight;    //    0 tot 1
     float SeparationWeight;  //    0 tot 1
     float AlignmentWeight;   //	   0 tot 1
     float RedTankWeight;     //   -1 tot 1;
     float GreenTankWeight;   //   -1 tot 1;
     float UfoWeight;         //   -1 tot 1;
     float DoorWeight;        //   -1 tot 1;
+   private:
+
+
 
     void Forces();
     void Move();
