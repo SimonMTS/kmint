@@ -37,7 +37,7 @@ kmint::math::vector2d forces::cohesion(const kmint::ufo::human &human) {
 
         float d = distance(human, other_human);
 
-        if ((d > 0) && (d < human.cohesiondist)) {
+        if ((d > 0) && (d < human.DesiredCohesionDistance)) {
             sum += other_human.get().location();
             count++;
         }
@@ -65,7 +65,7 @@ kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
 
         float d = distance(human, other_human);
 
-        if ((d > 0) && (d < human.separationdist)) {
+        if ((d > 0) && (d < human.DesiredSeparationDistance)) {
             kmint::math::vector2d diff = kmint::math::vector2d{0, 0};
             diff = human.location() - other_human.get().location();
             diff = normalize(diff);
@@ -105,7 +105,7 @@ kmint::math::vector2d forces::alignment(const kmint::ufo::human &human) {
 
         float d = distance(human, other_human);
 
-        if ((d > 0) && (d < human.alignmentdist)) {
+        if ((d > 0) && (d < human.DesiredAlignmentDistance)) {
             sum += other_human.get().velocity;
             count++;
         }
@@ -125,6 +125,46 @@ kmint::math::vector2d forces::alignment(const kmint::ufo::human &human) {
         return kmint::math::vector2d{0, 0};
     }
 }
+
+kmint::math::vector2d forces::attacted_to_tank(const kmint::ufo::human& human, const kmint::play::actor& actor, bool red) {
+    kmint::math::vector2d steer{0, 0};
+    int count = 0;
+
+    float d = distance(human, actor);
+
+    int desireddistance = 0;
+
+    if (red) {
+        desireddistance = human.DesiredRedTankDistance;
+    } else {
+        desireddistance = human.DesiredGreenTankDistance;
+    }
+
+    if ((d > 0) && (d < desireddistance)) {
+        kmint::math::vector2d diff = kmint::math::vector2d{0, 0};
+        diff = human.location() - actor.location();
+        diff *= 900;
+        steer += diff;
+        count++;
+    }
+
+    if (count > 0) {
+        steer = steer / float(count);
+    }
+
+    auto steermag = sqrt(steer.x() * steer.x() + steer.y() * steer.y());
+
+    if (steermag > 0) {
+        steer = normalize(steer);
+        steer *= human.maxSpeed;
+        steer -= human.velocity;
+        steer = limit(steer, human.maxForce);
+        steer = steer * 3;
+    }
+
+    return steer * -1;
+}
+
 
 kmint::math::vector2d forces::limit(const kmint::math::vector2d &v, float maxforce) {
     kmint::math::vector2d temp = v;

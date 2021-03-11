@@ -32,11 +32,12 @@ class human : public kmint::play::free_roaming_actor {
     const float maxSpeed = 2.6;
     const float maxForce = 0.7;
 
-    const float separationboatdist = 100;
-    const float separationdist = 100;
-    const float alignmentdist = 100;
-    const float cohesiondist = 100;
-    const float separationpredatordist = 200;
+    const float DesiredGreenTankDistance = 100;
+    const float DesiredRedTankDistance = 100;
+    const float DesiredSeparationDistance = 100;
+    const float DesiredAlignmentDistance= 100;
+    const float DesiredCohesionDistance = 100;
+    const float DesiredUfoDistance = 200;
 
     math::vector2d acceleration{0, 0};
     math::vector2d velocity{0, 0};
