@@ -42,7 +42,9 @@ public:
  private:
 
   enum State { wander, flee, gotoEMP, gotoShield, repair};
+
   State state = wander;
+
   void Wander();
   void Flee();
   void GoToEMP();
@@ -83,6 +85,11 @@ public:
   ufo::Pickup* target = nullptr;
   std::vector<std::reference_wrapper<map_node>> path;
 
+
+  // Kansberekenen
+  State lastchoice = wander;
+  std::vector<int> DamageHistory;
+  void UpdateChances();
   
   // Todo dit op een andere plek zetten
    int RandomInt(float Min, float Max) {

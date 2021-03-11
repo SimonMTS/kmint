@@ -36,7 +36,6 @@ bool cmpp(std::pair<play::actor*, int> a, std::pair<play::actor*, int> b) {
 }
 
 void tank::act(delta_time dt) {
-    //std::cout << Andre->location() << std::endl;
 
 	t_since_move_ += dt;
 	if (to_seconds(t_since_move_) >= 1) {
@@ -70,14 +69,12 @@ void tank::act(delta_time dt) {
             Move();
             RoadkillOrSave();
             SetSprite();
-
-            AvailablePickup(pickup_type::EMP);
             t_since_move_ = from_seconds(0);
 
 	}
 
         if (!attackable) t_since_attack_ += dt;
-        if (to_seconds(t_since_attack_) > 2) {
+        if (to_seconds(t_since_attack_) > 20) {
             attackable = true;
             t_since_attack_ = from_seconds(0);
         }
@@ -109,10 +106,13 @@ void tank::SenseUFO() {
     int number = RandomInt(0, 100);
     if (number >= 100 - FleeChance) {
         Flee();
+        lastchoice = flee;
     } else if (number >= 100 - FleeChance - EMPChance && AvailablePickup(pickup_type::EMP)) {
         GoToEMP();
+        lastchoice = gotoEMP;
     } else if (number <= ShieldChance && AvailablePickup(pickup_type::SHIELD)) {
         GoToShield();
+        lastchoice = gotoShield;
     }
 }
 
@@ -336,19 +336,80 @@ bool tank::UFOAttack() {
     if (EMPCount > 0) {
         std::cout << "Ufoattack EMP" << std::endl;
         EMPCount--;
+        DamageHistory.push_back(0);
+        UpdateChances();
         return true;
     }
 
     if (LaserShieldCount > 0) {
         LaserShieldCount--;
         damage += 20;
+        DamageHistory.push_back(20);
+        UpdateChances();
+
         return false;
     }
 
     damage += 50;
+    DamageHistory.push_back(50);
+    UpdateChances();
 
     return false;
 };
+
+void tank::UpdateChances() {
+    // Kansen zijn nu per tank, ik weet niet wat ze willen
+    // Na een tijdje zijn de EMP's en Shields op en zal de Fleechance altijd omhoog gaan...
+
+    int lastdamage = DamageHistory.size() - 1;
+    int avgdamage = 0;
+
+    for (int i = 0; i < DamageHistory.size(); i++) {
+        avgdamage += DamageHistory[i];
+    }
+    avgdamage /= DamageHistory.size();
+
+    if (lastdamage < avgdamage) {
+        if (lastchoice == State::flee && FleeChance <= 98) {
+            FleeChance += 2;
+            EMPChance--;
+            ShieldChance--;
+        }
+
+        if (lastchoice == State::gotoEMP && EMPChance <= 98) {
+            FleeChance --;
+            EMPChance += 2;
+            ShieldChance--;
+        }
+
+        if (lastchoice == State::gotoShield && ShieldChance <= 98) {
+            FleeChance --;
+            EMPChance--;
+            ShieldChance +=2;
+        }
+    } else if (lastdamage > avgdamage) {
+        if (lastchoice == State::flee && FleeChance >= 2) {
+            FleeChance -= 2;
+            EMPChance ++;
+            ShieldChance ++;
+        }
+
+        if (lastchoice == State::gotoEMP && EMPChance >= 2) {
+            FleeChance ++;
+            EMPChance -= 2;
+            ShieldChance ++;
+        }
+
+        if (lastchoice == State::gotoShield && ShieldChance >= 2) {
+            FleeChance ++;
+            EMPChance ++;
+            ShieldChance -= 2;
+        }
+    }
+
+    std::cout << "LASTCHOICE " << lastchoice << "AVG" << avgdamage << " " << lastdamage << " F " << FleeChance
+              << " E " << EMPChance << " S " << ShieldChance << std::endl;
+}
 
 void tank::RoadkillOrSave() {
     for (auto i = begin_perceived(); i != end_perceived(); ++i) {
