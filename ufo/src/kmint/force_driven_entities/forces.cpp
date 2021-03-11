@@ -69,12 +69,11 @@ kmint::math::vector2d forces::cohesion(const kmint::ufo::human &human) {
     }
 }
 
-// todo this is just a tmp implementation, should be redone properly
 kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
-    kmint::math::vector2d sum = kmint::math::vector2d{0, 0};
+    kmint::math::vector2d steer {0, 0};
     int count = 0;
 
-    if (human.removed()) return {0, 0};
+    if (human.removed()) return steer;
 
     for (auto &other_human : *human.other_humans) {
         if (&other_human == nullptr) {
@@ -83,27 +82,31 @@ kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
         if (other_human.get().removed()) continue;
         if (other_human.get().location() == human.location()) continue;
 
-        int dist;
-        {
-            int pxdist = 16;
-            int x = other_human.get().location().x() - human.location().x();
-            int y = other_human.get().location().y() - human.location().y();
-            int res = sqrt(pow(x, 2) + pow(y, 2));  // / pxdist;
-            dist = res;
-        }
+        float d = distance(human, other_human);
 
-        if (dist < 15) {
-            sum -= (other_human.get().location() - human.location()) * 2;
+        if ((d > 0) && (d < human.separationdist)) {
+            kmint::math::vector2d diff = kmint::math::vector2d{0, 0};
+            diff = human.location() - other_human.get().location();
+            diff = Normalize(diff);
+            diff = diff / d;
+            steer += diff;
             count++;
         }
     }
 
     if (count > 0) {
-        sum /= count;
-        return sum;
-    } else {
-        return {0, 0};
+        steer = steer / float(count);
     }
+
+    auto steermag = sqrt(steer.x() * steer.x() + steer.y() * steer.y());
+
+    if (steermag > 0) {
+        steer = Normalize(steer);
+        steer *= human.maxSpeed;
+        steer -= human.velocity;
+        steer = limit(steer, human.maxForce);
+    }
+    return steer;
 }
 
 // todo
@@ -111,14 +114,33 @@ kmint::math::vector2d forces::alignment(const kmint::ufo::human &human) {
     return {0, 0};
 }
 
-kmint::math::vector2d forces::limit(const kmint::math::vector2d &v) {
+kmint::math::vector2d forces::limit(const kmint::math::vector2d &v, float maxforce) {
     kmint::math::vector2d temp = v;
-    int maxforce = 1;
     float m = sqrt(v.x() * v.x() + v.y() * v.y());
     if (m > maxforce) {
         temp = {v.x() / m, v.y() / m};
     }
     return temp;
 };
+
+float forces::distance(const kmint::ufo::human& human,
+    const kmint::play::actor& actor) {
+
+    float dx = human.location().x() - actor.location().x();
+    float dy = human.location().y() - actor.location().y();
+    float dist = sqrt(dx * dx + dy * dy);
+    return dist;
+}
+
+kmint::math::vector2d forces::Normalize(kmint::math::vector2d v) {
+    float m = sqrt(v.x() * v.x() + v.y() * v.y());
+    kmint::math::vector2d temp;
+    if (m > 0) {
+        temp = kmint::math::vector2d{v.x() / m, v.y() / m};
+    } else {
+        temp = kmint::math::vector2d{v.x(), v.y()};
+    }
+    return temp;
+}
 
 }  // namespace student

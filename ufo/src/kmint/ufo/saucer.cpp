@@ -139,11 +139,15 @@ bool saucer::TankNearby() {
 
 bool saucer::HumanNearby() {
     for (auto it = begin_perceived(); it != end_perceived(); ++it) {
-        if (it->EntityType == "human")
-            // Veilige mensen niet laten meetellen
-            //   if (!it->isSafe) {
+        if (it->EntityType == "human") {
+            play::actor &human = *it;
+
+            ufo::human *human1 = dynamic_cast<ufo::human *>(&human);
+            if (human1->isSafeTank) continue;
+         
             return true;
-        // }
+           
+        }
     }
     return false;
 }
@@ -246,7 +250,7 @@ void saucer::AttackHuman() {
 
         float distance = std::sqrt(std::pow(location().x() - human.location().x(), 2) + std::pow(location().y() - human.location().y(), 2));
 
-        if (distance < 20 && !human1->isSafe) {
+        if (distance < 20 && !human1->isSafeTank) {
             human.remove();
         }
         
@@ -319,7 +323,7 @@ void saucer::GetNearest(std::string type) {
 
         if (i->EntityType == "human") {
             ufo::human *human = dynamic_cast<ufo::human *>(&actor);
-            if (human->isSafe) continue;
+            if (human->isSafeTank) continue;
         }
             float distance = std::sqrt(std::pow(location().x() - actor.location().x(), 2) + std::pow(location().y() - actor.location().y(), 2));
             queue.push(std::make_pair(&actor, distance));

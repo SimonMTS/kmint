@@ -6,7 +6,6 @@
 
 #include "kmint/math/vector2d.hpp"
 #include "kmint/play.hpp"
-
 namespace kmint::ufo {
 
 class human : public kmint::play::free_roaming_actor {
@@ -22,11 +21,29 @@ class human : public kmint::play::free_roaming_actor {
     map::map_graph &graph_;
     math::vector2d heading{1, 0};
     std::vector<std::reference_wrapper<ufo::human>> *other_humans;
-    bool isSafe = false;
+    bool isSafeTank = false;
 
-    play::actor *SafeLocation = nullptr;
 
+    //std::vector<ufo::door> doors;
+    std::vector<play::actor*> ufos;
+    play::actor *greentank;
+    play::actor *redtank;
+
+    const float maxSpeed = 2.6;
+    const float maxForce = 0.7;
+
+    const float separationboatdist = 100;
+    const float separationdist = 100;
+    const float alignmentdist = 100;
+    const float cohesiondist = 100;
+    const float separationpredatordist = 200;
+
+    math::vector2d acceleration{0, 0};
+    math::vector2d velocity{0, 0};
    private:
+
+    void Forces();
+    void Move();
     play::image_drawable drawable_;
     delta_time t_since_move_{};
 };

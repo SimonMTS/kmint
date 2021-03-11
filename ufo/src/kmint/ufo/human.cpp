@@ -29,24 +29,51 @@ human::human(map::map_graph &g)
 void human::act(delta_time dt) {
     t_since_move_ += dt;
     if (to_seconds(t_since_move_) >= 0.1) {
-        math::vector2d heading = this->heading;
-         //todo use a proper merging method here
-       //heading += ::student::forces::stay_on_map(*this) * 10;
-      /*  heading += ::student::forces::wander(*this);
-        heading += ::student::forces::separation(*this);
-        heading += ::student::forces::alignment(*this);
-        heading += ::student::forces::cohesion(*this);
 
-        heading = ::student::forces::normalize(heading);
-        this->heading = heading;
+        Forces();
+        Move();
 
-        location(location() + this->heading);*/
-
-        if (this->SafeLocation != nullptr) {
-            location(this->SafeLocation->location());
+        if (this->isSafeTank) {
+            location(greentank->location());
         }
+
+        // if this->isSafeBuilding
         t_since_move_ = from_seconds(0);
     }
+}
+void human::Move() {
+    if (!isSafeTank) {
+        acceleration *= 0.4;
+
+        velocity += acceleration;
+
+        velocity = ::student::forces::limit(velocity, maxForce);
+
+        math::vector2d nextpos = location() + velocity;
+        location(nextpos);
+        acceleration *= 0;
+    } else {
+        location(greentank->location());
+
+    }
+}
+void human::Forces() {
+
+    float d = ::student::forces::distance(*this, *greentank);
+    math::vector2d s = ::student::forces::separation(*this);
+    math::vector2d a = ::student::forces::alignment(*this);
+    math::vector2d c = ::student::forces::cohesion(*this);
+    //math::vector2d b = BoatSeparation();
+   // math::vector2d p = PredatorSeparation();
+
+    //s = s * SeparationWeight;
+    //a = a * AlignmentWeight;
+    //c = c * CohesionWeight;
+    //b = b * BoatWeight;
+    //p = p * PredatorWeight;
+
+    acceleration += s;
+   // acceleration += s + a + c;
 }
 
 }  // namespace kmint::ufo

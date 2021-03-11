@@ -79,11 +79,26 @@ int play() {
      tank1->pickups = pickups;
      tank2->pickups = pickups;
 
+     std::vector<play::actor *> ufos;
+
      s.build_actor<ufo::saucer>(saucer_type::blue);
      s.build_actor<ufo::saucer>(saucer_type::green);
      s.build_actor<ufo::saucer>(saucer_type::beige);
      s.build_actor<ufo::saucer>(saucer_type::yellow);
 
+     ufos.push_back(s.actors_[111].get());
+     ufos.push_back(s.actors_[112].get());
+     ufos.push_back(s.actors_[113].get());
+     ufos.push_back(s.actors_[114].get());
+
+     for (auto &actor : s) {
+         ufo::human *human = dynamic_cast<ufo::human *>(&actor);
+         if (human != nullptr) {
+             human->redtank = tank1;
+             human->greentank = tank2;
+             human->ufos = ufos;
+         }
+     }
     // Maak een event_source aan (hieruit kun je alle events halen, zoals
     // toetsaanslagen)
     ui::events::event_source event_source{};

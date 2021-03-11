@@ -18,8 +18,12 @@ class forces {
     static kmint::math::vector2d alignment(const kmint::ufo::human &human);
     static kmint::math::vector2d cohesion(const kmint::ufo::human &human);
     static kmint::math::vector2d normalize(const kmint::math::vector2d &vector);
-    static kmint::math::vector2d limit(const kmint::math::vector2d &vector);
+    static kmint::math::vector2d limit(const kmint::math::vector2d &vector, float maxforce);
+    static float distance(const kmint::ufo::human &human, const kmint::play::actor &actor);
+
    private:
+    static kmint::math::vector2d Normalize(kmint::math::vector2d v);
+
     static std::default_random_engine generator;
     static std::uniform_real_distribution<float> distribution;
 };

@@ -140,7 +140,7 @@ void tank::GoToEMP(){
         state = wander;
         LaserShieldCount++;
         target = nullptr;
-        std::cout << "Picked up EMP" << std::endl;
+        //std::cout << "Picked up EMP" << std::endl;
 
         return;
     }
@@ -157,7 +157,7 @@ void tank::GoToShield(){
         LaserShieldCount++;
         target = nullptr;
 
-        std::cout << "Picked up shield" << std::endl;
+        //std::cout << "Picked up shield" << std::endl;
         return;
     }
 
@@ -165,7 +165,7 @@ void tank::GoToShield(){
 
 void tank::Repair() {
 
-    std::cout << "Repair" << std::endl;
+    //std::cout << "Repair" << std::endl;
     state = repair;
 
      if (this->node().node_id() == Andre->node().node_id()) {
@@ -184,7 +184,7 @@ void tank::GoToRepair() {
         ufo::student::heuristics::euclidean_distance);
 
         if (path.size() == 0) {
-        std::cout << "Already there";
+        //std::cout << "Already there";
         return;
     }
 
@@ -203,7 +203,7 @@ void tank::GoTo(pickup_type type) {
         GetNearestPickup(type);
     }
     if (path.size() == 0) {
-        std::cout << "Already there";
+        //std::cout << "Already there";
         return;
     }
     for (int i = 0; i < this->node().num_edges(); i++) {
@@ -334,7 +334,7 @@ void tank::SetSprite() {
 bool tank::UFOAttack() {
     attackable = false;
     if (EMPCount > 0) {
-        std::cout << "Ufoattack EMP" << std::endl;
+       // std::cout << "Ufoattack EMP" << std::endl;
         EMPCount--;
         DamageHistory.push_back(0);
         UpdateChances();
@@ -359,7 +359,7 @@ bool tank::UFOAttack() {
 
 void tank::UpdateChances() {
     // Kansen zijn nu per tank, ik weet niet wat ze willen
-    // Na een tijdje zijn de EMP's en Shields op en zal de Fleechance altijd omhoog gaan...
+    // Na een tijdje zijn de EMP's en Shields op en zal de Fleechance  vgm altijd omhoog gaan...
 
     int lastdamage = DamageHistory.size() - 1;
     int avgdamage = 0;
@@ -370,37 +370,37 @@ void tank::UpdateChances() {
     avgdamage /= DamageHistory.size();
 
     if (lastdamage < avgdamage) {
-        if (lastchoice == State::flee && FleeChance <= 98) {
+        if (lastchoice == State::flee && EMPChance > 0 && ShieldChance > 0) {
             FleeChance += 2;
             EMPChance--;
             ShieldChance--;
         }
 
-        if (lastchoice == State::gotoEMP && EMPChance <= 98) {
+        if (lastchoice == State::gotoEMP && FleeChance > 0 && ShieldChance > 0) {
             FleeChance --;
             EMPChance += 2;
             ShieldChance--;
         }
 
-        if (lastchoice == State::gotoShield && ShieldChance <= 98) {
+        if (lastchoice == State::gotoShield && FleeChance > 0 && EMPChance > 0) {
             FleeChance --;
             EMPChance--;
             ShieldChance +=2;
         }
     } else if (lastdamage > avgdamage) {
-        if (lastchoice == State::flee && FleeChance >= 2) {
+        if (lastchoice == State::flee && EMPChance < 100 && ShieldChance < 100) {
             FleeChance -= 2;
             EMPChance ++;
             ShieldChance ++;
         }
 
-        if (lastchoice == State::gotoEMP && EMPChance >= 2) {
+        if (lastchoice == State::gotoEMP && FleeChance < 100 && ShieldChance < 100) {
             FleeChance ++;
             EMPChance -= 2;
             ShieldChance ++;
         }
 
-        if (lastchoice == State::gotoShield && ShieldChance >= 2) {
+        if (lastchoice == State::gotoShield && FleeChance < 100 && EMPChance < 100) {
             FleeChance ++;
             EMPChance ++;
             ShieldChance -= 2;
@@ -427,8 +427,7 @@ void tank::RoadkillOrSave() {
         if (this->type_ == tank_type::red ) {  // Roadkill
             human->remove();
         } else if (this->type_ == tank_type::green) {
-            human->isSafe = true;
-            human->SafeLocation = this;
+            human->isSafeTank = true;
         }
             
 
