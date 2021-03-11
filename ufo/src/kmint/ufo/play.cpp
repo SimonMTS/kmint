@@ -52,16 +52,15 @@ int play() {
     s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'),
                              tank_type::red);
 
-   // s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'),
-                            // tank_type::green);
+    s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'), tank_type::green);
     s.build_actor<ufo::andre>(graph, ufo::random_node_of_kind(m, 'R'));
 
      ufo::tank *tank1 = dynamic_cast<ufo::tank*>(s.actors_[102].get());
-     //ufo::tank *tank2 = dynamic_cast<ufo::tank*>(s.actors_[103].get());
-     ufo::andre *andre = dynamic_cast<ufo::andre*>(s.actors_[103].get());
+     ufo::tank *tank2 = dynamic_cast<ufo::tank*>(s.actors_[103].get());
+     ufo::andre *andre = dynamic_cast<ufo::andre*>(s.actors_[104].get());
 
      tank1->Andre = andre;
-    // tank2->Andre = andre;
+     tank2->Andre = andre;
 
      std::vector<ufo::Pickup *> pickups;
 
@@ -69,8 +68,8 @@ int play() {
          s.build_actor<ufo::Pickup>(graph, ufo::random_node_of_kind(m, 'R'), ufo::pickup_type::SHIELD);
          s.build_actor<ufo::Pickup>(graph, ufo::random_node_of_kind(m, 'R'), ufo::pickup_type::EMP);
 
-         ufo::Pickup *pkup1 = dynamic_cast<ufo::Pickup *>(s.actors_[104 + i * 2].get());
-         ufo::Pickup *pkup2 = dynamic_cast<ufo::Pickup *>(s.actors_[105 + i * 2].get());
+         ufo::Pickup *pkup1 = dynamic_cast<ufo::Pickup *>(s.actors_[105 + i * 2].get());
+         ufo::Pickup *pkup2 = dynamic_cast<ufo::Pickup *>(s.actors_[106 + i * 2].get());
 
          pickups.push_back(pkup1);
          pickups.push_back(pkup2);
@@ -78,7 +77,7 @@ int play() {
      }
 
      tank1->pickups = pickups;
-     //tank2->pickups = pickups;
+     tank2->pickups = pickups;
 
      s.build_actor<ufo::saucer>(saucer_type::blue);
      s.build_actor<ufo::saucer>(saucer_type::green);

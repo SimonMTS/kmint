@@ -242,10 +242,11 @@ void saucer::AttackHuman() {
         if (i->EntityType != "human") continue;
         play::actor &human = *i;
 
-        float distance = std::sqrt(std::pow(location().x() - human.location().x(), 2) + std::pow(location().y() - human.location().y(), 2));
-        //  if (distance < eatRange && !pig.isSafe) {
+        ufo::human *human1 = dynamic_cast<ufo::human *>(&human);
 
-        if (distance < 30) {
+        float distance = std::sqrt(std::pow(location().x() - human.location().x(), 2) + std::pow(location().y() - human.location().y(), 2));
+
+        if (distance < 20 && !human1->isSafe) {
             human.remove();
         }
         
@@ -263,7 +264,7 @@ void saucer::AttackTank() {
                       std::pow(location().y() - tank.location().y(), 2));
         //  if (distance < eatRange && !pig.isSafe) {
 
-        if (distance < 30 && tank1->attackable) {
+        if (distance < 20 && tank1->attackable) {
             //std::cout << "AttackTank" << std::endl;
             //tank.remove();
             if (tank1->UFOAttack()) {
@@ -276,7 +277,7 @@ void saucer::AttackTank() {
 void saucer::Move() { 
     velocity += acceleration;
 
-    velocity = student::forces::limit(velocity);
+    velocity = limit(velocity);
     math::vector2d nextpos = location() + velocity;
     location(nextpos);
     acceleration *= 0;
@@ -306,7 +307,7 @@ void saucer::GetNearest(std::string type) {
                                            std::pair<play::actor *, int>)>>
         queue(cmp);
 
-    // Zet alle humans in de radius in een priority queue en pop de eerste
+    // TODO netjes boolean van tank en human checken
     for (auto i = begin_perceived(); i != end_perceived(); ++i) {
         if (i->EntityType != type) continue;
         play::actor &actor = *i;
@@ -314,6 +315,11 @@ void saucer::GetNearest(std::string type) {
         if (i->EntityType == "tank") {
           ufo::tank *tank = dynamic_cast<ufo::tank *>(&actor);
             if (!tank->attackable) continue;
+        }
+
+        if (i->EntityType == "human") {
+            ufo::human *human = dynamic_cast<ufo::human *>(&actor);
+            if (human->isSafe) continue;
         }
             float distance = std::sqrt(std::pow(location().x() - actor.location().x(), 2) + std::pow(location().y() - actor.location().y(), 2));
             queue.push(std::make_pair(&actor, distance));
@@ -325,86 +331,44 @@ void saucer::GetNearest(std::string type) {
     }
 }
 
+math::vector2d saucer::limit(const kmint::math::vector2d &v) {
+    kmint::math::vector2d temp = v;
+    int maxforce = 1;
+    float m = sqrt(v.x() * v.x() + v.y() * v.y());
+    if (m > maxforce) {
+        temp = {v.x() / m, v.y() / m};
+    }
+    return temp;
+};
+
 void saucer::Edges() {
     kmint::scalar width = 1024;
     kmint::scalar height = 768;
-    math::vector2d correction = math::vector2d{0, 0};
 
     int edgeboundary = 25;
 
      // Map borders
     if (location().x() < edgeboundary) {
-        //std::cout << "Links";
         if (velocity.x() < 0) {
             acceleration += math::vector2d{-velocity.x() * 2, 0};
         }
 
     } else if (location().x() > width - edgeboundary) {
-        //std::cout << "Rechts";
         if (velocity.x() > 0) {
             acceleration += math::vector2d{-velocity.x() * 2, 0};
         }
     }
 
     if (location().y() < edgeboundary) {
-        //std::cout << "Boven" << std::endl;
         if (velocity.y() < 0) {
             acceleration += math::vector2d{0, -velocity.y() * 2};
         }
 
     } else if (location().y() > height - edgeboundary) {
-        //std::cout << "Onder" << std::endl;
         if (velocity.y() > 0) {
            acceleration += math::vector2d{0, -velocity.y() * 2};
         }
     }
-    //std::cout << std::endl;
-    //if (desired != math::vector2d{0, 0}) {
-    //    // desired = Normalize(desired);
-    //    //  desired *= 20;
-    //    math::vector2d steer = desired - v_;
-    //    // steer = Limit(steer, flock->maxForce);
-
-    //    v_ += steer;
-    //}
-
-
-
-
-
-
-
-
-
-
-
-
-    //// Map borders
-    //if (location().x() < edgeboundary) {
-    //    desired = math::vector2d{ 20, v_.y()};
-
-    //} else if (location().x() > width - edgeboundary) {
-    //    desired = math::vector2d{-20, v_.y()};
-    //    //velocity = math::vector2d{0, 0};
-    //}
-
-    //if (location().y() < edgeboundary) {
-    //    desired = math::vector2d{v_.x(), 20};
-    //   // velocity = math::vector2d{0, 0};
-
-    //} else if (location().y() > height - edgeboundary) {
-    //    desired = math::vector2d{v_.x(), -20};
-    //  //  velocity = math::vector2d{0, 0};
-    //}
-
-    //  if (desired != math::vector2d{0, 0}) {
-    //   // desired = Normalize(desired);
-    //  //  desired *= 20;
-    //    math::vector2d steer = desired - v_;
-    //   // steer = Limit(steer, flock->maxForce);
-    //    
-    //    v_ += steer;
-    //}
 }
 
   }  // namespace kmint::ufo

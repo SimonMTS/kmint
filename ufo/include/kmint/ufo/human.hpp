@@ -22,6 +22,9 @@ class human : public kmint::play::free_roaming_actor {
     map::map_graph &graph_;
     math::vector2d heading{1, 0};
     std::vector<std::reference_wrapper<ufo::human>> *other_humans;
+    bool isSafe = false;
+
+    play::actor *SafeLocation = nullptr;
 
    private:
     play::image_drawable drawable_;

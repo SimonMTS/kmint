@@ -27,9 +27,10 @@ class Pickup : public play::map_bound_actor {
     scalar perception_range() const override { return 200.f; }
 
     pickup_type type;
-
+    bool available = true;
     const map::map_node &node;
-   private:
+
+    private:
     // hoeveel tijd is verstreken sinds de laatste beweging
     delta_time t_since_move_{};
     // weet hoe de koe getekend moet worden

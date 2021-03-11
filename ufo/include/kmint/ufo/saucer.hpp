@@ -49,6 +49,8 @@ private:
 
 
   math::vector2d NextLocation;
+
+  math::vector2d limit(const kmint::math::vector2d &vector);
 };
 
 } // namespace kmint::ufo

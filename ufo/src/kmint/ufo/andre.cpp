@@ -26,7 +26,7 @@ andre::andre(map::map_graph &g, map::map_node &initial_node)
 
 void andre::act(delta_time dt) {
     t_since_move_ += dt;
-    if (to_seconds(t_since_move_) >= 1) {
+    if (to_seconds(t_since_move_) >= 2) {
 
         if (this->path.size() <= 1) {
             this->goal_node =

@@ -41,6 +41,10 @@ void tank::act(delta_time dt) {
 	t_since_move_ += dt;
 	if (to_seconds(t_since_move_) >= 1) {
 
+            if (damage >= 100) {
+                state = repair;
+            }
+
             if (state == wander) {
                 SenseUFO();
             }
@@ -58,10 +62,16 @@ void tank::act(delta_time dt) {
                 case gotoShield:
                     GoToShield();
                     break;
+                case repair:
+                    Repair();
+                    break;
             }
 
             Move();
+            RoadkillOrSave();
             SetSprite();
+
+            AvailablePickup(pickup_type::EMP);
             t_since_move_ = from_seconds(0);
 
 	}
@@ -99,9 +109,9 @@ void tank::SenseUFO() {
     int number = RandomInt(0, 100);
     if (number >= 100 - FleeChance) {
         Flee();
-    } else if (number >= 100 - FleeChance - EMPChance && EMPCount > 0) {
+    } else if (number >= 100 - FleeChance - EMPChance && AvailablePickup(pickup_type::EMP)) {
         GoToEMP();
-    } else if (number <= ShieldChance && ShieldCount > 0) {
+    } else if (number <= ShieldChance && AvailablePickup(pickup_type::SHIELD)) {
         GoToShield();
     }
 }
@@ -125,10 +135,10 @@ void tank::GoToEMP(){
     GoTo(pickup_type::EMP);
 
     if (this->path.size() == 0 && target != nullptr) {
+        target->available = false;
         target->remove();
         state = wander;
         EMP = true;
-        EMPCount--;
         target = nullptr;
         std::cout << "Picked up EMP" << std::endl;
 
@@ -141,10 +151,10 @@ void tank::GoToShield(){
     GoTo(pickup_type::SHIELD);
 
     if (this->path.size() == 0 && target != nullptr) {
+        target->available = false;
         target->remove();
         state = wander;
         LaserShield = true;
-        ShieldCount--;
         target = nullptr;
 
         std::cout << "Picked up shield" << std::endl;
@@ -153,11 +163,49 @@ void tank::GoToShield(){
 
 };
 
+void tank::Repair() {
+
+    std::cout << "Repair" << std::endl;
+    state = repair;
+
+     if (this->node().node_id() == Andre->node().node_id()) {
+        state = wander;
+        damage = 0;
+        return;
+    } 
+
+    GoToRepair();
+   
+}
+
+void tank::GoToRepair() {
+    path = ufo::student::a_star::find_path(
+        node(), Andre->node(), this->graph,
+        ufo::student::heuristics::euclidean_distance);
+
+        if (path.size() == 0) {
+        std::cout << "Already there";
+        return;
+    }
+
+    for (int i = 0; i < this->node().num_edges(); i++) {
+        if (node()[i].to().node_id() ==
+            this->path[this->path.size() - 1].get().node_id()) {
+            this->path.pop_back();
+            next_edge = &node()[i];
+            return;
+        }
+    }
+}
+
 void tank::GoTo(pickup_type type) {
     if (target == nullptr) {
         GetNearestPickup(type);
     }
-
+    if (path.size() == 0) {
+        std::cout << "Already there";
+        return;
+    }
     for (int i = 0; i < this->node().num_edges(); i++) {
         if (node()[i].to().node_id() ==
             this->path[this->path.size() - 1].get().node_id()) {
@@ -247,7 +295,6 @@ void tank::MoveTo(const int nodeid) {
             }
         }
     }
-    //std::cout << "Moveto" << next_edge << std::endl;
 }
 
 void tank::MoveAwayFrom(play::actor* actor) {
@@ -302,4 +349,36 @@ bool tank::UFOAttack() {
 
     return false;
 };
+
+void tank::RoadkillOrSave() {
+    for (auto i = begin_perceived(); i != end_perceived(); ++i) {
+        if (i->EntityType != "human") continue;
+        play::actor &human1 = *i;
+
+        ufo::human *human = dynamic_cast<ufo::human*>(&human1);
+        float distance =
+            std::sqrt(std::pow(location().x() - human->location().x(), 2) +
+                      std::pow(location().y() - human->location().y(), 2));
+
+        if (distance > 20) continue;
+      
+        
+        if (this->type_ == tank_type::red ) {  // Roadkill
+            human->remove();
+        } else if (this->type_ == tank_type::green) {
+            human->isSafe = true;
+            human->SafeLocation = this;
+        }
+            
+
+    }
+
+}
+
+bool tank::AvailablePickup(pickup_type type) {
+    for (int i = 0; i < pickups.size(); i++) {
+        if (pickups[i]->type == type && pickups[i]->available) return true;
+    }
+    return false;
+}
 } // namespace kmint::ufo

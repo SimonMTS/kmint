@@ -5,7 +5,8 @@
 #include "kmint/play.hpp"
 #include "kmint/primitives.hpp"
 #include "kmint/ufo/pickup.hpp"
-
+#include "kmint/ufo/human.hpp"
+#include "kmint/ufo/andre.hpp"
 #include <random>
 
 namespace kmint {
@@ -32,7 +33,7 @@ public:
   // geeft het bereik aan waarbinnen een tank
   // andere actors kan waarnemen.
   scalar perception_range() const override { return 200.f; }
-  play::actor* Andre;
+  ufo::andre* Andre;
   std::vector<ufo::Pickup*> pickups;
 
   bool UFOAttack();
@@ -40,13 +41,15 @@ public:
 
  private:
 
-  enum State { wander, flee, gotoEMP, gotoShield };
+  enum State { wander, flee, gotoEMP, gotoShield, repair};
   State state = wander;
   void Wander();
   void Flee();
   void GoToEMP();
   void GoToShield();
+  void Repair();
   void GoTo(pickup_type type);
+  void GoToRepair();
   void Move();
   void MoveTo(const int nodeid);
   void SenseUFO();
@@ -54,6 +57,8 @@ public:
   void GetNearestPickup(pickup_type type);
   void MoveAwayFrom(play::actor* actor);
   void SetSprite();
+  void RoadkillOrSave();
+  bool AvailablePickup(pickup_type type);
 
   int FleeChance = 34;
   int EMPChance = 33;
@@ -64,11 +69,9 @@ public:
   map::map_edge* last_edge = nullptr;
   std::vector<play::actor *> ufos;
 
-  bool EMP = true;
+  bool EMP = false;
   bool LaserShield = false;
-  int damage = 0;
-  int EMPCount = 3;
-  int ShieldCount = 3;
+  int damage = 80;
 
   play::image_drawable drawable_;
   delta_time t_since_move_{};
