@@ -25,12 +25,14 @@ class human : public kmint::play::free_roaming_actor {
     math::vector2d heading{1, 0};
     std::vector<std::reference_wrapper<ufo::human>> *other_humans;
     bool isSafeTank = false;
+    bool isSafeHouse = false;
     int id;
 
-    //std::vector<ufo::door> doors;
     std::vector<play::actor*> ufos;
+    std::vector <play::actor*> doors;
     play::actor *greentank;
     play::actor *redtank;
+
 
     const float maxSpeed = 2.6;
     const float maxForce = 0.7;
@@ -54,6 +56,8 @@ class human : public kmint::play::free_roaming_actor {
     float GreenTankWeight;   //   -1 tot 1;
     float UfoWeight;         //   -1 tot 1;
     float DoorWeight;        //   -1 tot 1;
+
+    void setLocation(math::vector2d location);
    private:
 
 

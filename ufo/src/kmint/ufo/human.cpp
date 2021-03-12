@@ -34,7 +34,7 @@ human::human(map::map_graph &g)
 
 void human::act(delta_time dt) {
     t_since_move_ += dt;
-    if (to_seconds(t_since_move_) >= 0.1) {
+    if (to_seconds(t_since_move_) >= 0.1 && !isSafeHouse) {
 
         Forces();
         Move();
@@ -69,12 +69,14 @@ void human::Forces() {
     math::vector2d s = ::student::forces::separation(*this);
     math::vector2d a = ::student::forces::alignment(*this);
     math::vector2d c = ::student::forces::cohesion(*this);
-    math::vector2d greent = ::student::forces::attacted_to(*this, *greentank, true);
-    math::vector2d redt = ::student::forces::attacted_to(*this, *redtank, true);
-    math::vector2d ufo0 = ::student::forces::attacted_to(*this, *ufos[0], true);
-    math::vector2d ufo1 = ::student::forces::attacted_to(*this, *ufos[1], true);
-    math::vector2d ufo2 = ::student::forces::attacted_to(*this, *ufos[2], true);
-    math::vector2d ufo3 = ::student::forces::attacted_to(*this, *ufos[3], true);
+    math::vector2d greent = ::student::forces::attacted_to(*this, *greentank, DesiredTankDistance);
+    math::vector2d redt = ::student::forces::attacted_to(*this, *redtank, DesiredTankDistance);
+    math::vector2d ufo0 = ::student::forces::attacted_to(*this, *ufos[0], DesiredUfoDistance);
+    math::vector2d ufo1 = ::student::forces::attacted_to(*this, *ufos[1], DesiredUfoDistance);
+    math::vector2d ufo2 = ::student::forces::attacted_to(*this, *ufos[2], DesiredUfoDistance);
+    math::vector2d ufo3 = ::student::forces::attacted_to(*this, *ufos[3], DesiredUfoDistance);
+    math::vector2d door0 = ::student::forces::attacted_to(*this, *doors[0], 1000);
+    math::vector2d door1 = ::student::forces::attacted_to(*this, *doors[1], 1000);
 
 
     s = s * SeparationWeight;
@@ -87,7 +89,11 @@ void human::Forces() {
     ufo2 = ufo2 * UfoWeight;
     ufo3 = ufo3 * UfoWeight;
 
-    acceleration += s + a + c + greent + redt + ufo0 + ufo1 + ufo2 + ufo3;
+    acceleration += door0 + door1;
+
+   // acceleration += s + a + c + greent + redt + ufo0 + ufo1 + ufo2 + ufo3 + door0 + door1;
 }
+void human::setLocation(math::vector2d location) { this->location(location); }
+
 
 }  // namespace kmint::ufo

@@ -18,7 +18,7 @@ class forces {
     static kmint::math::vector2d separation(const kmint::ufo::human &human);
     static kmint::math::vector2d alignment(const kmint::ufo::human &human);
     static kmint::math::vector2d cohesion(const kmint::ufo::human &human);
-    static kmint::math::vector2d attacted_to(const kmint::ufo::human &human, const kmint::play::actor &actor, bool tank);
+    static kmint::math::vector2d attacted_to(const kmint::ufo::human &human, const kmint::play::actor &actor, float range);
 
     static kmint::math::vector2d limit(const kmint::math::vector2d &vector, float maxforce);
 

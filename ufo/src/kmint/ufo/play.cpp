@@ -17,7 +17,7 @@
 #include "kmint/ufo/pickup.hpp"
 #include "kmint/ui.hpp"
 #include "kmint/force_driven_entities/population.hpp"
-
+#include "kmint/ufo/doors.hpp"
 namespace kmint::ufo {
 
 int play() {
@@ -106,6 +106,14 @@ int play() {
      ufos.push_back(s.actors_[113].get());
      ufos.push_back(s.actors_[114].get());
 
+     std::vector<play::actor *> doors;
+
+     s.build_actor<ufo::Doors>(graph, math::vector2d{401, 628});
+     s.build_actor<ufo::Doors>(graph, math::vector2d{460, 613});
+
+     doors.push_back(s.actors_[115].get());
+     doors.push_back(s.actors_[116].get());
+
      Population population;
      population.setPopulation(hums);
 
@@ -116,8 +124,11 @@ int play() {
              human->greentank = tank2;
              human->ufos = ufos;
              human->population = &population;
+             human->doors = doors;
          }
      }
+    
+
     // Maak een event_source aan (hieruit kun je alle events halen, zoals
     // toetsaanslagen)
     ui::events::event_source event_source{};
