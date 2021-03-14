@@ -6,18 +6,18 @@
 #include <random>
 #include <vector>
 
+#include "kmint/force_driven_entities/population.hpp"
 #include "kmint/main.hpp"  // voor de main loop
 #include "kmint/play.hpp"
 #include "kmint/ufo/andre.hpp"
+#include "kmint/ufo/doors.hpp"
 #include "kmint/ufo/human.hpp"
 #include "kmint/ufo/node_algorithm.hpp"
+#include "kmint/ufo/pickup.hpp"
 #include "kmint/ufo/resources.hpp"
 #include "kmint/ufo/saucer.hpp"
 #include "kmint/ufo/tank.hpp"
-#include "kmint/ufo/pickup.hpp"
 #include "kmint/ui.hpp"
-#include "kmint/force_driven_entities/population.hpp"
-#include "kmint/ufo/doors.hpp"
 namespace kmint::ufo {
 
 int play() {
@@ -58,76 +58,77 @@ int play() {
         ufo::human *hum = dynamic_cast<ufo::human *>(s.actors_[i].get());
 
         if (hum != nullptr) {
-        
             hums.push_back(hum);
         }
-
     }
 
     s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'),
                              tank_type::red);
 
-    s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'), tank_type::green);
+    s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'),
+                             tank_type::green);
     s.build_actor<ufo::andre>(graph, ufo::random_node_of_kind(m, 'R'));
 
-     ufo::tank *tank1 = dynamic_cast<ufo::tank*>(s.actors_[102].get());
-     ufo::tank *tank2 = dynamic_cast<ufo::tank*>(s.actors_[103].get());
-     ufo::andre *andre = dynamic_cast<ufo::andre*>(s.actors_[104].get());
+    ufo::tank *tank1 = dynamic_cast<ufo::tank *>(s.actors_[102].get());
+    ufo::tank *tank2 = dynamic_cast<ufo::tank *>(s.actors_[103].get());
+    ufo::andre *andre = dynamic_cast<ufo::andre *>(s.actors_[104].get());
 
-     tank1->Andre = andre;
-     tank2->Andre = andre;
+    tank1->Andre = andre;
+    tank2->Andre = andre;
 
-     std::vector<ufo::Pickup *> pickups;
+    std::vector<ufo::Pickup *> pickups;
 
-     for (int i = 0; i < 3; i++) {
-         s.build_actor<ufo::Pickup>(graph, ufo::random_node_of_kind(m, 'R'), ufo::pickup_type::SHIELD);
-         s.build_actor<ufo::Pickup>(graph, ufo::random_node_of_kind(m, 'R'), ufo::pickup_type::EMP);
+    for (int i = 0; i < 3; i++) {
+        s.build_actor<ufo::Pickup>(graph, ufo::random_node_of_kind(m, 'R'),
+                                   ufo::pickup_type::SHIELD);
+        s.build_actor<ufo::Pickup>(graph, ufo::random_node_of_kind(m, 'R'),
+                                   ufo::pickup_type::EMP);
 
-         ufo::Pickup *pkup1 = dynamic_cast<ufo::Pickup *>(s.actors_[105 + i * 2].get());
-         ufo::Pickup *pkup2 = dynamic_cast<ufo::Pickup *>(s.actors_[106 + i * 2].get());
+        ufo::Pickup *pkup1 =
+            dynamic_cast<ufo::Pickup *>(s.actors_[105 + i * 2].get());
+        ufo::Pickup *pkup2 =
+            dynamic_cast<ufo::Pickup *>(s.actors_[106 + i * 2].get());
 
-         pickups.push_back(pkup1);
-         pickups.push_back(pkup2);
+        pickups.push_back(pkup1);
+        pickups.push_back(pkup2);
+    }
 
-     }
+    tank1->pickups = pickups;
+    tank2->pickups = pickups;
 
-     tank1->pickups = pickups;
-     tank2->pickups = pickups;
+    std::vector<play::actor *> ufos;
 
-     std::vector<play::actor *> ufos;
+    s.build_actor<ufo::saucer>(saucer_type::blue);
+    s.build_actor<ufo::saucer>(saucer_type::green);
+    s.build_actor<ufo::saucer>(saucer_type::beige);
+    s.build_actor<ufo::saucer>(saucer_type::yellow);
 
-     s.build_actor<ufo::saucer>(saucer_type::blue);
-     s.build_actor<ufo::saucer>(saucer_type::green);
-     s.build_actor<ufo::saucer>(saucer_type::beige);
-     s.build_actor<ufo::saucer>(saucer_type::yellow);
+    ufos.push_back(s.actors_[111].get());
+    ufos.push_back(s.actors_[112].get());
+    ufos.push_back(s.actors_[113].get());
+    ufos.push_back(s.actors_[114].get());
 
-     ufos.push_back(s.actors_[111].get());
-     ufos.push_back(s.actors_[112].get());
-     ufos.push_back(s.actors_[113].get());
-     ufos.push_back(s.actors_[114].get());
+    std::vector<play::actor *> doors;
 
-     std::vector<play::actor *> doors;
+    s.build_actor<ufo::Doors>(graph, math::vector2d{401, 628});
+    s.build_actor<ufo::Doors>(graph, math::vector2d{460, 613});
 
-     s.build_actor<ufo::Doors>(graph, math::vector2d{401, 628});
-     s.build_actor<ufo::Doors>(graph, math::vector2d{460, 613});
+    doors.push_back(s.actors_[115].get());
+    doors.push_back(s.actors_[116].get());
 
-     doors.push_back(s.actors_[115].get());
-     doors.push_back(s.actors_[116].get());
+    Population population{hums};
+    //  population.setPopulation(hums);
 
-     Population population;
-     population.setPopulation(hums);
-
-     for (auto &actor : s) {
-         ufo::human *human = dynamic_cast<ufo::human *>(&actor);
-         if (human != nullptr) {
-             human->redtank = tank1;
-             human->greentank = tank2;
-             human->ufos = ufos;
-             human->population = &population;
-             human->doors = doors;
-         }
-     }
-    
+    for (auto &actor : s) {
+        ufo::human *human = dynamic_cast<ufo::human *>(&actor);
+        if (human != nullptr) {
+            human->redtank = tank1;
+            human->greentank = tank2;
+            human->ufos = ufos;
+            human->population = &population;
+            human->doors = doors;
+        }
+    }
 
     // Maak een event_source aan (hieruit kun je alle events halen, zoals
     // toetsaanslagen)
@@ -139,7 +140,6 @@ int play() {
         // sinds de vorige keer dat deze lambda werd aangeroepen
         // loop controls is een object met eigenschappen die je kunt gebruiken
         // om de main-loop aan te sturen.
-
 
         population.Update();
         for (ui::events::event &e : event_source) {

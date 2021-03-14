@@ -1,12 +1,10 @@
 #include "kmint/force_driven_entities/population.hpp"
 
-Population::Population() {
+Population::Population(std::vector<kmint::ufo::human*>& h) : humans(h) {}
 
-}
-
-void Population::setPopulation(std::vector<kmint::ufo::human*> humans) {
-    this->humans = humans;
-}
+// void Population::setPopulation(std::vector<kmint::ufo::human*> humans) {
+//     this->humans = humans;
+// }
 
 void Population::Update() {
     for (int i = 0; i < humans.size(); i++) {
@@ -107,12 +105,13 @@ void Population::SetValues() {
         humans[i]->AlignmentWeight = this->AlignmentWeight;
         humans[i]->CohesionWeight = this->CohesionWeight;
         humans[i]->SeparationWeight = this->SeparationWeight;
-        humans[i]->RedTankWeight= this->RedTankWeight;
+        humans[i]->RedTankWeight = this->RedTankWeight;
         humans[i]->GreenTankWeight = this->GreenTankWeight;
 
         humans[i]->UfoWeight = this->UfoWeight;
     }
 
     std::cout << "SetValues A\t" << AlignmentWeight << "\tC\t" << CohesionWeight
-              << "\tS\t" << SeparationWeight << "\tT\t" << RedTankWeight << "\tU\t"<< UfoWeight << std::endl;
+              << "\tS\t" << SeparationWeight << "\tT\t" << RedTankWeight
+              << "\tU\t" << UfoWeight << std::endl;
 }
