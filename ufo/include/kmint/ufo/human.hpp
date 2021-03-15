@@ -71,6 +71,7 @@ class human : public kmint::play::free_roaming_actor {
     void Forces();
     void Move();
     void Buildings();
+    void MapEdge();
     math::vector2d CanSpawnHere(math::vector2d location);
     play::image_drawable drawable_;
     delta_time t_since_move_{};

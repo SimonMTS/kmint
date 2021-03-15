@@ -48,6 +48,7 @@ void human::act(delta_time dt) {
 
         Forces();
         Buildings();
+        MapEdge();
         Move();
 
         if (this->isSafeTank) {
@@ -105,6 +106,39 @@ void human::Forces() {
     acceleration += s + a + c + greent + redt + ufo0 + ufo1 + ufo2 + ufo3 + door0 + door1;
 }
 void human::setLocation(math::vector2d location) { this->location(location); }
+void human::MapEdge() {
+    int TopLeftX = 64;
+    int TopLeftY = 0;
+    int BottomRightX = 959;
+    int BottomRightY = 703;
+
+
+    int edgeboundary = 5;
+
+    // Map borders
+    if (location().x() < TopLeftX) {
+        if (velocity.x() < 0) {
+            acceleration += math::vector2d{-velocity.x() * 2, 0};
+        }
+
+    } else if (location().x() > BottomRightX) {
+        if (velocity.x() > 0) {
+            acceleration += math::vector2d{-velocity.x() * 2, 0};
+        }
+    }
+
+    if (location().y() < TopLeftY) {
+        if (velocity.y() < 0) {
+            acceleration += math::vector2d{0, -velocity.y() * 2};
+        }
+
+    } else if (location().y() > BottomRightY) {
+        if (velocity.y() > 0) {
+            acceleration += math::vector2d{0, -velocity.y() * 2};
+        }
+    }
+
+}
 
 void human::Buildings() { 
     
