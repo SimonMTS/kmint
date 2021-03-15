@@ -91,7 +91,6 @@ public:
   std::vector<int> DamageHistory;
   void UpdateChances();
   
-  // Todo dit op een andere plek zetten
    int RandomInt(float Min, float Max) {
       std::random_device rd;
       std::mt19937 gen(rd());

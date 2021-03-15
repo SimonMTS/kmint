@@ -23,8 +23,9 @@ graphics::image image_for(ufo::pickup_type type) {
 Pickup::Pickup(map::map_graph &g, map::map_node &initial_node, pickup_type type)
     : play::map_bound_actor{initial_node},
       drawable_{*this, graphics::image{image_for(type)}},
-      graph_{g},
-      node{initial_node} {
+      graph_{g}
+       {
+    node(initial_node);
     this->type = type;
 };
 
@@ -34,6 +35,10 @@ void Pickup::act(delta_time dt) {
     }
 }
 
+void Pickup::NewLocation() { 
+    int id = RandomInt(0, graph_.num_nodes() - 1);
+    this->node(graph_[id]);
+}
 
 
 }  // namespace kmint::ufo

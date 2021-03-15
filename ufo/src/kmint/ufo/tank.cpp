@@ -104,11 +104,10 @@ void tank::SenseUFO() {
     if (number >= 100 - FleeChance) {
         Flee();
         lastchoice = flee;
-    } else if (number >= 100 - FleeChance - EMPChance &&
-               AvailablePickup(pickup_type::EMP)) {
+    } else if (number >= 100 - FleeChance - EMPChance) {
         GoToEMP();
         lastchoice = gotoEMP;
-    } else if (number <= ShieldChance && AvailablePickup(pickup_type::SHIELD)) {
+    } else if (number <= ShieldChance) {
         GoToShield();
         lastchoice = gotoShield;
     }
@@ -132,8 +131,10 @@ void tank::GoToEMP() {
     GoTo(pickup_type::EMP);
 
     if (this->path.size() == 0 && target != nullptr) {
-        target->available = false;
-        target->remove();
+        //target->available = false;
+        //target->remove();
+        target->NewLocation();
+
         state = wander;
         LaserShieldCount++;
         target = nullptr;
@@ -148,8 +149,9 @@ void tank::GoToShield() {
     GoTo(pickup_type::SHIELD);
 
     if (this->path.size() == 0 && target != nullptr) {
-        target->available = false;
-        target->remove();
+       // target->available = false;
+        //target->remove();
+        target->NewLocation();
         state = wander;
         LaserShieldCount++;
         target = nullptr;
@@ -216,12 +218,11 @@ void tank::GetNearestPickup(pickup_type type) {
     for (int i = 0; i < pickups.size(); i++) {
         if (pickups[i]->type != type) continue;
         if (pickups[i]->removed()) continue;
-        if (&pickups[i]->node == nullptr) continue;
 
         std::vector<std::reference_wrapper<map_node>> currpath;
 
         currpath = ufo::student::a_star::find_path(
-            node(), pickups[i]->node, this->graph,
+            node(), pickups[i]->node(), this->graph,
             ufo::student::heuristics::euclidean_distance);
 
         if (shortestpath.size() == 0 || currpath.size() < shortestpath.size()) {

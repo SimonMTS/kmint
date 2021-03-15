@@ -4,6 +4,7 @@
 #include "kmint/map/map.hpp"
 #include "kmint/play.hpp"
 #include "kmint/primitives.hpp"
+#include <random>
 
 namespace kmint::ufo {
 
@@ -28,8 +29,8 @@ class Pickup : public play::map_bound_actor {
 
     pickup_type type;
     bool available = true;
-    const map::map_node &node;
 
+    void NewLocation();
     private:
     // hoeveel tijd is verstreken sinds de laatste beweging
     delta_time t_since_move_{};
@@ -37,6 +38,13 @@ class Pickup : public play::map_bound_actor {
     play::image_drawable drawable_;
 
     map::map_graph &graph_;
+
+    int RandomInt(float Min, float Max) {
+      std::random_device rd;
+      std::mt19937 gen(rd());
+      std::uniform_int_distribution<> distr(Min, Max);
+      return distr(gen);
+  }
 };
 
 }  // namespace kmint::ufo
