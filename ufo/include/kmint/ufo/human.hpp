@@ -8,6 +8,12 @@
 #include "kmint/play.hpp"
 
 class Population;
+struct Building {
+    int TopLeftX;
+    int TopLeftY;
+    int BottomRightX;
+    int BottomRightY;
+};
 
 namespace kmint::ufo {
 
@@ -60,10 +66,12 @@ class human : public kmint::play::free_roaming_actor {
     void setLocation(math::vector2d location);
    private:
 
-
+    std::vector<Building> buildings;
 
     void Forces();
     void Move();
+    void Buildings();
+    math::vector2d CanSpawnHere(math::vector2d location);
     play::image_drawable drawable_;
     delta_time t_since_move_{};
 

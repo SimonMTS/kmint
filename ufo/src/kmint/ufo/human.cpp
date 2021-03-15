@@ -14,8 +14,10 @@ constexpr char const *image_path = "resources/human.png";
 
 graphics::image human_image() { return graphics::image{image_path}; }
 
-math::vector2d random_location() {
-    return {random_scalar(60, 900), random_scalar(60, 700)};
+math::vector2d random_location() { 
+    math::vector2d loc = {random_scalar(60, 900), random_scalar(60, 700)};
+    
+    return loc;
 }
 
 }  // namespace
@@ -30,6 +32,14 @@ human::human(map::map_graph &g)
     RedTankWeight = RandomNumber(-1, 1);
     GreenTankWeight = RandomNumber(-1, 1);
     UfoWeight = RandomNumber(-1, 1);
+    buildings.push_back({320, 512, 431, 639});
+    buildings.push_back({432, 464, 511, 623});
+    buildings.push_back({576, 400, 687, 495});
+    buildings.push_back({576, 208, 671, 319});
+    buildings.push_back({576, 64, 623, 143});
+    buildings.push_back({624, 64, 735, 127});
+    buildings.push_back({576, 560, 687, 704});
+    location(CanSpawnHere(location()));
 }
 
 void human::act(delta_time dt) {
@@ -37,6 +47,7 @@ void human::act(delta_time dt) {
     if (to_seconds(t_since_move_) >= 0.1 && !isSafeHouse) {
 
         Forces();
+        Buildings();
         Move();
 
         if (this->isSafeTank) {
@@ -75,8 +86,8 @@ void human::Forces() {
     math::vector2d ufo1 = ::student::forces::attacted_to(*this, *ufos[1], DesiredUfoDistance);
     math::vector2d ufo2 = ::student::forces::attacted_to(*this, *ufos[2], DesiredUfoDistance);
     math::vector2d ufo3 = ::student::forces::attacted_to(*this, *ufos[3], DesiredUfoDistance);
-    math::vector2d door0 = ::student::forces::attacted_to(*this, *doors[0], 1000);
-    math::vector2d door1 = ::student::forces::attacted_to(*this, *doors[1], 1000);
+    math::vector2d door0 = ::student::forces::attacted_to(*this, *doors[0], 100);
+    math::vector2d door1 = ::student::forces::attacted_to(*this, *doors[1], 100);
 
 
     s = s * SeparationWeight;
@@ -89,11 +100,38 @@ void human::Forces() {
     ufo2 = ufo2 * UfoWeight;
     ufo3 = ufo3 * UfoWeight;
 
-    acceleration += door0 + door1;
+    //acceleration += door0 + door1;
 
-   // acceleration += s + a + c + greent + redt + ufo0 + ufo1 + ufo2 + ufo3 + door0 + door1;
+    acceleration += s + a + c + greent + redt + ufo0 + ufo1 + ufo2 + ufo3 + door0 + door1;
 }
 void human::setLocation(math::vector2d location) { this->location(location); }
+
+void human::Buildings() { 
+    
+
+    for (auto b : buildings) {
+        if (location().x() > b.TopLeftX && location().x() < b.BottomRightX &&
+            location().y() > b.TopLeftY && location().y() < b.BottomRightY) {
+            drawable_.set_tint({0, 0, 0});
+            acceleration *= -2;
+        }
+    }
+
+
+
+}
+
+math::vector2d human::CanSpawnHere(math::vector2d location) {
+    for (auto b : buildings) {
+        if (location.x() > b.TopLeftX && location.x() < b.BottomRightX &&
+            location.y() > b.TopLeftY && location.y() < b.BottomRightY) {
+            std::cout << "Cant spawn here" << std::endl;
+            return CanSpawnHere(random_location());
+        }
+    }
+
+    return location;
+}
 
 
 }  // namespace kmint::ufo
