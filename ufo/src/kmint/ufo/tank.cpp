@@ -1,6 +1,6 @@
 #include "kmint/ufo/tank.hpp"
 
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
 
 #include <iostream>
 

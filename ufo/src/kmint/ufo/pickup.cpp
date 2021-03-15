@@ -9,19 +9,11 @@ namespace kmint::ufo {
 
 namespace {
 
-graphics::color color_for(ufo::pickup_type type) {
-    if (type == pickup_type::SHIELD) {
-            return {0, 255, 0};
-    } else if (type == pickup_type::EMP) {
-    return {0, 0, 255};
-    }
-    
-}
 
 
 graphics::image image_for(ufo::pickup_type type) {
-    //if (type == ufo::pickup_type::SHIELD) return graphics::image{"resources/andre.png"};
-    return graphics::image{"resources/andre.png"};
+   if (type == ufo::pickup_type::SHIELD) return graphics::image{"resources/shield.png"};
+    return graphics::image{"resources/emp.png"};
 }
 
 
@@ -33,7 +25,6 @@ Pickup::Pickup(map::map_graph &g, map::map_node &initial_node, pickup_type type)
       drawable_{*this, graphics::image{image_for(type)}},
       graph_{g},
       node{initial_node} {
-    drawable_.set_tint(color_for(type));
     this->type = type;
 };
 
