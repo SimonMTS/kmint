@@ -52,6 +52,7 @@ kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
 
     for (int i = 0; i < human.population->humans.size(); i++) {
         if (!human.population->humans[i]->removed()) {
+
             float d = distance(human, human.population->humans[i]->location());
 
             if ((d > 0) && (d < human.DesiredSeparationDistance)) {

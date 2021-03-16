@@ -32,7 +32,6 @@ class human : public kmint::play::free_roaming_actor {
     std::vector<std::reference_wrapper<ufo::human>> *other_humans;
     bool isSafeTank = false;
     bool isSafeHouse = false;
-    int id;
 
     std::vector<play::actor*> ufos;
     std::vector <play::actor*> doors;

@@ -41,24 +41,13 @@ int play() {
         s.build_actor<ufo::human>(graph);
     }
 
-    int skip = 2;  // terrible solution
-    int id = 0;
-    std::vector<std::reference_wrapper<ufo::human>> humans;
-    for (auto &actor : s) {
-        if (skip-- > 0) continue;
-        ufo::human &h = dynamic_cast<ufo::human &>(actor);
-        humans.push_back(h);
-        h.other_humans = &humans;
-        h.id = id;
-        id++;
-    }
 
-    std::vector<kmint::ufo::human *> hums;
+    std::vector<kmint::ufo::human *> humans;
     for (int i = 0; i < s.actors_.size(); i++) {
-        ufo::human *hum = dynamic_cast<ufo::human *>(s.actors_[i].get());
+        ufo::human *human = dynamic_cast<ufo::human *>(s.actors_[i].get());
 
-        if (hum != nullptr) {
-            hums.push_back(hum);
+        if (human != nullptr) {
+            humans.push_back(human);
         }
     }
 
@@ -116,7 +105,7 @@ int play() {
     doors.push_back(s.actors_[115].get());
     doors.push_back(s.actors_[116].get());
 
-    Population population{hums};
+    Population population{humans};
     //  population.setPopulation(hums);
 
     for (auto &actor : s) {
@@ -142,6 +131,102 @@ int play() {
         // om de main-loop aan te sturen.
 
         population.Update();
+
+        if (andre->totalsteps >= 200) {
+            andre->totalsteps = 0;
+
+            s.actors_.erase(s.actors_.begin() + 2, s.actors_.end());
+
+    
+
+            for (std::size_t h{0}; h < 100; ++h) {
+                s.build_actor<ufo::human>(graph);
+            }
+
+            humans.clear();
+            for (int i = 0; i < s.actors_.size(); i++) {
+                ufo::human *human =
+                    dynamic_cast<ufo::human *>(s.actors_[i].get());
+
+                if (human != nullptr) {
+                    humans.push_back(human);
+                }
+            }
+        
+
+             s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'),
+                                     tank_type::red);
+
+            s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'),
+                                     tank_type::green);
+            s.build_actor<ufo::andre>(graph, ufo::random_node_of_kind(m, 'R'));
+
+            tank1 = dynamic_cast<ufo::tank *>(s.actors_[102].get());
+            tank2 = dynamic_cast<ufo::tank *>(s.actors_[103].get());
+            andre =
+                dynamic_cast<ufo::andre *>(s.actors_[104].get());
+
+            tank1->Andre = andre;
+            tank2->Andre = andre;
+
+            pickups.clear();
+
+            for (int i = 0; i < 3; i++) {
+                s.build_actor<ufo::Pickup>(graph,
+                                           ufo::random_node_of_kind(m, 'R'),
+                                           ufo::pickup_type::SHIELD);
+                s.build_actor<ufo::Pickup>(graph,
+                                           ufo::random_node_of_kind(m, 'R'),
+                                           ufo::pickup_type::EMP);
+
+                ufo::Pickup *pkup1 =
+                    dynamic_cast<ufo::Pickup *>(s.actors_[105 + i * 2].get());
+                ufo::Pickup *pkup2 =
+                    dynamic_cast<ufo::Pickup *>(s.actors_[106 + i * 2].get());
+
+                pickups.push_back(pkup1);
+                pickups.push_back(pkup2);
+            }
+
+            tank1->pickups = pickups;
+            tank2->pickups = pickups;
+
+            ufos.clear();
+
+            s.build_actor<ufo::saucer>(saucer_type::blue);
+            s.build_actor<ufo::saucer>(saucer_type::green);
+            s.build_actor<ufo::saucer>(saucer_type::beige);
+            s.build_actor<ufo::saucer>(saucer_type::yellow);
+
+            ufos.push_back(s.actors_[111].get());
+            ufos.push_back(s.actors_[112].get());
+            ufos.push_back(s.actors_[113].get());
+            ufos.push_back(s.actors_[114].get());
+
+            doors.clear();
+
+            s.build_actor<ufo::Doors>(graph, math::vector2d{401, 628});
+            s.build_actor<ufo::Doors>(graph, math::vector2d{460, 613});
+
+            doors.push_back(s.actors_[115].get());
+            doors.push_back(s.actors_[116].get());
+
+            population.setPopulation(humans);
+
+            for (auto &actor : s) {
+                ufo::human *human = dynamic_cast<ufo::human *>(&actor);
+                if (human != nullptr) {
+                    human->redtank = tank1;
+                    human->greentank = tank2;
+                    human->ufos = ufos;
+                    human->population = &population;
+                    human->doors = doors;
+                }
+            }
+        }
+
+
+
         for (ui::events::event &e : event_source) {
             // event heeft een methode handle_quit die controleert
             // of de gebruiker de applicatie wilt sluiten, en zo ja

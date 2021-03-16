@@ -2,9 +2,9 @@
 
 Population::Population(std::vector<kmint::ufo::human*>& h) : humans(h) {}
 
-// void Population::setPopulation(std::vector<kmint::ufo::human*> humans) {
-//     this->humans = humans;
-// }
+ void Population::setPopulation(std::vector<kmint::ufo::human*> humans) {
+     this->humans = humans;
+ }
 
 void Population::Update() {
     for (int i = 0; i < humans.size(); i++) {

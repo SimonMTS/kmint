@@ -7,7 +7,7 @@ class Population {
    public:
     Population(std::vector<kmint::ufo::human *> &h);
     std::vector<kmint::ufo::human *> &humans;
-    //  void setPopulation(std::vector<kmint::ufo::human *> humans);
+    void setPopulation(std::vector<kmint::ufo::human *> humans);
     void Update();
 
     void increaseCohesion();
