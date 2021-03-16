@@ -45,6 +45,7 @@ public:
 
   State state = wander;
 
+  void TagPath();
   void Wander();
   void Flee();
   void GoToEMP();

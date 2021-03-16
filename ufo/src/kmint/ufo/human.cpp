@@ -54,7 +54,6 @@ void human::act(delta_time dt) {
         if (this->isSafeTank) {
             location(greentank->location());
         }
-
         // if this->isSafeBuilding
         t_since_move_ = from_seconds(0);
     }

@@ -22,6 +22,7 @@ class andre : public play::map_bound_actor {
     scalar collision_range() const override { return 16.0; }
     // geeft aan dat andr� andere actors kan zien
     bool perceptive() const override { return true; }
+    student::node_list path;
 
    private:
     // hoeveel tijd is verstreken sinds de laatste beweging
@@ -31,7 +32,8 @@ class andre : public play::map_bound_actor {
 
     map::map_graph &graph_;
     char goal_node = '1';
-    student::node_list path;
+    void TagPath();
+    void UntagPath();
 };
 
 }  // namespace kmint::ufo

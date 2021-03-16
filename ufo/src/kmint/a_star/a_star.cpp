@@ -52,8 +52,10 @@ node_list a_star::find_path(map_node &start, const map_node &end,
 
         for (auto &edge : lowest_f) {
             auto &neighbor = edge.to();
-            neighbor.tag(node_tag::visited);
 
+            if (!neighbor.tagged()) {
+                neighbor.tag(node_tag::visited);
+            }
             int neighbor_weight = edge.weight();
             // for complete avoidance
             // neighbor_weight = (neighbor_weight == 1 ? 1 : 1000);

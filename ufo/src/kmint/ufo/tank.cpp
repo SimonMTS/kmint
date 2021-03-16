@@ -41,6 +41,17 @@ bool cmpp(std::pair<play::actor *, int> a, std::pair<play::actor *, int> b) {
 void tank::act(delta_time dt) {
     t_since_move_ += dt;
     if (to_seconds(t_since_move_) >= 1) {
+        if (this->type_ == tank_type::red) {
+            graph.untag_all();
+           // for (int i = 0; i < graph.num_nodes() - 1; i++) {
+           //     if (graph[i].tag() == kmint::graph::node_tag::visited) {
+           //         graph[i].tag(kmint::graph::node_tag::normal);
+           //     }
+           // }
+
+        }
+
+
         if (damage >= 100) {
             state = repair;
         }
@@ -70,6 +81,7 @@ void tank::act(delta_time dt) {
         Move();
         RoadkillOrSave();
         SetSprite();
+        TagPath();
         t_since_move_ = from_seconds(0);
     }
 
@@ -175,6 +187,9 @@ void tank::Repair() {
 }
 
 void tank::GoToRepair() {
+    //if (Andre->path.size() == 0) return;
+   // const map_node &endnode = Andre->path[Andre->path.size() / 2 - 1];
+
     path = ufo::student::a_star::find_path(
         node(), Andre->node(), this->graph,
         ufo::student::heuristics::euclidean_distance);
@@ -435,5 +450,11 @@ bool tank::AvailablePickup(pickup_type type) {
         if (pickups[i]->type == type && pickups[i]->available) return true;
     }
     return false;
+}
+
+void tank::TagPath() {
+    for (auto node : path) {
+        node.get().tag(kmint::graph::node_tag::path);
+    }
 }
 }  // namespace kmint::ufo
