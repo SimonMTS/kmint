@@ -23,7 +23,7 @@ class andre : public play::map_bound_actor {
     // geeft aan dat andr� andere actors kan zien
     bool perceptive() const override { return true; }
     student::node_list path;
-    int totalsteps = 199;
+    int totalsteps = 190;
    private:
     // hoeveel tijd is verstreken sinds de laatste beweging
     delta_time t_since_move_{};

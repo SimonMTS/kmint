@@ -107,16 +107,6 @@ void saucer::act(delta_time dt) {
 
           t_since_move_ = from_seconds(0);
     }
-    //location(location() + v_ * to_seconds(dt));
-    //for (std::size_t ix{}; ix < num_colliding_actors(); ++ix) {
-    //    auto &other = colliding_actor(ix);
-    //    if (dynamic_cast<human *>(&other)) {
-    //        // remove human from play
-    //        std::cout << "Beam me up scotty\n";
-    //        // -- CHANGE THIS TO MORE SUITABLE BEHAVIOR FOR THE ASSESSMENT
-    //        // other.remove();
-    //    }
-    //}
 }
 
 bool saucer::TankNearby() {
@@ -126,9 +116,6 @@ bool saucer::TankNearby() {
             ufo::tank *tank1 = dynamic_cast<ufo::tank *>(&tank);
 
             if (tank1->attackable) {
-                /*std::cout << "Myloc" << location().x() << "," << location().y()
-                          << " tankloc " << tank1->location().x() << ","
-                          << tank1->location().y() << std::endl;*/
                 return true;
             }
         }
@@ -237,7 +224,7 @@ void saucer::HuntTank(delta_time dt) {
 
     // TODO Normalise() en Limit()
     // Ufo aanpassen aan de snelheid van de human
-    math::vector2d steer = (desired * 0.01);
+    math::vector2d steer = (desired * 0.01);  // 0.01);
 
     acceleration += steer;
 }

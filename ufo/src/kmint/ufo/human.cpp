@@ -21,10 +21,11 @@ math::vector2d random_location() {
 }
 
 }  // namespace
-human::human(map::map_graph &g)
+human::human(map::map_graph &g, const int id)
     : play::free_roaming_actor{random_location()},
       graph_{g},
-      drawable_{*this, human_image()} {
+      drawable_{*this, human_image()},
+      id{id} {
     EntityType = "human";
     CohesionWeight = RandomNumber(0, 1);
     SeparationWeight = RandomNumber(0, 1);
@@ -44,17 +45,23 @@ human::human(map::map_graph &g)
 
 void human::act(delta_time dt) {
     t_since_move_ += dt;
-    if (to_seconds(t_since_move_) >= 0.1 && !isSafeHouse) {
+    if (to_seconds(t_since_move_) >= 0.1) {
+        TimeAlive += to_seconds(t_since_move_);
+        DistanceTravelled += sqrt((velocity.x() * velocity.x()) + velocity.y() * velocity.y()) / 10;
 
-        Forces();
-        Buildings();
-        MapEdge();
-        Move();
+        population->humanproperties[id].Fitness = TimeAlive + DistanceTravelled;
+       // std::cout << id << " " << population->humanproperties[id].Fitness << std::endl;
+       
+        if (!isSafeHouse) {
+            Forces();
+            Buildings();
+            MapEdge();
+            Move();
 
-        if (this->isSafeTank) {
-            location(greentank->location());
+            if (isSafeTank) {
+                location(greentank->location());
+            }
         }
-        // if this->isSafeBuilding
         t_since_move_ = from_seconds(0);
     }
 }
@@ -115,23 +122,23 @@ void human::MapEdge() {
     int edgeboundary = 5;
 
     // Map borders
-    if (location().x() < TopLeftX) {
+    if (location().x() < TopLeftX + edgeboundary) {
         if (velocity.x() < 0) {
             acceleration += math::vector2d{-velocity.x() * 2, 0};
         }
 
-    } else if (location().x() > BottomRightX) {
+    } else if (location().x() > BottomRightX - edgeboundary) {
         if (velocity.x() > 0) {
             acceleration += math::vector2d{-velocity.x() * 2, 0};
         }
     }
 
-    if (location().y() < TopLeftY) {
+    if (location().y() < TopLeftY + edgeboundary) {
         if (velocity.y() < 0) {
             acceleration += math::vector2d{0, -velocity.y() * 2};
         }
 
-    } else if (location().y() > BottomRightY) {
+    } else if (location().y() > BottomRightY - edgeboundary) {
         if (velocity.y() > 0) {
             acceleration += math::vector2d{0, -velocity.y() * 2};
         }
@@ -158,7 +165,6 @@ math::vector2d human::CanSpawnHere(math::vector2d location) {
     for (auto b : buildings) {
         if (location.x() > b.TopLeftX && location.x() < b.BottomRightX &&
             location.y() > b.TopLeftY && location.y() < b.BottomRightY) {
-            std::cout << "Cant spawn here" << std::endl;
             return CanSpawnHere(random_location());
         }
     }

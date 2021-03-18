@@ -37,8 +37,10 @@ int play() {
                                     graphics::image{m.background_image()});
     s.build_actor<play::map_actor>(math::vector2d{0.f, 0.f}, m.graph());
 
+    int id = 0;
     for (std::size_t h{0}; h < 100; ++h) {
-        s.build_actor<ufo::human>(graph);
+        s.build_actor<ufo::human>(graph, id);
+        id++;
     }
 
 
@@ -106,7 +108,7 @@ int play() {
     doors.push_back(s.actors_[116].get());
 
     Population population{humans};
-    //  population.setPopulation(hums);
+    population.saveProperties();
 
     for (auto &actor : s) {
         ufo::human *human = dynamic_cast<ufo::human *>(&actor);
@@ -133,14 +135,14 @@ int play() {
         population.Update();
 
         if (andre->totalsteps >= 200) {
-            andre->totalsteps = 0;
-
+            population.getParents();
             s.actors_.erase(s.actors_.begin() + 2, s.actors_.end());
 
     
-
+            id = 0;
             for (std::size_t h{0}; h < 100; ++h) {
-                s.build_actor<ufo::human>(graph);
+                s.build_actor<ufo::human>(graph, id);
+                id++;
             }
 
             humans.clear();
@@ -211,7 +213,10 @@ int play() {
             doors.push_back(s.actors_[115].get());
             doors.push_back(s.actors_[116].get());
 
-            population.setPopulation(humans);
+            population.humans = humans;
+            population.Crossover();
+            population.Mutation();
+            population.saveProperties();
 
             for (auto &actor : s) {
                 ufo::human *human = dynamic_cast<ufo::human *>(&actor);

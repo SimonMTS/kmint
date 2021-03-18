@@ -19,7 +19,7 @@ namespace kmint::ufo {
 
 class human : public kmint::play::free_roaming_actor {
    public:
-    human(map::map_graph &g);
+    human(map::map_graph &g, const int id);
     const ui::drawable &drawable() const override { return drawable_; }
     // participates in collisions
     bool incorporeal() const override { return false; }
@@ -39,8 +39,8 @@ class human : public kmint::play::free_roaming_actor {
     play::actor *redtank;
 
 
-    const float maxSpeed = 2.6;
-    const float maxForce = 0.7;
+    const float maxSpeed = 4;
+    const float maxForce = 1;
 
     const float DesiredTankDistance = 100;
     const float DesiredUfoDistance = 200;
@@ -54,7 +54,7 @@ class human : public kmint::play::free_roaming_actor {
 
     Population *population = nullptr;
 
-        float CohesionWeight;    //    0 tot 1
+    float CohesionWeight;    //    0 tot 1
     float SeparationWeight;  //    0 tot 1
     float AlignmentWeight;   //	   0 tot 1
     float RedTankWeight;     //   -1 tot 1;
@@ -63,6 +63,11 @@ class human : public kmint::play::free_roaming_actor {
     float DoorWeight;        //   -1 tot 1;
 
     void setLocation(math::vector2d location);
+
+    // To calculate fitness
+    const int id;
+    float DistanceTravelled = 0;
+    float TimeAlive=0;
    private:
 
     std::vector<Building> buildings;
