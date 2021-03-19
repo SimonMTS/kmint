@@ -70,7 +70,7 @@ saucer::saucer(saucer_type type)
       velocity{velocity_for(type)},
       type_{type} {
     EntityType = "ufo";
-    SetWanderDirection();
+    //SetWanderDirection();
 }
 
 void saucer::act(delta_time dt) {
@@ -196,16 +196,17 @@ void saucer::HuntHuman(delta_time dt) {
         Wander(dt);
         return;
     }
-    //std::cout << "HuntHuman" << std::endl; 
 
     GetNearest("human");
+    ufo::human *human = dynamic_cast<ufo::human *>(target);
 
     math::vector2d desired = target->location() - location(); 
     
-    // TODO Normalise() en Limit()
-    // Ufo aanpassen aan de snelheid van de human
-    math::vector2d steer = (desired * 0.01);
+    math::vector2d steer = desired + human->velocity;
 
+
+
+    steer = ::student::forces::limit(steer, 1);
     acceleration += steer;
 
 }
@@ -216,15 +217,15 @@ void saucer::HuntTank(delta_time dt) {
         Wander(dt);
         return;
     }
-    //std::cout << "HuntTank" << std::endl;
 
     GetNearest("tank");
 
     math::vector2d desired = target->location() - location();
 
-    // TODO Normalise() en Limit()
-    // Ufo aanpassen aan de snelheid van de human
-    math::vector2d steer = (desired * 0.01);  // 0.01);
+    math::vector2d steer = desired;
+
+    steer = ::student::forces::limit(steer, 1);
+
 
     acceleration += steer;
 }
@@ -324,7 +325,7 @@ void saucer::GetNearest(std::string type) {
 
 math::vector2d saucer::limit(const kmint::math::vector2d &v) {
     kmint::math::vector2d temp = v;
-    int maxforce = 1;
+    int maxforce = 3;
     float m = sqrt(v.x() * v.x() + v.y() * v.y());
     if (m > maxforce) {
         temp = {v.x() / m, v.y() / m};
