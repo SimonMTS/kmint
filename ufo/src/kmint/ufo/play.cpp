@@ -43,7 +43,6 @@ int play() {
         id++;
     }
 
-
     std::vector<kmint::ufo::human *> humans;
     for (int i = 0; i < s.actors_.size(); i++) {
         ufo::human *human = dynamic_cast<ufo::human *>(s.actors_[i].get());
@@ -138,7 +137,6 @@ int play() {
             population.getParents();
             s.actors_.erase(s.actors_.begin() + 2, s.actors_.end());
 
-    
             id = 0;
             for (std::size_t h{0}; h < 100; ++h) {
                 s.build_actor<ufo::human>(graph, id);
@@ -154,9 +152,8 @@ int play() {
                     humans.push_back(human);
                 }
             }
-        
 
-             s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'),
+            s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'),
                                      tank_type::red);
 
             s.build_actor<ufo::tank>(graph, ufo::random_node_of_kind(m, 'T'),
@@ -165,8 +162,7 @@ int play() {
 
             tank1 = dynamic_cast<ufo::tank *>(s.actors_[102].get());
             tank2 = dynamic_cast<ufo::tank *>(s.actors_[103].get());
-            andre =
-                dynamic_cast<ufo::andre *>(s.actors_[104].get());
+            andre = dynamic_cast<ufo::andre *>(s.actors_[104].get());
 
             tank1->Andre = andre;
             tank2->Andre = andre;
@@ -229,8 +225,6 @@ int play() {
                 }
             }
         }
-
-
 
         for (ui::events::event &e : event_source) {
             // event heeft een methode handle_quit die controleert

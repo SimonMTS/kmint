@@ -29,15 +29,14 @@ class human : public kmint::play::free_roaming_actor {
     scalar perception_range() const override { return 30.0f; }
     map::map_graph &graph_;
     math::vector2d heading{1, 0};
-    std::vector<std::reference_wrapper<ufo::human>> *other_humans;
+    // std::vector<std::reference_wrapper<ufo::human>> *other_humans;
     bool isSafeTank = false;
     bool isSafeHouse = false;
 
-    std::vector<play::actor*> ufos;
-    std::vector <play::actor*> doors;
+    std::vector<play::actor *> ufos;
+    std::vector<play::actor *> doors;
     play::actor *greentank;
     play::actor *redtank;
-
 
     const float maxSpeed = 4;
     const float maxForce = 1;
@@ -46,7 +45,7 @@ class human : public kmint::play::free_roaming_actor {
     const float DesiredUfoDistance = 200;
 
     const float DesiredSeparationDistance = 100;
-    const float DesiredAlignmentDistance= 100;
+    const float DesiredAlignmentDistance = 100;
     const float DesiredCohesionDistance = 100;
 
     math::vector2d acceleration{0, 0};
@@ -67,9 +66,9 @@ class human : public kmint::play::free_roaming_actor {
     // To calculate fitness
     const int id;
     float DistanceTravelled = 0;
-    float TimeAlive=0;
-   private:
+    float TimeAlive = 0;
 
+   private:
     std::vector<Building> buildings;
 
     void Forces();
@@ -80,7 +79,7 @@ class human : public kmint::play::free_roaming_actor {
     play::image_drawable drawable_;
     delta_time t_since_move_{};
 
-     float RandomNumber(float Min, float Max) {
+    float RandomNumber(float Min, float Max) {
         return ((float(rand()) / float(RAND_MAX)) * (Max - Min)) + Min;
     }
 };

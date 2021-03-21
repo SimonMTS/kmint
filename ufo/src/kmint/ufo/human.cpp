@@ -14,9 +14,9 @@ constexpr char const *image_path = "resources/human.png";
 
 graphics::image human_image() { return graphics::image{image_path}; }
 
-math::vector2d random_location() { 
+math::vector2d random_location() {
     math::vector2d loc = {random_scalar(60, 900), random_scalar(60, 700)};
-    
+
     return loc;
 }
 
@@ -47,11 +47,14 @@ void human::act(delta_time dt) {
     t_since_move_ += dt;
     if (to_seconds(t_since_move_) >= 0.1) {
         TimeAlive += to_seconds(t_since_move_);
-        DistanceTravelled += sqrt((velocity.x() * velocity.x()) + velocity.y() * velocity.y()) / 10;
+        DistanceTravelled +=
+            sqrt((velocity.x() * velocity.x()) + velocity.y() * velocity.y()) /
+            10;
 
         population->humanproperties[id].Fitness = TimeAlive + DistanceTravelled;
-       // std::cout << id << " " << population->humanproperties[id].Fitness << std::endl;
-       
+        // std::cout << id << " " << population->humanproperties[id].Fitness <<
+        // std::endl;
+
         if (!isSafeHouse) {
             Forces();
             Buildings();
@@ -78,7 +81,6 @@ void human::Move() {
         acceleration *= 0;
     } else {
         location(greentank->location());
-
     }
 }
 void human::Forces() {
@@ -87,15 +89,22 @@ void human::Forces() {
     math::vector2d s = ::student::forces::separation(*this);
     math::vector2d a = ::student::forces::alignment(*this);
     math::vector2d c = ::student::forces::cohesion(*this);
-    math::vector2d greent = ::student::forces::attacted_to(*this, *greentank, DesiredTankDistance);
-    math::vector2d redt = ::student::forces::attacted_to(*this, *redtank, DesiredTankDistance);
-    math::vector2d ufo0 = ::student::forces::attacted_to(*this, *ufos[0], DesiredUfoDistance);
-    math::vector2d ufo1 = ::student::forces::attacted_to(*this, *ufos[1], DesiredUfoDistance);
-    math::vector2d ufo2 = ::student::forces::attacted_to(*this, *ufos[2], DesiredUfoDistance);
-    math::vector2d ufo3 = ::student::forces::attacted_to(*this, *ufos[3], DesiredUfoDistance);
-    math::vector2d door0 = ::student::forces::attacted_to(*this, *doors[0], 100);
-    math::vector2d door1 = ::student::forces::attacted_to(*this, *doors[1], 100);
-
+    math::vector2d greent =
+        ::student::forces::attacted_to(*this, *greentank, DesiredTankDistance);
+    math::vector2d redt =
+        ::student::forces::attacted_to(*this, *redtank, DesiredTankDistance);
+    math::vector2d ufo0 =
+        ::student::forces::attacted_to(*this, *ufos[0], DesiredUfoDistance);
+    math::vector2d ufo1 =
+        ::student::forces::attacted_to(*this, *ufos[1], DesiredUfoDistance);
+    math::vector2d ufo2 =
+        ::student::forces::attacted_to(*this, *ufos[2], DesiredUfoDistance);
+    math::vector2d ufo3 =
+        ::student::forces::attacted_to(*this, *ufos[3], DesiredUfoDistance);
+    math::vector2d door0 =
+        ::student::forces::attacted_to(*this, *doors[0], 100);
+    math::vector2d door1 =
+        ::student::forces::attacted_to(*this, *doors[1], 100);
 
     s = s * SeparationWeight;
     a = a * AlignmentWeight;
@@ -107,9 +116,10 @@ void human::Forces() {
     ufo2 = ufo2 * UfoWeight;
     ufo3 = ufo3 * UfoWeight;
 
-    //acceleration += door0 + door1;
+    // acceleration += door0 + door1;
 
-    acceleration += s + a + c + greent + redt + ufo0 + ufo1 + ufo2 + ufo3 + door0 + door1;
+    acceleration +=
+        s + a + c + greent + redt + ufo0 + ufo1 + ufo2 + ufo3 + door0 + door1;
 }
 void human::setLocation(math::vector2d location) { this->location(location); }
 void human::MapEdge() {
@@ -117,7 +127,6 @@ void human::MapEdge() {
     int TopLeftY = 0;
     int BottomRightX = 959;
     int BottomRightY = 703;
-
 
     int edgeboundary = 5;
 
@@ -143,12 +152,9 @@ void human::MapEdge() {
             acceleration += math::vector2d{0, -velocity.y() * 2};
         }
     }
-
 }
 
-void human::Buildings() { 
-    
-
+void human::Buildings() {
     for (auto b : buildings) {
         if (location().x() > b.TopLeftX && location().x() < b.BottomRightX &&
             location().y() > b.TopLeftY && location().y() < b.BottomRightY) {
@@ -156,9 +162,6 @@ void human::Buildings() {
             acceleration *= -2;
         }
     }
-
-
-
 }
 
 math::vector2d human::CanSpawnHere(math::vector2d location) {
@@ -171,6 +174,5 @@ math::vector2d human::CanSpawnHere(math::vector2d location) {
 
     return location;
 }
-
 
 }  // namespace kmint::ufo

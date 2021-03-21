@@ -28,11 +28,15 @@ kmint::math::vector2d forces::wander(const kmint::ufo::human &human) {
 kmint::math::vector2d forces::cohesion(const kmint::ufo::human &human) {
     kmint::math::vector2d sum = kmint::math::vector2d{0, 0};
     int count = 0;
-    for (int i = 0; i < human.population->humans.size(); i++) {
-        if (!human.population->humans[i]->removed()) {
-            float d = distance(human, human.population->humans[i]->location());
+    for (unsigned long i = 0; i < human.population->humans.size(); i++) {
+        // the memory in other can be corrupted
+        kmint::ufo::human &other = *human.population->humans[i];
+        // this prevents most crashes, but is not a real fix
+        if (!human.removed() && !other.removed() && human.id != other.id &&
+            &other.graph_ == &human.graph_) {
+            float d = distance(human, other.location());
             if ((d > 0) && (d < human.DesiredCohesionDistance)) {
-                sum += human.population->humans[i]->location();
+                sum += other.location();
                 count++;
             }
         }
@@ -44,20 +48,21 @@ kmint::math::vector2d forces::cohesion(const kmint::ufo::human &human) {
     return kmint::math::vector2d{0, 0};
 }
 
-
-
 kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
     kmint::math::vector2d steer{0, 0};
     int count = 0;
 
-    for (int i = 0; i < human.population->humans.size(); i++) {
-        if (!human.population->humans[i]->removed()) {
-
-            float d = distance(human, human.population->humans[i]->location());
+    for (unsigned long i = 0; i < human.population->humans.size(); i++) {
+        // the memory in other can be corrupted
+        kmint::ufo::human &other = *human.population->humans[i];
+        // this prevents most crashes, but is not a real fix
+        if (!human.removed() && !other.removed() && human.id != other.id &&
+            &other.graph_ == &human.graph_) {
+            float d = distance(human, other.location());
 
             if ((d > 0) && (d < human.DesiredSeparationDistance)) {
                 kmint::math::vector2d diff = kmint::math::vector2d{0, 0};
-                diff = human.location() - human.population->humans[i]->location();
+                diff = human.location() - other.location();
                 diff = normalize(diff);
                 diff = diff / d;
                 steer += diff;
@@ -80,18 +85,20 @@ kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
     return steer;
 }
 
-
-
 kmint::math::vector2d forces::alignment(const kmint::ufo::human &human) {
     kmint::math::vector2d sum{0, 0};
 
     int count = 0;
-    for (int i = 0; i < human.population->humans.size(); i++) {
-        if (!human.population->humans[i]->removed()) {
-            float d = distance(human, human.population->humans[i]->location());
+    for (unsigned long i = 0; i < human.population->humans.size(); i++) {
+        // the memory in other can be corrupted
+        kmint::ufo::human &other = *human.population->humans[i];
+        // this prevents most crashes, but is not a real fix
+        if (!human.removed() && !other.removed() && human.id != other.id &&
+            &other.graph_ == &human.graph_) {
+            float d = distance(human, other.location());
 
             if ((d > 0) && (d < human.DesiredAlignmentDistance)) {
-                sum += human.population->humans[i]->velocity;
+                sum += other.velocity;
                 count++;
             }
         }
@@ -111,12 +118,14 @@ kmint::math::vector2d forces::alignment(const kmint::ufo::human &human) {
     }
 }
 
-kmint::math::vector2d forces::attacted_to(const kmint::ufo::human& human, const kmint::play::actor& actor, float range) {
+kmint::math::vector2d forces::attacted_to(const kmint::ufo::human &human,
+                                          const kmint::play::actor &actor,
+                                          float range) {
     kmint::math::vector2d steer{0, 0};
     int count = 0;
 
     float d = distance(human, actor);
-   
+
     if ((d > 0) && (d < range)) {
         kmint::math::vector2d diff = kmint::math::vector2d{0, 0};
         diff = human.location() - actor.location();
@@ -142,27 +151,27 @@ kmint::math::vector2d forces::attacted_to(const kmint::ufo::human& human, const 
     return steer * -1;
 }
 
-
-kmint::math::vector2d forces::limit(const kmint::math::vector2d &v, float maxforce) {
+kmint::math::vector2d forces::limit(const kmint::math::vector2d &v,
+                                    float maxforce) {
     kmint::math::vector2d temp = v;
     float m = sqrt(v.x() * v.x() + v.y() * v.y());
     if (m > maxforce) {
         temp = {v.x() / m, v.y() / m};
     }
     return temp;
-};
+}
 
-float forces::distance(const kmint::ufo::human& human,
-    const kmint::play::actor& actor) {
-
+float forces::distance(const kmint::ufo::human &human,
+                       const kmint::play::actor &actor) {
     float dx = human.location().x() - actor.location().x();
     float dy = human.location().y() - actor.location().y();
     float dist = sqrt(dx * dx + dy * dy);
     return dist;
 }
 
-float forces::distance(const kmint::ufo::human &human, const kmint::math::vector2d &v) {
-    float dx = human.location().x() -v.x();
+float forces::distance(const kmint::ufo::human &human,
+                       const kmint::math::vector2d &v) {
+    float dx = human.location().x() - v.x();
     float dy = human.location().y() - v.y();
     float dist = sqrt(dx * dx + dy * dy);
     return dist;
@@ -178,7 +187,8 @@ kmint::math::vector2d forces::normalize(const kmint::math::vector2d &v) {
     return temp;
 }
 
-kmint::math::vector2d forces::seek(const kmint::ufo::human &human, const kmint::math::vector2d &v) {
+kmint::math::vector2d forces::seek(const kmint::ufo::human &human,
+                                   const kmint::math::vector2d &v) {
     kmint::math::vector2d desired = v - human.location();
 
     desired = normalize(desired);
@@ -189,6 +199,6 @@ kmint::math::vector2d forces::seek(const kmint::ufo::human &human, const kmint::
 
     steer = limit(steer, human.maxForce);
     return steer;
-};
+}
 
 }  // namespace student

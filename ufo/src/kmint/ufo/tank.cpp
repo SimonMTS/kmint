@@ -1,6 +1,6 @@
 #include "kmint/ufo/tank.hpp"
 
-//#include <bits/stdc++.h>
+#include <bits/stdc++.h>
 
 #include <iostream>
 
@@ -43,14 +43,12 @@ void tank::act(delta_time dt) {
     if (to_seconds(t_since_move_) >= 1) {
         if (this->type_ == tank_type::red) {
             graph.untag_all();
-           // for (int i = 0; i < graph.num_nodes() - 1; i++) {
-           //     if (graph[i].tag() == kmint::graph::node_tag::visited) {
-           //         graph[i].tag(kmint::graph::node_tag::normal);
-           //     }
-           // }
-
+            // for (int i = 0; i < graph.num_nodes() - 1; i++) {
+            //     if (graph[i].tag() == kmint::graph::node_tag::visited) {
+            //         graph[i].tag(kmint::graph::node_tag::normal);
+            //     }
+            // }
         }
-
 
         if (damage >= 100) {
             state = repair;
@@ -143,8 +141,8 @@ void tank::GoToEMP() {
     GoTo(pickup_type::EMP);
 
     if (this->path.size() == 0 && target != nullptr) {
-        //target->available = false;
-        //target->remove();
+        // target->available = false;
+        // target->remove();
         target->NewLocation();
 
         state = wander;
@@ -161,8 +159,8 @@ void tank::GoToShield() {
     GoTo(pickup_type::SHIELD);
 
     if (this->path.size() == 0 && target != nullptr) {
-       // target->available = false;
-        //target->remove();
+        // target->available = false;
+        // target->remove();
         target->NewLocation();
         state = wander;
         LaserShieldCount++;
@@ -187,8 +185,8 @@ void tank::Repair() {
 }
 
 void tank::GoToRepair() {
-    //if (Andre->path.size() == 0) return;
-   // const map_node &endnode = Andre->path[Andre->path.size() / 2 - 1];
+    // if (Andre->path.size() == 0) return;
+    // const map_node &endnode = Andre->path[Andre->path.size() / 2 - 1];
 
     path = ufo::student::a_star::find_path(
         node(), Andre->node(), this->graph,
@@ -438,7 +436,7 @@ void tank::RoadkillOrSave() {
         if (distance > 20) continue;
 
         if (this->type_ == tank_type::red) {  // Roadkill
-            human->remove();
+            human1.remove();
         } else if (this->type_ == tank_type::green) {
             human->isSafeTank = true;
         }
