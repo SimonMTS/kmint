@@ -1,7 +1,5 @@
 #include "kmint/ufo/tank.hpp"
 
-#include <bits/stdc++.h>
-
 #include <iostream>
 
 #include "kmint/a_star/a_star.hpp"

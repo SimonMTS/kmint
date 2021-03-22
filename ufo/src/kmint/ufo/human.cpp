@@ -89,23 +89,18 @@ void human::Forces() {
     math::vector2d s = ::student::forces::separation(*this);
     math::vector2d a = ::student::forces::alignment(*this);
     math::vector2d c = ::student::forces::cohesion(*this);
-    math::vector2d greent =
-        ::student::forces::attacted_to(*this, *greentank, DesiredTankDistance);
-    math::vector2d redt =
-        ::student::forces::attacted_to(*this, *redtank, DesiredTankDistance);
-    math::vector2d ufo0 =
-        ::student::forces::attacted_to(*this, *ufos[0], DesiredUfoDistance);
-    math::vector2d ufo1 =
-        ::student::forces::attacted_to(*this, *ufos[1], DesiredUfoDistance);
-    math::vector2d ufo2 =
-        ::student::forces::attacted_to(*this, *ufos[2], DesiredUfoDistance);
-    math::vector2d ufo3 =
-        ::student::forces::attacted_to(*this, *ufos[3], DesiredUfoDistance);
-    math::vector2d door0 =
-        ::student::forces::attacted_to(*this, *doors[0], 100);
-    math::vector2d door1 =
-        ::student::forces::attacted_to(*this, *doors[1], 100);
-
+    math::vector2d greent = ::student::forces::attacted_to(*this, *greentank, DesiredTankDistance);
+    math::vector2d redt =   ::student::forces::attacted_to(*this, *redtank, DesiredTankDistance);
+    math::vector2d ufo0 =   ::student::forces::attacted_to(*this, *ufos[0], DesiredUfoDistance);
+    math::vector2d ufo1 =   ::student::forces::attacted_to(*this, *ufos[1], DesiredUfoDistance);
+    math::vector2d ufo2 =   ::student::forces::attacted_to(*this, *ufos[2], DesiredUfoDistance);
+    math::vector2d ufo3 =   ::student::forces::attacted_to(*this, *ufos[3], DesiredUfoDistance);
+    math::vector2d door0 =  ::student::forces::attacted_to(*this, *doors[0], 100);
+    math::vector2d door1 =  ::student::forces::attacted_to(*this, *doors[1], 100);
+    math::vector2d door2 =  ::student::forces::attacted_to(*this, *doors[2], 100);
+    math::vector2d door3 =  ::student::forces::attacted_to(*this, *doors[3], 100);
+    math::vector2d door4 =  ::student::forces::attacted_to(*this, *doors[4], 100);
+    math::vector2d door5 =  ::student::forces::attacted_to(*this, *doors[5], 100);
     s = s * SeparationWeight;
     a = a * AlignmentWeight;
     c = c * CohesionWeight;
@@ -115,11 +110,14 @@ void human::Forces() {
     ufo1 = ufo1 * UfoWeight;
     ufo2 = ufo2 * UfoWeight;
     ufo3 = ufo3 * UfoWeight;
+    door0 = door0 * DoorWeight;
+    door1 = door1 * DoorWeight;
+    door2 = door2 * DoorWeight;
+    door3 = door3 * DoorWeight;
+    door4 = door4 * DoorWeight;
+    door5 = door5 * DoorWeight;
 
-    // acceleration += door0 + door1;
-
-    acceleration +=
-        s + a + c + greent + redt + ufo0 + ufo1 + ufo2 + ufo3 + door0 + door1;
+    acceleration += s + a + c + greent + redt + ufo0 + ufo1 + ufo2 + ufo3 + door0 + door1 + door2 + door3 + door4 + door5;
 }
 void human::setLocation(math::vector2d location) { this->location(location); }
 void human::MapEdge() {

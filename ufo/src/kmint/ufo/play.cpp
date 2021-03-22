@@ -102,9 +102,17 @@ int play() {
 
     s.build_actor<ufo::Doors>(graph, math::vector2d{401, 628});
     s.build_actor<ufo::Doors>(graph, math::vector2d{460, 613});
+    s.build_actor<ufo::Doors>(graph, math::vector2d{640, 496});
+    s.build_actor<ufo::Doors>(graph, math::vector2d{624, 320});
+    s.build_actor<ufo::Doors>(graph, math::vector2d{688, 129});
+    s.build_actor<ufo::Doors>(graph, math::vector2d{598, 139});
 
     doors.push_back(s.actors_[115].get());
     doors.push_back(s.actors_[116].get());
+    doors.push_back(s.actors_[117].get());
+    doors.push_back(s.actors_[118].get());
+    doors.push_back(s.actors_[119].get());
+    doors.push_back(s.actors_[120].get());
 
     Population population{humans};
     population.saveProperties();
@@ -205,9 +213,18 @@ int play() {
 
             s.build_actor<ufo::Doors>(graph, math::vector2d{401, 628});
             s.build_actor<ufo::Doors>(graph, math::vector2d{460, 613});
+            s.build_actor<ufo::Doors>(graph, math::vector2d{640, 496});
+            s.build_actor<ufo::Doors>(graph, math::vector2d{624, 320});
+            s.build_actor<ufo::Doors>(graph, math::vector2d{688, 129});
+            s.build_actor<ufo::Doors>(graph, math::vector2d{598, 139});
+
 
             doors.push_back(s.actors_[115].get());
             doors.push_back(s.actors_[116].get());
+            doors.push_back(s.actors_[117].get());
+            doors.push_back(s.actors_[118].get());
+            doors.push_back(s.actors_[119].get());
+            doors.push_back(s.actors_[120].get());
 
             population.humans = humans;
             population.Crossover();
