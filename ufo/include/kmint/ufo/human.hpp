@@ -4,6 +4,7 @@
 #include <tuple>
 #include <vector>
 
+#include "kmint/force_driven_entities/movement_helpers.hpp"
 #include "kmint/math/vector2d.hpp"
 #include "kmint/play.hpp"
 
@@ -17,7 +18,7 @@ struct Building {
 
 namespace kmint::ufo {
 
-class human : public kmint::play::free_roaming_actor {
+class human : public student::force_driven_entity {
    public:
     human(map::map_graph &g, const int id);
     const ui::drawable &drawable() const override { return drawable_; }
@@ -48,8 +49,8 @@ class human : public kmint::play::free_roaming_actor {
     const float DesiredAlignmentDistance = 100;
     const float DesiredCohesionDistance = 100;
 
-    math::vector2d acceleration{0, 0};
-    math::vector2d velocity{0, 0};
+    // math::vector2d acceleration{0, 0};
+    // math::vector2d velocity{0, 0};
 
     Population *population = nullptr;
 

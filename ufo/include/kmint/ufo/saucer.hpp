@@ -2,6 +2,7 @@
 #define KMINT_UFO_SAUCER_HPP
 
 #include "kmint/finite_state_machine/finite_state_machine.hpp"
+#include "kmint/force_driven_entities/movement_helpers.hpp"
 #include "kmint/math/vector2d.hpp"
 #include "kmint/play.hpp"
 
@@ -10,7 +11,7 @@ namespace kmint::ufo {
 enum class saucer_type { blue, green, beige, yellow };
 enum State { hunttank, hunthuman, wander, nomove };
 
-class saucer : public kmint::play::free_roaming_actor {
+class saucer : public student::force_driven_entity {
    public:
     State state = wander;
 
@@ -32,13 +33,10 @@ class saucer : public kmint::play::free_roaming_actor {
     play::image_drawable drawable_;
     void GetNearest(std::string type);
     play::actor *target;
-    void Move();
-    math::vector2d acceleration{};
-    math::vector2d WanderDirection;
+    // void Move();
 
    private:
     saucer_type type_;
-    math::vector2d velocity{};
 
     delta_time t_since_move_{};
 
@@ -57,8 +55,6 @@ class saucer : public kmint::play::free_roaming_actor {
     void SetWanderDirection();
     void Edges();
     int RandomInt(float Min, float Max);
-
-    math::vector2d limit(const kmint::math::vector2d &vector);
 };
 
 }  // namespace kmint::ufo

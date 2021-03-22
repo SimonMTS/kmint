@@ -1,5 +1,7 @@
 #include "kmint/finite_state_machine/fsm_actions.hpp"
 
+#include <iostream>
+
 #include "kmint/force_driven_entities/forces.hpp"
 #include "kmint/ufo/saucer.hpp"
 #include "kmint/ufo/tank.hpp"
@@ -7,12 +9,13 @@
 namespace kmint::ufo::student {
 
 void fsm_actions::Execute_Wander(saucer& s) {
-    s.acceleration += s.WanderDirection * 0.01;
+    // randomize wander // saucer::SetWanderDirection()
+    float xspeed = RandomInt(-1, 1);
+    float yspeed = RandomInt(-1, 1);
+    s.WanderDirection += {xspeed, yspeed};
 
-    // saucer::SetWanderDirection()
-    float xspeed = 20.f * RandomInt(-0.1, 0.1);
-    float yspeed = 20.f * RandomInt(-0.1, 0.1);
-    s.WanderDirection = {xspeed, yspeed};
+    // "move"
+    s.acceleration += s.WanderDirection;
 }
 
 void fsm_actions::Execute_HuntHuman(saucer& s) {
@@ -81,11 +84,11 @@ void fsm_actions::Execute_NoMove(saucer& s) { s.acceleration = {0, 0}; }
 
 #pragma region helpers
 
-int fsm_actions::RandomInt(float Min, float Max) {
+float fsm_actions::RandomInt(float Min, float Max) {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> distr(-1, 1);
-    return distr(gen);
+    std::uniform_int_distribution<int> distr(Min * 1000, Max * 1000);
+    return ((float)distr(gen)) / 1000;
 }
 
 #pragma endregion helpers

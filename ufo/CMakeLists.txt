@@ -24,6 +24,7 @@ add_library(ufo-common STATIC
   src/kmint/force_driven_entities/forces.cpp
   src/kmint/ufo/pickup.cpp
   src/kmint/force_driven_entities/population.cpp
+  src/kmint/force_driven_entities/movement_helpers.cpp
   src/kmint/finite_state_machine/finite_state_machine.cpp
   src/kmint/finite_state_machine/fsm_actions.cpp
   src/kmint/finite_state_machine/fsm_transitions.cpp

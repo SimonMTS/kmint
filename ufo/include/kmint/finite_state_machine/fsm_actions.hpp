@@ -17,9 +17,8 @@ class fsm_actions {
     static void Execute_HuntTank(saucer& s);
     static void Execute_NoMove(saucer& s);
 
-   private:
     // helpers
-    static int RandomInt(float Min, float Max);
+    static float RandomInt(float Min, float Max);
 };
 }  // namespace kmint::ufo::student
 

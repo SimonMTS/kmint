@@ -274,6 +274,87 @@ src/kmint/a_star/heuristics.cpp.s:
 	cd /home/simon/Documents/GitHub/kmint && $(MAKE) $(MAKESILENT) -f ufo/CMakeFiles/ufo-common.dir/build.make ufo/CMakeFiles/ufo-common.dir/src/kmint/a_star/heuristics.cpp.s
 .PHONY : src/kmint/a_star/heuristics.cpp.s
 
+src/kmint/finite_state_machine/finite_state_machine.o: src/kmint/finite_state_machine/finite_state_machine.cpp.o
+
+.PHONY : src/kmint/finite_state_machine/finite_state_machine.o
+
+# target to build an object file
+src/kmint/finite_state_machine/finite_state_machine.cpp.o:
+	cd /home/simon/Documents/GitHub/kmint && $(MAKE) $(MAKESILENT) -f ufo/CMakeFiles/ufo-common.dir/build.make ufo/CMakeFiles/ufo-common.dir/src/kmint/finite_state_machine/finite_state_machine.cpp.o
+.PHONY : src/kmint/finite_state_machine/finite_state_machine.cpp.o
+
+src/kmint/finite_state_machine/finite_state_machine.i: src/kmint/finite_state_machine/finite_state_machine.cpp.i
+
+.PHONY : src/kmint/finite_state_machine/finite_state_machine.i
+
+# target to preprocess a source file
+src/kmint/finite_state_machine/finite_state_machine.cpp.i:
+	cd /home/simon/Documents/GitHub/kmint && $(MAKE) $(MAKESILENT) -f ufo/CMakeFiles/ufo-common.dir/build.make ufo/CMakeFiles/ufo-common.dir/src/kmint/finite_state_machine/finite_state_machine.cpp.i
+.PHONY : src/kmint/finite_state_machine/finite_state_machine.cpp.i
+
+src/kmint/finite_state_machine/finite_state_machine.s: src/kmint/finite_state_machine/finite_state_machine.cpp.s
+
+.PHONY : src/kmint/finite_state_machine/finite_state_machine.s
+
+# target to generate assembly for a file
+src/kmint/finite_state_machine/finite_state_machine.cpp.s:
+	cd /home/simon/Documents/GitHub/kmint && $(MAKE) $(MAKESILENT) -f ufo/CMakeFiles/ufo-common.dir/build.make ufo/CMakeFiles/ufo-common.dir/src/kmint/finite_state_machine/finite_state_machine.cpp.s
+.PHONY : src/kmint/finite_state_machine/finite_state_machine.cpp.s
+
+src/kmint/finite_state_machine/fsm_actions.o: src/kmint/finite_state_machine/fsm_actions.cpp.o
+
+.PHONY : src/kmint/finite_state_machine/fsm_actions.o
+
+# target to build an object file
+src/kmint/finite_state_machine/fsm_actions.cpp.o:
+	cd /home/simon/Documents/GitHub/kmint && $(MAKE) $(MAKESILENT) -f ufo/CMakeFiles/ufo-common.dir/build.make ufo/CMakeFiles/ufo-common.dir/src/kmint/finite_state_machine/fsm_actions.cpp.o
+.PHONY : src/kmint/finite_state_machine/fsm_actions.cpp.o
+
+src/kmint/finite_state_machine/fsm_actions.i: src/kmint/finite_state_machine/fsm_actions.cpp.i
+
+.PHONY : src/kmint/finite_state_machine/fsm_actions.i
+
+# target to preprocess a source file
+src/kmint/finite_state_machine/fsm_actions.cpp.i:
+	cd /home/simon/Documents/GitHub/kmint && $(MAKE) $(MAKESILENT) -f ufo/CMakeFiles/ufo-common.dir/build.make ufo/CMakeFiles/ufo-common.dir/src/kmint/finite_state_machine/fsm_actions.cpp.i
+.PHONY : src/kmint/finite_state_machine/fsm_actions.cpp.i
+
+src/kmint/finite_state_machine/fsm_actions.s: src/kmint/finite_state_machine/fsm_actions.cpp.s
+
+.PHONY : src/kmint/finite_state_machine/fsm_actions.s
+
+# target to generate assembly for a file
+src/kmint/finite_state_machine/fsm_actions.cpp.s:
+	cd /home/simon/Documents/GitHub/kmint && $(MAKE) $(MAKESILENT) -f ufo/CMakeFiles/ufo-common.dir/build.make ufo/CMakeFiles/ufo-common.dir/src/kmint/finite_state_machine/fsm_actions.cpp.s
+.PHONY : src/kmint/finite_state_machine/fsm_actions.cpp.s
+
+src/kmint/finite_state_machine/fsm_transitions.o: src/kmint/finite_state_machine/fsm_transitions.cpp.o
+
+.PHONY : src/kmint/finite_state_machine/fsm_transitions.o
+
+# target to build an object file
+src/kmint/finite_state_machine/fsm_transitions.cpp.o:
+	cd /home/simon/Documents/GitHub/kmint && $(MAKE) $(MAKESILENT) -f ufo/CMakeFiles/ufo-common.dir/build.make ufo/CMakeFiles/ufo-common.dir/src/kmint/finite_state_machine/fsm_transitions.cpp.o
+.PHONY : src/kmint/finite_state_machine/fsm_transitions.cpp.o
+
+src/kmint/finite_state_machine/fsm_transitions.i: src/kmint/finite_state_machine/fsm_transitions.cpp.i
+
+.PHONY : src/kmint/finite_state_machine/fsm_transitions.i
+
+# target to preprocess a source file
+src/kmint/finite_state_machine/fsm_transitions.cpp.i:
+	cd /home/simon/Documents/GitHub/kmint && $(MAKE) $(MAKESILENT) -f ufo/CMakeFiles/ufo-common.dir/build.make ufo/CMakeFiles/ufo-common.dir/src/kmint/finite_state_machine/fsm_transitions.cpp.i
+.PHONY : src/kmint/finite_state_machine/fsm_transitions.cpp.i
+
+src/kmint/finite_state_machine/fsm_transitions.s: src/kmint/finite_state_machine/fsm_transitions.cpp.s
+
+.PHONY : src/kmint/finite_state_machine/fsm_transitions.s
+
+# target to generate assembly for a file
+src/kmint/finite_state_machine/fsm_transitions.cpp.s:
+	cd /home/simon/Documents/GitHub/kmint && $(MAKE) $(MAKESILENT) -f ufo/CMakeFiles/ufo-common.dir/build.make ufo/CMakeFiles/ufo-common.dir/src/kmint/finite_state_machine/fsm_transitions.cpp.s
+.PHONY : src/kmint/finite_state_machine/fsm_transitions.cpp.s
+
 src/kmint/force_driven_entities/forces.o: src/kmint/force_driven_entities/forces.cpp.o
 
 .PHONY : src/kmint/force_driven_entities/forces.o
@@ -619,6 +700,15 @@ help:
 	@echo "... src/kmint/a_star/heuristics.o"
 	@echo "... src/kmint/a_star/heuristics.i"
 	@echo "... src/kmint/a_star/heuristics.s"
+	@echo "... src/kmint/finite_state_machine/finite_state_machine.o"
+	@echo "... src/kmint/finite_state_machine/finite_state_machine.i"
+	@echo "... src/kmint/finite_state_machine/finite_state_machine.s"
+	@echo "... src/kmint/finite_state_machine/fsm_actions.o"
+	@echo "... src/kmint/finite_state_machine/fsm_actions.i"
+	@echo "... src/kmint/finite_state_machine/fsm_actions.s"
+	@echo "... src/kmint/finite_state_machine/fsm_transitions.o"
+	@echo "... src/kmint/finite_state_machine/fsm_transitions.i"
+	@echo "... src/kmint/finite_state_machine/fsm_transitions.s"
 	@echo "... src/kmint/force_driven_entities/forces.o"
 	@echo "... src/kmint/force_driven_entities/forces.i"
 	@echo "... src/kmint/force_driven_entities/forces.s"

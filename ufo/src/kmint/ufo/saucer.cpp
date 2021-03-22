@@ -7,6 +7,7 @@
 #include <string>
 
 #include "kmint/finite_state_machine/finite_state_machine.hpp"
+#include "kmint/finite_state_machine/fsm_actions.hpp"
 #include "kmint/force_driven_entities/forces.hpp"
 #include "kmint/ufo/human.hpp"
 #include "kmint/ufo/tank.hpp"
@@ -32,17 +33,21 @@ char const *color_for(saucer_type type) {
 }
 
 math::vector2d location_for(saucer_type type) {
-    switch (type) {
-        case saucer_type::blue:
-            return {30.f, 30.f};
-        case saucer_type::green:
-            return {994.f, 30.f};
-        case saucer_type::beige:
-            return {994.f, 738.f};
-        case saucer_type::yellow:
-        default:
-            return {30.f, 738.f};
-    }
+    // switch (type) {
+    //     case saucer_type::blue:
+    //         return {30.f, 30.f};
+    //     case saucer_type::green:
+    //         return {994.f, 30.f};
+    //     case saucer_type::beige:
+    //         return {994.f, 738.f};
+    //     case saucer_type::yellow:
+    //     default:
+    //         return {30.f, 738.f};
+    // }
+
+    float x = (int)student::fsm_actions::RandomInt(0, 1024);
+    float y = (int)student::fsm_actions::RandomInt(0, 768);
+    return {x, y};
 }
 
 graphics::image image_for(saucer_type type) {
@@ -70,12 +75,16 @@ math::vector2d velocity_for(saucer_type type) {
 #pragma endregion helpers
 
 saucer::saucer(saucer_type type)
-    : play::free_roaming_actor{location_for(type)},
+    : student::force_driven_entity{location_for(type)},
       drawable_{*this, image_for(type)},
-      velocity{velocity_for(type)},
       type_{type} {
     EntityType = "ufo";
+    velocity = velocity_for(type);
+
     // SetWanderDirection();
+    float xspeed = student::fsm_actions::RandomInt(-3, 3);
+    float yspeed = student::fsm_actions::RandomInt(-3, 3);
+    WanderDirection = {xspeed, yspeed};
 }
 
 void saucer::act(delta_time dt) {
@@ -89,14 +98,31 @@ void saucer::act(delta_time dt) {
     }
 }
 
-void saucer::Move() {
-    velocity += acceleration;
+// void saucer::Move() {
+// {  // stay on map (not great, but it works?)
+// check position in 100 steps
+// math::vector2d futPos = location() + (velocity * 100);
 
-    velocity = limit(velocity);
-    math::vector2d nextpos = location() + velocity;
-    location(nextpos);
-    acceleration *= 0;
-}
+// calulate repulsion
+// float xRep =
+//     (futPos.x() < 0 ? std::abs(futPos.x()) : futPos.x() - 1024) / 5;
+// float yRep =
+//     (futPos.y() < 0 ? std::abs(futPos.y()) : futPos.y() - 768) / 5;
+
+// if out of bound, apply opposite force
+// if (futPos.x() < 0) WanderDirection += {xRep, 0};
+// if (futPos.x() > 1024) WanderDirection += {-xRep, 0};
+// if (futPos.y() < 0) WanderDirection += {0, yRep};
+// if (futPos.y() > 768) WanderDirection += {0, -yRep};
+// }
+
+// velocity += acceleration;
+
+// velocity = limit(velocity);
+// math::vector2d nextpos = location() + velocity;
+// location(nextpos);
+// acceleration *= 0;
+// }
 
 #pragma region moreHelpers
 
@@ -133,16 +159,6 @@ void saucer::GetNearest(std::string type) {
     if (!queue.empty()) {
         target = queue.top().first;
     }
-}
-
-math::vector2d saucer::limit(const kmint::math::vector2d &v) {
-    kmint::math::vector2d temp = v;
-    int maxforce = 3;
-    float m = sqrt(v.x() * v.x() + v.y() * v.y());
-    if (m > maxforce) {
-        temp = {v.x() / m, v.y() / m};
-    }
-    return temp;
 }
 
 #pragma endregion moreHelpers

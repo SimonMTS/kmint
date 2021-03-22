@@ -58,7 +58,7 @@ void finite_state_machine::ExecuteStateAction(saucer& s) {
             break;
     }
 
-    s.Move();
+    student::movement_helpers::MoveTick(s);
 }
 
 }  // namespace kmint::ufo::student
