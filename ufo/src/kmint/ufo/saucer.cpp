@@ -74,8 +74,8 @@ math::vector2d velocity_for(saucer_type type) {
 
 #pragma endregion helpers
 
-saucer::saucer(saucer_type type)
-    : student::force_driven_entity{location_for(type)},
+saucer::saucer(saucer_type type, math::vector2d location)
+    : student::force_driven_entity{location},
       drawable_{*this, image_for(type)},
       type_{type} {
     EntityType = "ufo";

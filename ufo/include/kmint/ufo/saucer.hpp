@@ -15,7 +15,7 @@ class saucer : public student::force_driven_entity {
    public:
     State state = wander;
 
-    saucer(saucer_type type);
+    saucer(saucer_type type, math::vector2d location);
 
     saucer_type type() const noexcept { return type_; }
     ui::drawable const &drawable() const override { return drawable_; }

@@ -88,10 +88,10 @@ int play() {
 
     std::vector<play::actor *> ufos;
 
-    s.build_actor<ufo::saucer>(saucer_type::blue);
-    s.build_actor<ufo::saucer>(saucer_type::green);
-    s.build_actor<ufo::saucer>(saucer_type::beige);
-    s.build_actor<ufo::saucer>(saucer_type::yellow);
+    s.build_actor<ufo::saucer>(saucer_type::blue, ufo::random_node_of_kind(m, 'R').location());
+    s.build_actor<ufo::saucer>(saucer_type::green, ufo::random_node_of_kind(m, 'R').location());
+    s.build_actor<ufo::saucer>(saucer_type::beige, ufo::random_node_of_kind(m, 'R').location());
+    s.build_actor<ufo::saucer>(saucer_type::yellow, ufo::random_node_of_kind(m, 'R').location());
 
     ufos.push_back(s.actors_[111].get());
     ufos.push_back(s.actors_[112].get());
@@ -199,10 +199,10 @@ int play() {
 
             ufos.clear();
 
-            s.build_actor<ufo::saucer>(saucer_type::blue);
-            s.build_actor<ufo::saucer>(saucer_type::green);
-            s.build_actor<ufo::saucer>(saucer_type::beige);
-            s.build_actor<ufo::saucer>(saucer_type::yellow);
+            s.build_actor<ufo::saucer>(saucer_type::blue, ufo::random_node_of_kind(m, 'R').location());
+            s.build_actor<ufo::saucer>(saucer_type::green, ufo::random_node_of_kind(m, 'R').location());
+            s.build_actor<ufo::saucer>(saucer_type::beige, ufo::random_node_of_kind(m, 'R').location());
+            s.build_actor<ufo::saucer>(saucer_type::yellow, ufo::random_node_of_kind(m, 'R').location());
 
             ufos.push_back(s.actors_[111].get());
             ufos.push_back(s.actors_[112].get());
