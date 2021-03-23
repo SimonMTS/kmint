@@ -3,6 +3,7 @@
 #include "kmint/finite_state_machine/fsm_actions.hpp"
 #include "kmint/finite_state_machine/fsm_transitions.hpp"
 #include "kmint/force_driven_entities/forces.hpp"
+#include "kmint/force_driven_entities/movement_helpers.hpp"
 #include "kmint/ufo/saucer.hpp"
 #include "kmint/ufo/tank.hpp"
 
@@ -58,7 +59,9 @@ void finite_state_machine::ExecuteStateAction(saucer& s) {
             break;
     }
 
-    student::movement_helpers::MoveTick(s);
+    std::vector<movement_helpers::forceFunc> inputForces{
+        student::movement_helpers::AvoidScreenEdge};
+    student::movement_helpers::MoveTick(s, inputForces);
 }
 
 }  // namespace kmint::ufo::student

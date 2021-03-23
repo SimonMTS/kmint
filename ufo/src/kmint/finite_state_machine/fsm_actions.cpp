@@ -9,13 +9,9 @@
 namespace kmint::ufo::student {
 
 void fsm_actions::Execute_Wander(saucer& s) {
-    // randomize wander // saucer::SetWanderDirection()
     float xspeed = RandomInt(-1, 1);
     float yspeed = RandomInt(-1, 1);
-    s.WanderDirection += {xspeed, yspeed};
-
-    // "move"
-    s.acceleration += s.WanderDirection;
+    s.acceleration += {xspeed, yspeed};
 }
 
 void fsm_actions::Execute_HuntHuman(saucer& s) {
@@ -24,7 +20,7 @@ void fsm_actions::Execute_HuntHuman(saucer& s) {
         s.GetNearest("human");
         ufo::human* human = dynamic_cast<ufo::human*>(s.target);
 
-        math::vector2d desired = s.target->location() - s.location();
+        math::vector2d desired = human->location() - s.location();
         math::vector2d steer = desired + human->velocity;
         steer = ::student::forces::limit(steer, 1);
         s.acceleration += steer;

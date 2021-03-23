@@ -62,8 +62,6 @@ class human : public student::force_driven_entity {
     float UfoWeight;         //   -1 tot 1;
     float DoorWeight;        //   -1 tot 1;
 
-    void setLocation(math::vector2d location);
-
     // To calculate fitness
     const int id;
     float DistanceTravelled = 0;

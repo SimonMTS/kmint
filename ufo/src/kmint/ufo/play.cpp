@@ -88,10 +88,14 @@ int play() {
 
     std::vector<play::actor *> ufos;
 
-    s.build_actor<ufo::saucer>(saucer_type::blue, ufo::random_node_of_kind(m, 'R').location());
-    s.build_actor<ufo::saucer>(saucer_type::green, ufo::random_node_of_kind(m, 'R').location());
-    s.build_actor<ufo::saucer>(saucer_type::beige, ufo::random_node_of_kind(m, 'R').location());
-    s.build_actor<ufo::saucer>(saucer_type::yellow, ufo::random_node_of_kind(m, 'R').location());
+    s.build_actor<ufo::saucer>(saucer_type::blue,
+                               ufo::random_node_of_kind(m, 'R').location());
+    s.build_actor<ufo::saucer>(saucer_type::green,
+                               ufo::random_node_of_kind(m, 'R').location());
+    s.build_actor<ufo::saucer>(saucer_type::beige,
+                               ufo::random_node_of_kind(m, 'R').location());
+    s.build_actor<ufo::saucer>(saucer_type::yellow,
+                               ufo::random_node_of_kind(m, 'R').location());
 
     ufos.push_back(s.actors_[111].get());
     ufos.push_back(s.actors_[112].get());
@@ -199,10 +203,17 @@ int play() {
 
             ufos.clear();
 
-            s.build_actor<ufo::saucer>(saucer_type::blue, ufo::random_node_of_kind(m, 'R').location());
-            s.build_actor<ufo::saucer>(saucer_type::green, ufo::random_node_of_kind(m, 'R').location());
-            s.build_actor<ufo::saucer>(saucer_type::beige, ufo::random_node_of_kind(m, 'R').location());
-            s.build_actor<ufo::saucer>(saucer_type::yellow, ufo::random_node_of_kind(m, 'R').location());
+            s.build_actor<ufo::saucer>(
+                saucer_type::blue, ufo::random_node_of_kind(m, 'R').location());
+            s.build_actor<ufo::saucer>(
+                saucer_type::green,
+                ufo::random_node_of_kind(m, 'R').location());
+            s.build_actor<ufo::saucer>(
+                saucer_type::beige,
+                ufo::random_node_of_kind(m, 'R').location());
+            s.build_actor<ufo::saucer>(
+                saucer_type::yellow,
+                ufo::random_node_of_kind(m, 'R').location());
 
             ufos.push_back(s.actors_[111].get());
             ufos.push_back(s.actors_[112].get());
@@ -217,7 +228,6 @@ int play() {
             s.build_actor<ufo::Doors>(graph, math::vector2d{624, 320});
             s.build_actor<ufo::Doors>(graph, math::vector2d{688, 129});
             s.build_actor<ufo::Doors>(graph, math::vector2d{598, 139});
-
 
             doors.push_back(s.actors_[115].get());
             doors.push_back(s.actors_[116].get());

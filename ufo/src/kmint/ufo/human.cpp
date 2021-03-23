@@ -33,6 +33,7 @@ human::human(map::map_graph &g, const int id)
     RedTankWeight = RandomNumber(-1, 1);
     GreenTankWeight = RandomNumber(-1, 1);
     UfoWeight = RandomNumber(-1, 1);
+    DoorWeight = RandomNumber(-1, 1);
     buildings.push_back({320, 512, 431, 639});
     buildings.push_back({432, 464, 511, 623});
     buildings.push_back({576, 400, 687, 495});
@@ -70,7 +71,8 @@ void human::act(delta_time dt) {
 }
 void human::Move() {
     if (!isSafeTank) {
-        student::movement_helpers::MoveTick(*this);
+        std::vector<student::movement_helpers::forceFunc> inputForces;
+        student::movement_helpers::MoveTick(*this, inputForces);
         // acceleration *= 0.4;
 
         // velocity += acceleration;
@@ -133,7 +135,7 @@ void human::Forces() {
     acceleration += s + a + c + greent + redt + ufo0 + ufo1 + ufo2 + ufo3 +
                     door0 + door1 + door2 + door3 + door4 + door5;
 }
-void human::setLocation(math::vector2d location) { this->location(location); }
+
 void human::MapEdge() {
     int TopLeftX = 64;
     int TopLeftY = 0;
