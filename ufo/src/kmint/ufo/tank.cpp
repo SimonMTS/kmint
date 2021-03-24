@@ -363,8 +363,22 @@ bool tank::UFOAttack() {
 };
 
 void tank::UpdateChances() {
+    if (lastchoice == wander) {
+        std::cout << "Lastchoice is Wander" << std::endl;
+        DamageHistory.erase(DamageHistory.end() - 1);
+        return;
+    }
+    if (lastchoice == gotoEMP) {
+        std::cout << "Lastchoice is EMP" << std::endl;
+    }
+    if (lastchoice == gotoShield) {
+        std::cout << "Lastchoice is Shield" << std::endl;
+    }
 
-    int lastdamage = DamageHistory.size() - 1;
+     if (lastchoice == flee) {
+        std::cout << "Lastchoice is Flee" << std::endl;
+    }
+    int lastdamage = DamageHistory[DamageHistory.size() - 1];
     int avgdamage = 0;
 
     for (int i = 0; i < DamageHistory.size(); i++) {
@@ -392,35 +406,31 @@ void tank::UpdateChances() {
             EMPChance--;
             ShieldChance += 2;
         }
-    } else if (lastdamage > avgdamage) {
-        if (lastchoice == State::flee && EMPChance < 100 &&
-            ShieldChance < 100) {
+    } else if (lastdamage >= avgdamage) {
+        if (lastchoice == State::flee && (EMPChance + ShieldChance < 99)) {
             FleeChance -= 2;
             EMPChance++;
             ShieldChance++;
         }
 
-        if (lastchoice == State::gotoEMP && FleeChance < 100 &&
-            ShieldChance < 100) {
+        if (lastchoice == State::gotoEMP && (FleeChance + ShieldChance < 99)) {
             FleeChance++;
             EMPChance -= 2;
             ShieldChance++;
         }
 
-        if (lastchoice == State::gotoShield && FleeChance < 100 &&
-            EMPChance < 100) {
+        if (lastchoice == State::gotoShield && (FleeChance + EMPChance < 99)) {
             FleeChance++;
             EMPChance++;
             ShieldChance -= 2;
         }
     }
 
-    if (this->type_ == tank_type::green) {
         std::cout  << " LASTCHOICE " << lastchoice
-                  << " AVG " << avgdamage << " " << lastdamage << " F "
-                  << FleeChance << " E " << EMPChance << " S " << ShieldChance
-                  << std::endl;
-    }
+                  << " AVG " << avgdamage << " LAST " << lastdamage << " FLEE "
+                  << FleeChance << " EMP " << EMPChance << " SHIELD " << ShieldChance
+                  << " SIZE " << DamageHistory.size() << std::endl;
+    
 }
 
 void tank::RoadkillOrSave() {

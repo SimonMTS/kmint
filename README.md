@@ -2,7 +2,6 @@
 
 Problemen:
 Andre kan nooit worden behaald door de tanks
-Mensen worden niet verwijderd als de ufo op een tank jaagt
 Force driven entities kunnen buiten kaart
 Kansen zijn per tank
 Tank kiest actie en wordt aangevallen voor het beindigen van zijn actie, dan krijgt de actie al + of -
@@ -37,7 +36,7 @@ Not tested:
 
  DONE * Er beginnen 100 mensen op willekeurige plaatsen in de stad, niet op gebouwen
  FAIL * Mensen kunnen niet over gebouwen lopen en niet van de rand van het scherm af
- FAIL * Als een mens een ufo aanraakt dan gaat hij dood
+ FIXED * Als een mens een ufo aanraakt dan gaat hij dood
  DONE * Als een mens de groene tank aanraakt dan is hij veilig
  DONE * Als een mens de rode tank aanraakt dan gaat hij dood
  DONE * Als een mens een deur aanraakt dan is hij veilig

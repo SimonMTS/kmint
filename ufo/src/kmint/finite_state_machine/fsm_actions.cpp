@@ -34,7 +34,7 @@ void fsm_actions::Execute_HuntHuman(saucer& s) {
     }
 
     // saucer::AttackHuman() // beam up humans in range
-    for (auto i = s.begin_perceived(); i != s.end_perceived(); ++i) {
+   /* for (auto i = s.begin_perceived(); i != s.end_perceived(); ++i) {
         if (i->EntityType != "human") continue;
         play::actor& human = *i;
 
@@ -47,7 +47,7 @@ void fsm_actions::Execute_HuntHuman(saucer& s) {
         if (distance < 20 && !human1->isSafeTank && !human1->isSafeHouse) {
             human1->remove();
         }
-    }
+    }*/
 }
 
 void fsm_actions::Execute_HuntTank(saucer& s) {
