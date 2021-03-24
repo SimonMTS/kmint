@@ -1,15 +1,19 @@
 # kmint
 
 Todo:
- * Andre kan nooit worden behaald door de tanks
- * Force driven entities kunnen buiten kaart
- * Kansen zijn per tank
- * Tank kiest actie en wordt aangevallen voor het beindigen van zijn actie, dan krijgt de actie al + of -
- * Mensen kunnen niet over gebouwen lopen en niet van de rand van het scherm af
  * Document met verantwoording
- * Er kunnen met a* bewegende doelen worden bereikt    (A* zorgt er voor dat er naar het doel wordt gelopen, maar het doel blijft altijd weglopen)
- * Extra: De mensenpopulatie wordt elke ronde samengesteld door een genetisch algoritme met alle stappen uit de evolutiecycle  (Uitdunning welke variant?)
 
+Todo Thijs:
+ * Bugs fixen (/zorgen dat aan alle "spelregels worden voldaan")
+ * (Dit is dan eigenlijk al klaar?) Extra: De mensenpopulatie wordt elke ronde samengesteld door een genetisch algoritme met alle stappen uit de evolutiecycle  (Uitdunning welke variant?)
+
+Todo Simon:
+ * Force driven entities kunnen buiten kaart en over gebouwen lopen
+ * Er kunnen met a* bewegende doelen worden bereikt
+
+Not tested:
+ * Maak zichtbaar door middel van een overlay kleur welke staat een entiteit heeft
+ * Extra: Q-learning
 
 Done:
  * Andre begint op een willekeurige plek in de stad
@@ -52,7 +56,3 @@ Done:
  * Mensen en Ufo's worden alleen door krachten bewogen
  * krachten worden gecombineerd op een manier die recht doet aan de waarde van hun eigenschappen
  * Ufo's bewegen niet over de randen van het speelveld
-
-Not tested:
- * Maak zichtbaar door middel van een overlay kleur welke staat een entiteit heeft
- * Extra: Q-learning
