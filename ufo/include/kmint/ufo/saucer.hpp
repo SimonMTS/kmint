@@ -49,7 +49,7 @@ class saucer : public student::force_driven_entity {
     void HuntHuman(delta_time dt);
     void HuntTank(delta_time dt);
     void NoMove(delta_time dt);
-
+    void BeamHuman();
     void AttackHuman();
     void AttackTank();
     void SetWanderDirection();

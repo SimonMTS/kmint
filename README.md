@@ -32,7 +32,7 @@ Not tested:
  DONE * Als een tank 100 schade heeft dan gaat hij naar andre
 
  DONE * Als een tank en een ufo botsen, en de tank heeft niks bij: dan krijgt de tank 50 schade
- FAIL * Als een tank en een ufo botsen, en de tank heeft een emp bij: dan kan de ufo 20 beurten niet meer bewegen  
+ FIXED * Als een tank en een ufo botsen, en de tank heeft een emp bij: dan kan de ufo 20 beurten niet meer bewegen  
  DONE * Als een tank en een ufo botsen, en de tank heeft een schild bij: dan krijgt de tank 20 schade
 
  DONE * Er beginnen 100 mensen op willekeurige plaatsen in de stad, niet op gebouwen
