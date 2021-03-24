@@ -83,7 +83,18 @@ void fsm_actions::Execute_HuntTank(saucer& s) {
     }
 }
 
-void fsm_actions::Execute_NoMove(saucer& s) { s.acceleration = {0, 0}; }
+void fsm_actions::Execute_NoMove(saucer& s) {
+    s.acceleration = {0, 0};
+    s.velocity = {0, 0};
+
+    s.NoMoveCount++;
+
+    // Saucer acts ever 0.1s so 200 for 20s
+    if (s.NoMoveCount >= 200) {
+        s.NoMoveCount = 0;
+        s.state = wander;
+    }
+}
 
 #pragma region helpers
 

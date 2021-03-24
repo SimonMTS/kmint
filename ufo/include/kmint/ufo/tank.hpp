@@ -72,7 +72,7 @@ public:
   map::map_edge* last_edge = nullptr;
   std::vector<play::actor *> ufos;
 
-  int EMPCount = 0;
+  int EMPCount = 5;
   int LaserShieldCount = 0;
   int damage = 0;
 

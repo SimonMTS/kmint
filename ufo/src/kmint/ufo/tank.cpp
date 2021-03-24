@@ -50,7 +50,7 @@ void tank::act(delta_time dt) {
             // }
         }
 
-        if (damage >= 100) {
+        if (damage >= 10000) {
             state = repair;
         }
 
@@ -84,7 +84,7 @@ void tank::act(delta_time dt) {
     }
 
     if (!attackable) t_since_attack_ += dt;
-    if (to_seconds(t_since_attack_) > 20) {
+    if (to_seconds(t_since_attack_) > 1) {
         attackable = true;
         t_since_attack_ = from_seconds(0);
     }
@@ -113,13 +113,10 @@ void tank::SenseUFO() {
     int number = RandomInt(0, 100);
     if (number >= 100 - FleeChance) {
         Flee();
-        lastchoice = flee;
     } else if (number >= 100 - FleeChance - EMPChance) {
         GoToEMP();
-        lastchoice = gotoEMP;
     } else if (number <= ShieldChance) {
         GoToShield();
-        lastchoice = gotoShield;
     }
 }
 
@@ -131,6 +128,7 @@ void tank::Flee() {
         MoveAwayFrom(ToFleeFrom);
         fleecount++;
     } else {
+        lastchoice = flee;
         fleecount = 0;
         Wander();
     }
@@ -144,6 +142,7 @@ void tank::GoToEMP() {
         // target->available = false;
         // target->remove();
         target->NewLocation();
+        lastchoice = gotoEMP;
 
         state = wander;
         LaserShieldCount++;
@@ -165,6 +164,7 @@ void tank::GoToShield() {
         state = wander;
         LaserShieldCount++;
         target = nullptr;
+        lastchoice = gotoShield;
 
         // std::cout << "Picked up shield" << std::endl;
         return;
@@ -330,9 +330,9 @@ void tank::SetSprite() {
     else if (state == flee) {
         drawable_.set_tint({0, 0, 0});
     } else if (state == gotoEMP) {
-        drawable_.set_tint({153, 50, 204});
+        drawable_.set_tint({255, 140, 0});
     } else if (state == gotoShield) {
-        drawable_.set_tint({0, 0, 0});
+        drawable_.set_tint({0, 0, 255});
     }
 }
 
@@ -363,9 +363,6 @@ bool tank::UFOAttack() {
 };
 
 void tank::UpdateChances() {
-    // Kansen zijn nu per tank, ik weet niet wat ze willen
-    // Na een tijdje zijn de EMP's en Shields op en zal de Fleechance  vgm
-    // altijd omhoog gaan...
 
     int lastdamage = DamageHistory.size() - 1;
     int avgdamage = 0;
@@ -418,9 +415,12 @@ void tank::UpdateChances() {
         }
     }
 
-    std::cout << "LASTCHOICE " << lastchoice << "AVG" << avgdamage << " "
-              << lastdamage << " F " << FleeChance << " E " << EMPChance
-              << " S " << ShieldChance << std::endl;
+    if (this->type_ == tank_type::green) {
+        std::cout  << " LASTCHOICE " << lastchoice
+                  << " AVG " << avgdamage << " " << lastdamage << " F "
+                  << FleeChance << " E " << EMPChance << " S " << ShieldChance
+                  << std::endl;
+    }
 }
 
 void tank::RoadkillOrSave() {
