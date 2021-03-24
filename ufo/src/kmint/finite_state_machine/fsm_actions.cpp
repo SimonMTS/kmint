@@ -21,9 +21,16 @@ void fsm_actions::Execute_HuntHuman(saucer& s) {
         ufo::human* human = dynamic_cast<ufo::human*>(s.target);
 
         math::vector2d desired = human->location() - s.location();
-        math::vector2d steer = desired + human->velocity;
-        steer = ::student::forces::limit(steer, 1);
-        s.acceleration += steer;
+        desired = ::student::forces::limit(desired, 1);
+
+        float humanx = abs(human->velocity.x());
+        float humany = abs(human->velocity.y());
+
+        float xspeed = desired.x() * humanx;
+        float yspeed = desired.y() * humany;
+
+        desired = math::vector2d{xspeed, yspeed};
+        s.acceleration += desired;
     }
 
     // saucer::AttackHuman() // beam up humans in range
@@ -37,7 +44,7 @@ void fsm_actions::Execute_HuntHuman(saucer& s) {
             std::sqrt(std::pow(s.location().x() - human.location().x(), 2) +
                       std::pow(s.location().y() - human.location().y(), 2));
 
-        if (distance < 20 && !human1->isSafeTank) {
+        if (distance < 20 && !human1->isSafeTank && !human1->isSafeHouse) {
             human1->remove();
         }
     }

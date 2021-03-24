@@ -92,48 +92,32 @@ void human::Forces() {
     math::vector2d s = ::student::forces::separation(*this);
     math::vector2d a = ::student::forces::alignment(*this);
     math::vector2d c = ::student::forces::cohesion(*this);
-    math::vector2d greent =
-        ::student::forces::attacted_to(*this, *greentank, DesiredTankDistance);
-    math::vector2d redt =
-        ::student::forces::attacted_to(*this, *redtank, DesiredTankDistance);
-    math::vector2d ufo0 =
-        ::student::forces::attacted_to(*this, *ufos[0], DesiredUfoDistance);
-    math::vector2d ufo1 =
-        ::student::forces::attacted_to(*this, *ufos[1], DesiredUfoDistance);
-    math::vector2d ufo2 =
-        ::student::forces::attacted_to(*this, *ufos[2], DesiredUfoDistance);
-    math::vector2d ufo3 =
-        ::student::forces::attacted_to(*this, *ufos[3], DesiredUfoDistance);
-    math::vector2d door0 =
-        ::student::forces::attacted_to(*this, *doors[0], 100);
-    math::vector2d door1 =
-        ::student::forces::attacted_to(*this, *doors[1], 100);
-    math::vector2d door2 =
-        ::student::forces::attacted_to(*this, *doors[2], 100);
-    math::vector2d door3 =
-        ::student::forces::attacted_to(*this, *doors[3], 100);
-    math::vector2d door4 =
-        ::student::forces::attacted_to(*this, *doors[4], 100);
-    math::vector2d door5 =
-        ::student::forces::attacted_to(*this, *doors[5], 100);
+    math::vector2d greent = ::student::forces::attacted_to(*this, *greentank, DesiredTankDistance);
+    math::vector2d redt = ::student::forces::attacted_to(*this, *redtank, DesiredTankDistance);
+    
+    math::vector2d ufo{0, 0};
+
+    for (int i = 0; i < ufos.size(); i++) {
+        ufo +=
+            ::student::forces::attacted_to(*this, *ufos[i], DesiredUfoDistance);
+    }
+
+    math::vector2d door{0, 0};
+
+    for (int i = 0; i < doors.size(); i++) {
+        door += ::student::forces::attacted_to(*this, *doors[0], 100);
+    } 
+
     s = s * SeparationWeight;
     a = a * AlignmentWeight;
     c = c * CohesionWeight;
     greent = greent * GreenTankWeight;
     redt = redt * RedTankWeight;
-    ufo0 = ufo0 * UfoWeight;
-    ufo1 = ufo1 * UfoWeight;
-    ufo2 = ufo2 * UfoWeight;
-    ufo3 = ufo3 * UfoWeight;
-    door0 = door0 * DoorWeight;
-    door1 = door1 * DoorWeight;
-    door2 = door2 * DoorWeight;
-    door3 = door3 * DoorWeight;
-    door4 = door4 * DoorWeight;
-    door5 = door5 * DoorWeight;
+    ufo = ufo * UfoWeight;
+    door = door * DoorWeight;
 
-    acceleration += s + a + c + greent + redt + ufo0 + ufo1 + ufo2 + ufo3 +
-                    door0 + door1 + door2 + door3 + door4 + door5;
+
+    acceleration += s + a + c + greent + redt + ufo + door;
 }
 
 void human::MapEdge() {
