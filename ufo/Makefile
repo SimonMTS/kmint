@@ -382,6 +382,33 @@ src/kmint/force_driven_entities/forces.cpp.s:
 	cd /home/simon/Documents/GitHub/kmint && $(MAKE) $(MAKESILENT) -f ufo/CMakeFiles/ufo-common.dir/build.make ufo/CMakeFiles/ufo-common.dir/src/kmint/force_driven_entities/forces.cpp.s
 .PHONY : src/kmint/force_driven_entities/forces.cpp.s
 
+src/kmint/force_driven_entities/movement_helpers.o: src/kmint/force_driven_entities/movement_helpers.cpp.o
+
+.PHONY : src/kmint/force_driven_entities/movement_helpers.o
+
+# target to build an object file
+src/kmint/force_driven_entities/movement_helpers.cpp.o:
+	cd /home/simon/Documents/GitHub/kmint && $(MAKE) $(MAKESILENT) -f ufo/CMakeFiles/ufo-common.dir/build.make ufo/CMakeFiles/ufo-common.dir/src/kmint/force_driven_entities/movement_helpers.cpp.o
+.PHONY : src/kmint/force_driven_entities/movement_helpers.cpp.o
+
+src/kmint/force_driven_entities/movement_helpers.i: src/kmint/force_driven_entities/movement_helpers.cpp.i
+
+.PHONY : src/kmint/force_driven_entities/movement_helpers.i
+
+# target to preprocess a source file
+src/kmint/force_driven_entities/movement_helpers.cpp.i:
+	cd /home/simon/Documents/GitHub/kmint && $(MAKE) $(MAKESILENT) -f ufo/CMakeFiles/ufo-common.dir/build.make ufo/CMakeFiles/ufo-common.dir/src/kmint/force_driven_entities/movement_helpers.cpp.i
+.PHONY : src/kmint/force_driven_entities/movement_helpers.cpp.i
+
+src/kmint/force_driven_entities/movement_helpers.s: src/kmint/force_driven_entities/movement_helpers.cpp.s
+
+.PHONY : src/kmint/force_driven_entities/movement_helpers.s
+
+# target to generate assembly for a file
+src/kmint/force_driven_entities/movement_helpers.cpp.s:
+	cd /home/simon/Documents/GitHub/kmint && $(MAKE) $(MAKESILENT) -f ufo/CMakeFiles/ufo-common.dir/build.make ufo/CMakeFiles/ufo-common.dir/src/kmint/force_driven_entities/movement_helpers.cpp.s
+.PHONY : src/kmint/force_driven_entities/movement_helpers.cpp.s
+
 src/kmint/force_driven_entities/population.o: src/kmint/force_driven_entities/population.cpp.o
 
 .PHONY : src/kmint/force_driven_entities/population.o
@@ -712,6 +739,9 @@ help:
 	@echo "... src/kmint/force_driven_entities/forces.o"
 	@echo "... src/kmint/force_driven_entities/forces.i"
 	@echo "... src/kmint/force_driven_entities/forces.s"
+	@echo "... src/kmint/force_driven_entities/movement_helpers.o"
+	@echo "... src/kmint/force_driven_entities/movement_helpers.i"
+	@echo "... src/kmint/force_driven_entities/movement_helpers.s"
 	@echo "... src/kmint/force_driven_entities/population.o"
 	@echo "... src/kmint/force_driven_entities/population.i"
 	@echo "... src/kmint/force_driven_entities/population.s"

@@ -57,10 +57,18 @@ void human::act(delta_time dt) {
         // std::endl;
 
         if (!isSafeHouse) {
-            Forces();
-            Buildings();
-            MapEdge();
-            Move();
+            // Forces();
+            // Buildings();
+            // MapEdge();
+            // Move();
+
+            std::vector<student::movement_helpers::forceFunc> inputForces{
+                {student::movement_helpers::AvoidBuildings, 100},
+                {student::movement_helpers::AvoidScreenEdge, 100},
+                {student::movement_helpers::Separation, 1},
+                {student::movement_helpers::Alignment, 1},
+                {student::movement_helpers::Cohesion, 1}};
+            student::movement_helpers::MoveTick(*this, inputForces);
 
             if (isSafeTank) {
                 location(greentank->location());
@@ -71,8 +79,14 @@ void human::act(delta_time dt) {
 }
 void human::Move() {
     if (!isSafeTank) {
-        std::vector<student::movement_helpers::forceFunc> inputForces;
-        student::movement_helpers::MoveTick(*this, inputForces);
+        // std::vector<student::movement_helpers::forceFunc> inputForces{
+        //     {student::movement_helpers::AvoidBuildings, 10},
+        //     {student::movement_helpers::AvoidScreenEdge, 10},
+        //     {student::movement_helpers::Separation, 1},
+        //     {student::movement_helpers::Alignment, 1},
+        //     {student::movement_helpers::Cohesion, 1}};
+        // student::movement_helpers::MoveTick(*this, inputForces);
+
         // acceleration *= 0.4;
 
         // velocity += acceleration;
@@ -92,9 +106,11 @@ void human::Forces() {
     math::vector2d s = ::student::forces::separation(*this);
     math::vector2d a = ::student::forces::alignment(*this);
     math::vector2d c = ::student::forces::cohesion(*this);
-    math::vector2d greent = ::student::forces::attacted_to(*this, *greentank, DesiredTankDistance);
-    math::vector2d redt = ::student::forces::attacted_to(*this, *redtank, DesiredTankDistance);
-    
+    math::vector2d greent =
+        ::student::forces::attacted_to(*this, *greentank, DesiredTankDistance);
+    math::vector2d redt =
+        ::student::forces::attacted_to(*this, *redtank, DesiredTankDistance);
+
     math::vector2d ufo{0, 0};
 
     for (int i = 0; i < ufos.size(); i++) {
@@ -106,7 +122,7 @@ void human::Forces() {
 
     for (int i = 0; i < doors.size(); i++) {
         door += ::student::forces::attacted_to(*this, *doors[0], 100);
-    } 
+    }
 
     s = s * SeparationWeight;
     a = a * AlignmentWeight;
@@ -115,7 +131,6 @@ void human::Forces() {
     redt = redt * RedTankWeight;
     ufo = ufo * UfoWeight;
     door = door * DoorWeight;
-
 
     acceleration += s + a + c + greent + redt + ufo + door;
 }

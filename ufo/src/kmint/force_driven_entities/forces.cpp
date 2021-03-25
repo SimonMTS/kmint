@@ -169,7 +169,7 @@ float forces::distance(const kmint::ufo::human &human,
     return dist;
 }
 
-float forces::distance(const kmint::ufo::human &human,
+float forces::distance(const kmint::play::free_roaming_actor &human,
                        const kmint::math::vector2d &v) {
     float dx = human.location().x() - v.x();
     float dy = human.location().y() - v.y();

@@ -93,28 +93,10 @@ void saucer::act(delta_time dt) {
     if (to_seconds(t_since_move_) >= 0.1) {
         student::finite_state_machine::StateTransitionCheck(*this);
         student::finite_state_machine::ExecuteStateAction(*this);
-        BeamHuman();
         t_since_move_ = from_seconds(0);
     }
 }
 
-void saucer::BeamHuman() {
-    // saucer::AttackHuman() // beam up humans in range
-    for (auto i = begin_perceived(); i != end_perceived(); ++i) {
-        if (i->EntityType != "human") continue;
-        play::actor &human = *i;
-
-        ufo::human *human1 = dynamic_cast<ufo::human *>(&human);
-
-        float distance =
-            std::sqrt(std::pow(location().x() - human.location().x(), 2) +
-                      std::pow(location().y() - human.location().y(), 2));
-
-        if (distance < 20 && !human1->isSafeTank && !human1->isSafeHouse) {
-            human1->remove();
-        }
-    }
-}
 // void saucer::Move() {
 // {  // stay on map (not great, but it works?)
 // check position in 100 steps

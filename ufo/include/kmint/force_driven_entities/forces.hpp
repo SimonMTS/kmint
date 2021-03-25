@@ -3,11 +3,11 @@
 
 #include <random>
 
-#include "kmint/ufo/human.hpp"
 #include "../../ufo/include/kmint/ufo/node_algorithm.hpp"
+#include "kmint/force_driven_entities/population.hpp"
 #include "kmint/map/map.hpp"
 #include "kmint/math/vector2d.hpp"
-#include "kmint/force_driven_entities/population.hpp"
+#include "kmint/ufo/human.hpp"
 using kmint::map::map_node;
 
 namespace student {
@@ -18,18 +18,22 @@ class forces {
     static kmint::math::vector2d separation(const kmint::ufo::human &human);
     static kmint::math::vector2d alignment(const kmint::ufo::human &human);
     static kmint::math::vector2d cohesion(const kmint::ufo::human &human);
-    static kmint::math::vector2d attacted_to(const kmint::ufo::human &human, const kmint::play::actor &actor, float range);
+    static kmint::math::vector2d attacted_to(const kmint::ufo::human &human,
+                                             const kmint::play::actor &actor,
+                                             float range);
 
-    static kmint::math::vector2d limit(const kmint::math::vector2d &vector, float maxforce);
+    static kmint::math::vector2d limit(const kmint::math::vector2d &vector,
+                                       float maxforce);
 
-
-   private:
-    static float distance(const kmint::ufo::human &human, const kmint::play::actor &actor);
-    static float distance(const kmint::ufo::human &human, const kmint::math::vector2d &vector);
+    //    private:
+    static float distance(const kmint::ufo::human &human,
+                          const kmint::play::actor &actor);
+    static float distance(const kmint::play::free_roaming_actor &human,
+                          const kmint::math::vector2d &vector);
 
     static kmint::math::vector2d normalize(const kmint::math::vector2d &vector);
-    static kmint::math::vector2d seek(const kmint::ufo::human &human, const kmint::math::vector2d &vector);
-
+    static kmint::math::vector2d seek(const kmint::ufo::human &human,
+                                      const kmint::math::vector2d &vector);
 
     static std::default_random_engine generator;
     static std::uniform_real_distribution<float> distribution;

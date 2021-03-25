@@ -375,7 +375,7 @@ void tank::UpdateChances() {
         std::cout << "Lastchoice is Shield" << std::endl;
     }
 
-     if (lastchoice == flee) {
+    if (lastchoice == flee) {
         std::cout << "Lastchoice is Flee" << std::endl;
     }
     int lastdamage = DamageHistory[DamageHistory.size() - 1];
@@ -426,11 +426,10 @@ void tank::UpdateChances() {
         }
     }
 
-        std::cout  << " LASTCHOICE " << lastchoice
-                  << " AVG " << avgdamage << " LAST " << lastdamage << " FLEE "
-                  << FleeChance << " EMP " << EMPChance << " SHIELD " << ShieldChance
-                  << " SIZE " << DamageHistory.size() << std::endl;
-    
+    std::cout << " LASTCHOICE " << lastchoice << " AVG " << avgdamage
+              << " LAST " << lastdamage << " FLEE " << FleeChance << " EMP "
+              << EMPChance << " SHIELD " << ShieldChance << " SIZE "
+              << DamageHistory.size() << std::endl;
 }
 
 void tank::RoadkillOrSave() {

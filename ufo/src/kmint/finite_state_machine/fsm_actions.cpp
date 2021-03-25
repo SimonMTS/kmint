@@ -16,38 +16,20 @@ void fsm_actions::Execute_Wander(saucer& s) {
 
 void fsm_actions::Execute_HuntHuman(saucer& s) {
     // move toward target human
-    {
-        s.GetNearest("human");
-        ufo::human* human = dynamic_cast<ufo::human*>(s.target);
+    s.GetNearest("human");
+    ufo::human* human = dynamic_cast<ufo::human*>(s.target);
 
-        math::vector2d desired = human->location() - s.location();
-        desired = ::student::forces::limit(desired, 1);
+    math::vector2d desired = human->location() - s.location();
+    desired = ::student::forces::limit(desired, 1);
 
-        float humanx = abs(human->velocity.x());
-        float humany = abs(human->velocity.y());
+    float humanx = abs(human->velocity.x());
+    float humany = abs(human->velocity.y());
 
-        float xspeed = desired.x() * humanx;
-        float yspeed = desired.y() * humany;
+    float xspeed = desired.x() * humanx;
+    float yspeed = desired.y() * humany;
 
-        desired = math::vector2d{xspeed, yspeed};
-        s.acceleration += desired;
-    }
-
-    // saucer::AttackHuman() // beam up humans in range
-   /* for (auto i = s.begin_perceived(); i != s.end_perceived(); ++i) {
-        if (i->EntityType != "human") continue;
-        play::actor& human = *i;
-
-        ufo::human* human1 = dynamic_cast<ufo::human*>(&human);
-
-        float distance =
-            std::sqrt(std::pow(s.location().x() - human.location().x(), 2) +
-                      std::pow(s.location().y() - human.location().y(), 2));
-
-        if (distance < 20 && !human1->isSafeTank && !human1->isSafeHouse) {
-            human1->remove();
-        }
-    }*/
+    desired = math::vector2d{xspeed, yspeed};
+    s.acceleration += desired;
 }
 
 void fsm_actions::Execute_HuntTank(saucer& s) {
@@ -97,6 +79,23 @@ void fsm_actions::Execute_NoMove(saucer& s) {
 }
 
 #pragma region helpers
+
+void fsm_actions::BeamHumans(saucer& s) {
+    for (auto i = s.begin_perceived(); i != s.end_perceived(); ++i) {
+        if (i->EntityType != "human") continue;
+        play::actor& human = *i;
+
+        ufo::human* human1 = dynamic_cast<ufo::human*>(&human);
+
+        float distance =
+            std::sqrt(std::pow(s.location().x() - human.location().x(), 2) +
+                      std::pow(s.location().y() - human.location().y(), 2));
+
+        if (distance < 20 && !human1->isSafeTank && !human1->isSafeHouse) {
+            human1->remove();
+        }
+    }
+}
 
 float fsm_actions::RandomInt(float Min, float Max) {
     std::random_device rd;

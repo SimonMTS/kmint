@@ -8,11 +8,20 @@ using kmint::map::map_node;
 
 namespace kmint::ufo::student {
 
+struct Building {
+    int TopLeftX;
+    int TopLeftY;
+    int BottomRightX;
+    int BottomRightY;
+};
+
 class force_driven_entity : public kmint::play::free_roaming_actor {
    public:
     math::vector2d acceleration{0, 0};
     math::vector2d WanderDirection{0, 0};
     math::vector2d velocity{0, 0};
+
+    std::vector<Building> buildings;
 
     force_driven_entity(math::vector2d loc) : free_roaming_actor(loc) {}
 
@@ -26,16 +35,24 @@ class force_driven_entity : public kmint::play::free_roaming_actor {
 
 class movement_helpers {
    public:
-    using forceFunc = std::function<math::vector2d(force_driven_entity&)>;
+    using forceFunc =
+        std::pair<std::function<math::vector2d(force_driven_entity&)>, int>;
 
     static void MoveTick(force_driven_entity& e,
                          std::vector<forceFunc>& forces);
 
     // forceFunctions
     static math::vector2d AvoidScreenEdge(force_driven_entity& a);
+    static math::vector2d AvoidBuildings(force_driven_entity& a);
+
+    static math::vector2d Separation(force_driven_entity& a);
+    static math::vector2d Alignment(force_driven_entity& a);
+    static math::vector2d Cohesion(force_driven_entity& a);
 
     // helper
     static math::vector2d limit(const kmint::math::vector2d& vector);
+    static math::vector2d limit(const kmint::math::vector2d& v, float maxforce);
+    static kmint::math::vector2d normalize(const kmint::math::vector2d& v);
 };
 
 }  // namespace kmint::ufo::student

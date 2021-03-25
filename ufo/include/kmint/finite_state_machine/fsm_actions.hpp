@@ -18,6 +18,7 @@ class fsm_actions {
     static void Execute_NoMove(saucer& s);
 
     // helpers
+    static void BeamHumans(saucer& s);
     static float RandomInt(float Min, float Max);
 };
 }  // namespace kmint::ufo::student

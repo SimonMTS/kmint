@@ -59,8 +59,10 @@ void finite_state_machine::ExecuteStateAction(saucer& s) {
             break;
     }
 
+    fsm_actions::BeamHumans(s);
+
     std::vector<movement_helpers::forceFunc> inputForces{
-        student::movement_helpers::AvoidScreenEdge};
+        {student::movement_helpers::AvoidScreenEdge, 10}};
     student::movement_helpers::MoveTick(s, inputForces);
 }
 

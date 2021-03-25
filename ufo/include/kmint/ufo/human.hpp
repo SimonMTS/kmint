@@ -9,12 +9,6 @@
 #include "kmint/play.hpp"
 
 class Population;
-struct Building {
-    int TopLeftX;
-    int TopLeftY;
-    int BottomRightX;
-    int BottomRightY;
-};
 
 namespace kmint::ufo {
 
@@ -68,8 +62,6 @@ class human : public student::force_driven_entity {
     float TimeAlive = 0;
 
    private:
-    std::vector<Building> buildings;
-
     void Forces();
     void Move();
     void Buildings();
