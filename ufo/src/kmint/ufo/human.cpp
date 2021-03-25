@@ -1,5 +1,6 @@
 #include "kmint/ufo/human.hpp"
 
+#include <climits>
 #include <string>
 
 #include "kmint/force_driven_entities/forces.hpp"
@@ -39,8 +40,9 @@ human::human(map::map_graph &g, const int id)
     buildings.push_back({576, 400, 687, 495});
     buildings.push_back({576, 208, 671, 319});
     buildings.push_back({576, 64, 623, 143});
-    buildings.push_back({624, 64, 735, 127});
-    buildings.push_back({576, 560, 687, 704});
+    buildings.push_back({622, 64, 735, 127});
+    // buildings.push_back({576, 560, 687, 704}); // hier mogen ze vgm wel
+    // lopen?
     location(CanSpawnHere(location()));
 }
 
@@ -62,12 +64,17 @@ void human::act(delta_time dt) {
             // MapEdge();
             // Move();
 
+            // todo add ufo/door/tank attraction
+            // GreenTankWeight
+            // RedTankWeight
+            // UfoWeight
+            // DoorWeight
             std::vector<student::movement_helpers::forceFunc> inputForces{
-                {student::movement_helpers::AvoidBuildings, 100},
-                {student::movement_helpers::AvoidScreenEdge, 100},
-                {student::movement_helpers::Separation, 1},
-                {student::movement_helpers::Alignment, 1},
-                {student::movement_helpers::Cohesion, 1}};
+                {student::movement_helpers::AvoidBuildings, INT_MAX},
+                {student::movement_helpers::AvoidScreenEdge, INT_MAX},
+                {student::movement_helpers::Separation, SeparationWeight},
+                {student::movement_helpers::Alignment, AlignmentWeight},
+                {student::movement_helpers::Cohesion, CohesionWeight}};
             student::movement_helpers::MoveTick(*this, inputForces);
 
             if (isSafeTank) {

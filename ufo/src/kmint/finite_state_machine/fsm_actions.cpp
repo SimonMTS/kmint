@@ -3,18 +3,23 @@
 #include <iostream>
 
 #include "kmint/force_driven_entities/forces.hpp"
+#include "kmint/math/vector2d.hpp"
 #include "kmint/ufo/saucer.hpp"
 #include "kmint/ufo/tank.hpp"
 
 namespace kmint::ufo::student {
 
-void fsm_actions::Execute_Wander(saucer& s) {
-    float xspeed = RandomInt(-1, 1);
-    float yspeed = RandomInt(-1, 1);
-    s.acceleration += {xspeed, yspeed};
+math::vector2d fsm_actions::Execute_Wander(saucer& s) {
+    float xspeed = RandomInt(-1, 1) / 10;
+    float yspeed = RandomInt(-1, 1) / 10;
+    // s.acceleration += {xspeed, yspeed};
+
+    // std::cout << xspeed << " " << yspeed << "\n";
+
+    return {xspeed, yspeed};
 }
 
-void fsm_actions::Execute_HuntHuman(saucer& s) {
+math::vector2d fsm_actions::Execute_HuntHuman(saucer& s) {
     // move toward target human
     s.GetNearest("human");
     ufo::human* human = dynamic_cast<ufo::human*>(s.target);
@@ -28,20 +33,17 @@ void fsm_actions::Execute_HuntHuman(saucer& s) {
     float xspeed = desired.x() * humanx;
     float yspeed = desired.y() * humany;
 
-    desired = math::vector2d{xspeed, yspeed};
-    s.acceleration += desired;
+    // desired = math::vector2d{xspeed, yspeed};
+    // s.acceleration += desired;
+    return desired;
 }
 
-void fsm_actions::Execute_HuntTank(saucer& s) {
+math::vector2d fsm_actions::Execute_HuntTank(saucer& s) {
     // move toward target tank
-    {
-        s.GetNearest("tank");
-
-        math::vector2d desired = s.target->location() - s.location();
-        math::vector2d steer = desired;
-        steer = ::student::forces::limit(steer, 1);
-        s.acceleration += steer;
-    }
+    s.GetNearest("tank");
+    math::vector2d desired = s.target->location() - s.location();
+    math::vector2d steer = desired;
+    steer = ::student::forces::limit(steer, 1);
 
     // saucer::AttackTank() // attack tanks in range
     for (auto i = s.begin_perceived(); i != s.end_perceived(); ++i) {
@@ -59,15 +61,17 @@ void fsm_actions::Execute_HuntTank(saucer& s) {
             // tank.remove();
             if (tank1->UFOAttack()) {
                 s.state = nomove;
-                return;
+                break;
             };
         }
     }
+
+    return steer;
 }
 
-void fsm_actions::Execute_NoMove(saucer& s) {
-    s.acceleration = {0, 0};
-    s.velocity = {0, 0};
+math::vector2d fsm_actions::Execute_NoMove(saucer& s) {
+    // s.acceleration = {0, 0};
+    // s.velocity = {0, 0};
 
     s.NoMoveCount++;
 
@@ -76,6 +80,8 @@ void fsm_actions::Execute_NoMove(saucer& s) {
         s.NoMoveCount = 0;
         s.state = wander;
     }
+
+    return {0, 0};
 }
 
 #pragma region helpers

@@ -1,9 +1,13 @@
 #include "kmint/finite_state_machine/finite_state_machine.hpp"
 
+#include <climits>
+#include <iostream>
+
 #include "kmint/finite_state_machine/fsm_actions.hpp"
 #include "kmint/finite_state_machine/fsm_transitions.hpp"
 #include "kmint/force_driven_entities/forces.hpp"
 #include "kmint/force_driven_entities/movement_helpers.hpp"
+#include "kmint/math/vector2d.hpp"
 #include "kmint/ufo/saucer.hpp"
 #include "kmint/ufo/tank.hpp"
 
@@ -44,25 +48,30 @@ void finite_state_machine::StateTransitionCheck(saucer& s) {
 }
 
 void finite_state_machine::ExecuteStateAction(saucer& s) {
+    math::vector2d force = {0, 0};
+
     switch (s.state) {
         case wander:
-            fsm_actions::Execute_Wander(s);
+            force = fsm_actions::Execute_Wander(s);
             break;
         case hunthuman:
-            fsm_actions::Execute_HuntHuman(s);
+            force = fsm_actions::Execute_HuntHuman(s);
             break;
         case hunttank:
-            fsm_actions::Execute_HuntTank(s);
+            force = fsm_actions::Execute_HuntTank(s);
             break;
         case nomove:
-            fsm_actions::Execute_NoMove(s);
+            force = fsm_actions::Execute_NoMove(s);
             break;
     }
 
     fsm_actions::BeamHumans(s);
 
+    movement_helpers::forceFunc stateForceFunc = {
+        [force](force_driven_entity& e) { return force; }, 1};
+
     std::vector<movement_helpers::forceFunc> inputForces{
-        {student::movement_helpers::AvoidScreenEdge, 10}};
+        {student::movement_helpers::AvoidScreenEdge, INT_MAX}, stateForceFunc};
     student::movement_helpers::MoveTick(s, inputForces);
 }
 

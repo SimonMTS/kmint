@@ -1,7 +1,9 @@
 #include "kmint/force_driven_entities/movement_helpers.hpp"
 
+#include <algorithm>
 #include <cstdio>
 #include <iostream>
+#include <iterator>
 
 #include "kmint/force_driven_entities/forces.hpp"
 #include "kmint/math/vector2d.hpp"
@@ -14,16 +16,14 @@ void movement_helpers::MoveTick(force_driven_entity& e,
     // todo, samenvoeg algo gebruiken
     math::vector2d total_force = {0, 0};
     for (auto& force : forces) {
-        total_force += force.first(e) * force.second;
+        total_force += limit(force.first(e)) * force.second;
     }
-    e.acceleration += total_force;
 
-    e.velocity += e.acceleration;
-
+    e.velocity += limit(total_force);
     e.velocity = limit(e.velocity);
-    math::vector2d nextpos = e.location() + e.velocity;
-    e.location(nextpos);
-    e.acceleration *= 0;
+
+    e.location(e.location() + e.velocity);
+    // e.acceleration *= 0;
 }
 
 math::vector2d movement_helpers::AvoidScreenEdge(force_driven_entity& a) {
@@ -49,41 +49,50 @@ math::vector2d movement_helpers::AvoidScreenEdge(force_driven_entity& a) {
 
     {  // stay on map, simple
         // check position in 10 steps
+        math::vector2d currPos = a.location();
         math::vector2d futPos = a.location() + (a.velocity * 10);
 
         // if out of bound, apply opposite force
-        if (futPos.x() < 0) force += {10, 0};
-        if (futPos.x() > 1024) force += {-10, 0};
-        if (futPos.y() < 0) force += {0, 10};
-        if (futPos.y() > 768) force += {0, -10};
+        if (currPos.x() < 0 || futPos.x() < 0) force += {10, 0};
+        if (currPos.x() > 1024 || futPos.x() > 1024) force += {-10, 0};
+        if (currPos.y() < 0 || futPos.y() < 0) force += {0, 10};
+        if (currPos.y() > 768 || futPos.y() > 768) force += {0, -10};
     }
 
-    return limit(force);
+    return force;
 }
 
 math::vector2d movement_helpers::AvoidBuildings(force_driven_entity& a) {
     math::vector2d force = {0, 0};
-
+    math::vector2d currPos = a.location();
     math::vector2d futPos = a.location() + (a.velocity * 10);
-    // math::vector2d futPos = a.location();  // todo really "avoid" buildings
 
     for (const auto& b : a.buildings) {
-        if (futPos.x() > b.TopLeftX && futPos.x() < b.BottomRightX &&
-            futPos.y() > b.TopLeftY && futPos.y() < b.BottomRightY) {
-            float topLeftDist = ::student::forces::distance(
-                a, {(float)b.TopLeftX, (float)b.TopLeftY});
-            float bottomRightDist = ::student::forces::distance(
-                a, {(float)b.BottomRightX, (float)b.BottomRightY});
-
-            if (topLeftDist < bottomRightDist) {
-                force += {-10, -10};
+        if ((futPos.x() > b.TopLeftX && futPos.x() < b.BottomRightX &&
+             futPos.y() > b.TopLeftY && futPos.y() < b.BottomRightY) ||
+            (currPos.x() > b.TopLeftX && currPos.x() < b.BottomRightX &&
+             currPos.y() > b.TopLeftY && currPos.y() < b.BottomRightY)) {
+            auto buildingMiddleY =
+                b.TopLeftY + ((b.BottomRightY - b.TopLeftY) / 2);
+            bool topSide = currPos.y() < buildingMiddleY;
+            if (topSide) {
+                force += {0, -10};
             } else {
-                force += {10, 10};
+                force += {0, 10};
+            }
+
+            auto buildingMiddleX =
+                b.TopLeftX + ((b.BottomRightX - b.TopLeftX) / 2);
+            bool leftSide = currPos.x() < buildingMiddleX;
+            if (leftSide) {
+                force += {-10, 0};
+            } else {
+                force += {10, 0};
             }
         }
     }
 
-    return limit(force);
+    return force;
 }
 
 math::vector2d movement_helpers::Separation(force_driven_entity& a) {
@@ -124,7 +133,7 @@ math::vector2d movement_helpers::Separation(force_driven_entity& a) {
         steer = limit(steer, human.maxForce);
     }
 
-    return limit(steer);
+    return steer;
 }
 
 math::vector2d movement_helpers::Alignment(force_driven_entity& a) {
@@ -157,7 +166,7 @@ math::vector2d movement_helpers::Alignment(force_driven_entity& a) {
         kmint::math::vector2d steer;
         steer = sum - human.velocity;
         steer = limit(steer, human.maxForce);
-        return limit(steer);
+        return steer;
     } else {
         return {0, 0};
     }
@@ -189,7 +198,7 @@ math::vector2d movement_helpers::Cohesion(force_driven_entity& a) {
     }
 
     sum = sum / count;
-    return limit(::student::forces::seek(human, sum));
+    return ::student::forces::seek(human, sum);
 }
 
 math::vector2d movement_helpers::limit(const kmint::math::vector2d& v) {

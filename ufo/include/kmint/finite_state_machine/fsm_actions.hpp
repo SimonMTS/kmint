@@ -12,10 +12,10 @@ using kmint::map::map_node;
 namespace kmint::ufo::student {
 class fsm_actions {
    public:
-    static void Execute_Wander(saucer& s);
-    static void Execute_HuntHuman(saucer& s);
-    static void Execute_HuntTank(saucer& s);
-    static void Execute_NoMove(saucer& s);
+    static math::vector2d Execute_Wander(saucer& s);
+    static math::vector2d Execute_HuntHuman(saucer& s);
+    static math::vector2d Execute_HuntTank(saucer& s);
+    static math::vector2d Execute_NoMove(saucer& s);
 
     // helpers
     static void BeamHumans(saucer& s);

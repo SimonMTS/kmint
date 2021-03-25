@@ -79,12 +79,14 @@ saucer::saucer(saucer_type type, math::vector2d location)
       drawable_{*this, image_for(type)},
       type_{type} {
     EntityType = "ufo";
-    velocity = velocity_for(type);
+    // velocity = velocity_for(type);
+    // velocity = {0, 0};
 
     // SetWanderDirection();
     float xspeed = student::fsm_actions::RandomInt(-3, 3);
     float yspeed = student::fsm_actions::RandomInt(-3, 3);
-    WanderDirection = {xspeed, yspeed};
+    // WanderDirection = {xspeed, yspeed};
+    velocity = {xspeed, yspeed};
 }
 
 void saucer::act(delta_time dt) {

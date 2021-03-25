@@ -36,7 +36,7 @@ class force_driven_entity : public kmint::play::free_roaming_actor {
 class movement_helpers {
    public:
     using forceFunc =
-        std::pair<std::function<math::vector2d(force_driven_entity&)>, int>;
+        std::pair<std::function<math::vector2d(force_driven_entity&)>, float>;
 
     static void MoveTick(force_driven_entity& e,
                          std::vector<forceFunc>& forces);

@@ -90,17 +90,17 @@ int play() {
 
     s.build_actor<ufo::saucer>(saucer_type::blue,
                                ufo::random_node_of_kind(m, 'R').location());
-   // s.build_actor<ufo::saucer>(saucer_type::green,
-    //                           ufo::random_node_of_kind(m, 'R').location());
-   // s.build_actor<ufo::saucer>(saucer_type::beige,
-   //                            ufo::random_node_of_kind(m, 'R').location());
-   // s.build_actor<ufo::saucer>(saucer_type::yellow,
-   //                            ufo::random_node_of_kind(m, 'R').location());
+    s.build_actor<ufo::saucer>(saucer_type::green,
+                               ufo::random_node_of_kind(m, 'R').location());
+    s.build_actor<ufo::saucer>(saucer_type::beige,
+                               ufo::random_node_of_kind(m, 'R').location());
+    s.build_actor<ufo::saucer>(saucer_type::yellow,
+                               ufo::random_node_of_kind(m, 'R').location());
 
     ufos.push_back(s.actors_[111].get());
-   // ufos.push_back(s.actors_[112].get());
-   // ufos.push_back(s.actors_[113].get());
-   // ufos.push_back(s.actors_[114].get());
+    ufos.push_back(s.actors_[112].get());
+    ufos.push_back(s.actors_[113].get());
+    ufos.push_back(s.actors_[114].get());
 
     std::vector<play::actor *> doors;
 
