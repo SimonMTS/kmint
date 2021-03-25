@@ -50,7 +50,7 @@ void tank::act(delta_time dt) {
             // }
         }
 
-        if (damage >= 10000) {
+        if (damage >= 100) {
             state = repair;
         }
 

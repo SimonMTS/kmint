@@ -26,7 +26,7 @@ class saucer : public student::force_driven_entity {
     bool perceptive() const override { return true; }
 
     scalar collision_range() const override { return 32.0; }
-    scalar perception_range() const override { return 3000.0f; }
+    scalar perception_range() const override { return 200.0f; } 
 
     int seconds_since_move() const { return to_seconds(t_since_move_); }
 
