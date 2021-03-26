@@ -12,6 +12,8 @@ class Population;
 
 namespace kmint::ufo {
 
+using student::movement_helpers;
+
 class human : public student::force_driven_entity {
    public:
     human(map::map_graph &g, const int id);

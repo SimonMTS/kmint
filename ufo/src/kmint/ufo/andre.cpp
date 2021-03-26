@@ -28,47 +28,45 @@ void andre::act(delta_time dt) {
     t_since_move_ += dt;
     if (to_seconds(t_since_move_) >= 1) {
         totalsteps++;
-       // graph_.untag_all();
-       UntagPath();
+        // graph_.untag_all();
+        UntagPath();
 
-    /*    if (this->path.size() <= 1) {
+        /*    if (this->path.size() <= 1) {
+                this->goal_node =
+                    this->goal_node == '4' ? '1' : this->goal_node + 1;
+
+                graph_.untag_all();
+                this->path = student::a_star::find_path(
+                    node(), find_node_of_kind(graph_, this->goal_node), graph_,
+                    ufo::student::heuristics::euclidean_distance);
+            }
+
+            this->node(this->path[this->path.size() - 2].get());
+            this->path.pop_back();*/
+
+        if (path.size() == 0) {
             this->goal_node =
                 this->goal_node == '4' ? '1' : this->goal_node + 1;
 
-            graph_.untag_all();
-            this->path = student::a_star::find_path(
+            path = ufo::student::a_star::find_path(
                 node(), find_node_of_kind(graph_, this->goal_node), graph_,
                 ufo::student::heuristics::euclidean_distance);
         }
 
-        this->node(this->path[this->path.size() - 2].get());
-        this->path.pop_back();*/
-
-
-
-        if (path.size() == 0) {
-              this->goal_node = this->goal_node == '4' ? '1' : this->goal_node + 1;
-              
-        }
-
-            path = ufo::student::a_star::find_path(
-        node(), find_node_of_kind(graph_, this->goal_node), graph_,
-        ufo::student::heuristics::euclidean_distance);
-
         this->node(this->path[this->path.size() - 1].get());
 
         this->path.pop_back();
-                
-       TagPath();
-    
+
+        TagPath();
+
         t_since_move_ = from_seconds(0);
     }
 }
 
-void andre::TagPath() { 
+void andre::TagPath() {
     for (auto node : path) {
         node.get().tag(kmint::graph::node_tag::path);
-    } 
+    }
 }
 
 void andre::UntagPath() {

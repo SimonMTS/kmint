@@ -42,7 +42,7 @@ void finite_state_machine::StateTransitionCheck(saucer& s) {
             s.drawable_.set_tint({0, 0, 255});
             break;
         case nomove:
-            s.drawable_.set_tint({200, 200, 200});
+            s.drawable_.set_tint({200, 200, 0});
             break;
     }
 }

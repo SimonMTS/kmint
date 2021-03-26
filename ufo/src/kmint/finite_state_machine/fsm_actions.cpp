@@ -9,7 +9,7 @@
 
 namespace kmint::ufo::student {
 
-math::vector2d fsm_actions::Execute_Wander(saucer& s) {
+math::vector2d fsm_actions::Execute_Wander(force_driven_entity& s) {
     float xspeed = RandomInt(-1, 1) / 10;
     float yspeed = RandomInt(-1, 1) / 10;
     // s.acceleration += {xspeed, yspeed};
@@ -22,16 +22,17 @@ math::vector2d fsm_actions::Execute_Wander(saucer& s) {
 math::vector2d fsm_actions::Execute_HuntHuman(saucer& s) {
     // move toward target human
     s.GetNearest("human");
+    if (s.target == nullptr) return {0, 0};
     ufo::human* human = dynamic_cast<ufo::human*>(s.target);
 
     math::vector2d desired = human->location() - s.location();
     desired = ::student::forces::limit(desired, 1);
 
-    float humanx = abs(human->velocity.x());
-    float humany = abs(human->velocity.y());
+    // float humanx = abs(human->velocity.x());
+    // float humany = abs(human->velocity.y());
 
-    float xspeed = desired.x() * humanx;
-    float yspeed = desired.y() * humany;
+    // float xspeed = desired.x() * humanx;
+    // float yspeed = desired.y() * humany;
 
     // desired = math::vector2d{xspeed, yspeed};
     // s.acceleration += desired;

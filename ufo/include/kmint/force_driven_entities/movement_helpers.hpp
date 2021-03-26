@@ -49,6 +49,11 @@ class movement_helpers {
     static math::vector2d Alignment(force_driven_entity& a);
     static math::vector2d Cohesion(force_driven_entity& a);
 
+    static math::vector2d GreenTankAttraction(force_driven_entity& a);
+    static math::vector2d RedTankAttraction(force_driven_entity& a);
+    static math::vector2d UfoAttraction(force_driven_entity& a);
+    static math::vector2d DoorAttraction(force_driven_entity& a);
+
     // helper
     static math::vector2d limit(const kmint::math::vector2d& vector);
     static math::vector2d limit(const kmint::math::vector2d& v, float maxforce);

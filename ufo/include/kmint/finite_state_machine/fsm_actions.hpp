@@ -2,6 +2,7 @@
 #define STUDENT_FSMA_HPP
 
 // #include "../../kmint/ufo/saucer.hpp"
+#include "kmint/force_driven_entities/movement_helpers.hpp"
 namespace kmint::ufo {
 class saucer;
 }
@@ -12,7 +13,7 @@ using kmint::map::map_node;
 namespace kmint::ufo::student {
 class fsm_actions {
    public:
-    static math::vector2d Execute_Wander(saucer& s);
+    static math::vector2d Execute_Wander(force_driven_entity& s);
     static math::vector2d Execute_HuntHuman(saucer& s);
     static math::vector2d Execute_HuntTank(saucer& s);
     static math::vector2d Execute_NoMove(saucer& s);

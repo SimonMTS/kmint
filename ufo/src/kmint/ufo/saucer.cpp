@@ -149,7 +149,8 @@ void saucer::GetNearest(std::string type) {
 
         if (i->EntityType == "human") {
             ufo::human *human = dynamic_cast<ufo::human *>(&actor);
-            if (human->isSafeTank || human->isSafeHouse) continue;
+            if (human->removed() || human->isSafeTank || human->isSafeHouse)
+                continue;
         }
         float distance =
             std::sqrt(std::pow(location().x() - actor.location().x(), 2) +
@@ -159,6 +160,8 @@ void saucer::GetNearest(std::string type) {
 
     if (!queue.empty()) {
         target = queue.top().first;
+    } else {
+        target = nullptr;
     }
 }
 

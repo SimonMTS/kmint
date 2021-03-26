@@ -12,6 +12,7 @@
 namespace kmint::ufo {
 
 namespace {
+
 graphics::image tank_image(tank_type t) {
     constexpr scalar scale = 0.35;
     switch (t) {
@@ -84,7 +85,7 @@ void tank::act(delta_time dt) {
     }
 
     if (!attackable) t_since_attack_ += dt;
-    if (to_seconds(t_since_attack_) > 1) {
+    if (to_seconds(t_since_attack_) > 1 && damage < 100) {
         attackable = true;
         t_since_attack_ = from_seconds(0);
     }
@@ -132,7 +133,8 @@ void tank::Flee() {
         fleecount = 0;
         Wander();
     }
-};
+}
+
 void tank::GoToEMP() {
     state = gotoEMP;
 
@@ -151,7 +153,8 @@ void tank::GoToEMP() {
 
         return;
     }
-};
+}
+
 void tank::GoToShield() {
     state = gotoShield;
 
@@ -169,7 +172,7 @@ void tank::GoToShield() {
         // std::cout << "Picked up shield" << std::endl;
         return;
     }
-};
+}
 
 void tank::Repair() {
     // std::cout << "Repair" << std::endl;
@@ -188,8 +191,24 @@ void tank::GoToRepair() {
     // if (Andre->path.size() == 0) return;
     // const map_node &endnode = Andre->path[Andre->path.size() / 2 - 1];
 
+    // check if on andre's path
+    bool on_andre_path = false;
+    for (auto &n : Andre->path) {
+        if (n.get().node_id() == node().node_id()) {
+            on_andre_path = true;
+            break;
+        }
+    }
+
+    // if on andre's path move to andre, else move to point ahead of andre
+    auto &andre_intercept_node =
+        on_andre_path ? Andre->node()
+                      : (Andre->path.size() > 2
+                             ? Andre->path[Andre->path.size() / 2].get()
+                             : Andre->node());
+
     path = ufo::student::a_star::find_path(
-        node(), Andre->node(), this->graph,
+        node(), andre_intercept_node, this->graph,
         ufo::student::heuristics::euclidean_distance);
 
     if (path.size() == 0) {
@@ -360,7 +379,7 @@ bool tank::UFOAttack() {
     UpdateChances();
 
     return false;
-};
+}
 
 void tank::UpdateChances() {
     if (lastchoice == wander) {
@@ -464,4 +483,5 @@ void tank::TagPath() {
         node.get().tag(kmint::graph::node_tag::path);
     }
 }
+
 }  // namespace kmint::ufo

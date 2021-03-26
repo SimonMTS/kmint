@@ -201,6 +201,45 @@ math::vector2d movement_helpers::Cohesion(force_driven_entity& a) {
     return ::student::forces::seek(human, sum);
 }
 
+math::vector2d movement_helpers::GreenTankAttraction(force_driven_entity& a) {
+    if (a.EntityType != "human") return {0, 0};
+    const ufo::human& human = dynamic_cast<ufo::human&>(a);
+
+    return ::student::forces::attacted_to(human, *human.greentank,
+                                          human.DesiredTankDistance);
+}
+
+math::vector2d movement_helpers::RedTankAttraction(force_driven_entity& a) {
+    if (a.EntityType != "human") return {0, 0};
+    const ufo::human& human = dynamic_cast<ufo::human&>(a);
+
+    return ::student::forces::attacted_to(human, *human.redtank,
+                                          human.DesiredTankDistance);
+}
+
+math::vector2d movement_helpers::UfoAttraction(force_driven_entity& a) {
+    if (a.EntityType != "human") return {0, 0};
+    const ufo::human& human = dynamic_cast<ufo::human&>(a);
+
+    math::vector2d force{0, 0};
+    for (int i = 0; i < human.ufos.size(); i++) {
+        force += ::student::forces::attacted_to(human, *human.ufos[i],
+                                                human.DesiredUfoDistance);
+    }
+    return force;
+}
+
+math::vector2d movement_helpers::DoorAttraction(force_driven_entity& a) {
+    if (a.EntityType != "human") return {0, 0};
+    const ufo::human& human = dynamic_cast<ufo::human&>(a);
+
+    math::vector2d force{0, 0};
+    for (int i = 0; i < human.doors.size(); i++) {
+        force += ::student::forces::attacted_to(human, *human.doors[0], 100);
+    }
+    return force;
+}
+
 math::vector2d movement_helpers::limit(const kmint::math::vector2d& v) {
     kmint::math::vector2d temp = v;
     int maxforce = 3;
