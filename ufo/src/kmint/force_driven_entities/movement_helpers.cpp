@@ -13,7 +13,6 @@ namespace kmint::ufo::student {
 
 void movement_helpers::MoveTick(force_driven_entity& e,
                                 std::vector<forceFunc>& forces) {
-    // todo, samenvoeg algo gebruiken
     math::vector2d total_force = {0, 0};
     for (auto& force : forces) {
         total_force += limit(force.first(e)) * force.second;
@@ -23,41 +22,21 @@ void movement_helpers::MoveTick(force_driven_entity& e,
     e.velocity = limit(e.velocity);
 
     e.location(e.location() + e.velocity);
-    // e.acceleration *= 0;
 }
 
 math::vector2d movement_helpers::AvoidScreenEdge(force_driven_entity& a) {
     math::vector2d force = {0, 0};
 
-    {
-        // stay on map (not great, but it works?)
-        // check position in 100 steps
-        // math::vector2d futPos = a.location() + (a.velocity * 100);
+    // stay on map, simple
+    // check position in 10 steps
+    math::vector2d currPos = a.location();
+    math::vector2d futPos = a.location() + (a.velocity * 10);
 
-        // calulate repulsion
-        // float xRep =
-        //     (futPos.x() < 0 ? std::abs(futPos.x()) : futPos.x() - 1024) / 5;
-        // float yRep =
-        //     (futPos.y() < 0 ? std::abs(futPos.y()) : futPos.y() - 768) / 5;
-
-        // if out of bound, apply opposite force
-        // if (futPos.x() < 0) force += {xRep, 0};
-        // if (futPos.x() > 1024) force += {-xRep, 0};
-        // if (futPos.y() < 0) force += {0, yRep};
-        // if (futPos.y() > 768) force += {0, -yRep};
-    }
-
-    {  // stay on map, simple
-        // check position in 10 steps
-        math::vector2d currPos = a.location();
-        math::vector2d futPos = a.location() + (a.velocity * 10);
-
-        // if out of bound, apply opposite force
-        if (currPos.x() < 0 || futPos.x() < 0) force += {10, 0};
-        if (currPos.x() > 1024 || futPos.x() > 1024) force += {-10, 0};
-        if (currPos.y() < 0 || futPos.y() < 0) force += {0, 10};
-        if (currPos.y() > 768 || futPos.y() > 768) force += {0, -10};
-    }
+    // if out of bound, apply opposite force
+    if (currPos.x() < 0 || futPos.x() < 0) force += {10, 0};
+    if (currPos.x() > 1024 || futPos.x() > 1024) force += {-10, 0};
+    if (currPos.y() < 0 || futPos.y() < 0) force += {0, 10};
+    if (currPos.y() > 768 || futPos.y() > 768) force += {0, -10};
 
     return force;
 }

@@ -149,21 +149,21 @@ void Population::increaseCohesion() {
     else
         CohesionWeight = 1;
     SetValues();
-};
+}
 void Population::increaseSeparation() {
     if (SeparationWeight <= 0.9f)
         SeparationWeight += 0.1f;
     else
         SeparationWeight = 1;
     SetValues();
-};
+}
 void Population::increaseAlignment() {
     if (AlignmentWeight <= 0.9f)
         AlignmentWeight += 0.1f;
     else
         AlignmentWeight = 1;
     SetValues();
-};
+}
 
 void Population::increaseTank() {
     if (GreenTankWeight <= 0.9f)
@@ -176,7 +176,7 @@ void Population::increaseTank() {
     else
         RedTankWeight = 1;
     SetValues();
-};
+}
 
 void Population::increaseUfo() {
     if (UfoWeight <= 0.9f)
@@ -184,7 +184,7 @@ void Population::increaseUfo() {
     else
         UfoWeight = 1;
     SetValues();
-};
+}
 
 void Population::decreaseCohesion() {
     if (CohesionWeight >= 0.1f)
@@ -192,21 +192,21 @@ void Population::decreaseCohesion() {
     else
         CohesionWeight = 0;
     SetValues();
-};
+}
 void Population::decreaseSeparation() {
     if (SeparationWeight >= 0.1f)
         SeparationWeight -= 0.1f;
     else
         SeparationWeight = 0;
     SetValues();
-};
+}
 void Population::decreaseAlignment() {
     if (AlignmentWeight >= 0.1f)
         AlignmentWeight -= 0.1f;
     else
         AlignmentWeight = 0;
     SetValues();
-};
+}
 
 void Population::decreaseTank() {
     if (GreenTankWeight >= -0.9f)
@@ -219,7 +219,7 @@ void Population::decreaseTank() {
     else
         RedTankWeight = -1.f;
     SetValues();
-};
+}
 
 void Population::decreaseUfo() {
     if (UfoWeight >= -0.9f)
@@ -227,7 +227,7 @@ void Population::decreaseUfo() {
     else
         UfoWeight = -1.f;
     SetValues();
-};
+}
 
 void Population::SetValues() {
     for (int i = 0; i < humans.size(); i++) {

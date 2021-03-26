@@ -12,9 +12,6 @@ namespace kmint::ufo::student {
 math::vector2d fsm_actions::Execute_Wander(force_driven_entity& s) {
     float xspeed = RandomInt(-1, 1) / 10;
     float yspeed = RandomInt(-1, 1) / 10;
-    // s.acceleration += {xspeed, yspeed};
-
-    // std::cout << xspeed << " " << yspeed << "\n";
 
     return {xspeed, yspeed};
 }
@@ -28,14 +25,6 @@ math::vector2d fsm_actions::Execute_HuntHuman(saucer& s) {
     math::vector2d desired = human->location() - s.location();
     desired = ::student::forces::limit(desired, 1);
 
-    // float humanx = abs(human->velocity.x());
-    // float humany = abs(human->velocity.y());
-
-    // float xspeed = desired.x() * humanx;
-    // float yspeed = desired.y() * humany;
-
-    // desired = math::vector2d{xspeed, yspeed};
-    // s.acceleration += desired;
     return desired;
 }
 
@@ -71,9 +60,6 @@ math::vector2d fsm_actions::Execute_HuntTank(saucer& s) {
 }
 
 math::vector2d fsm_actions::Execute_NoMove(saucer& s) {
-    // s.acceleration = {0, 0};
-    // s.velocity = {0, 0};
-
     s.NoMoveCount++;
 
     // Saucer acts ever 0.1s so 200 for 20s

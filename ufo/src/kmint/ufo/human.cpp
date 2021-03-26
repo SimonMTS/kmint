@@ -60,16 +60,6 @@ void human::act(delta_time dt) {
         // std::endl;
 
         if (!isSafeHouse) {
-            // Forces();
-            // Buildings();
-            // MapEdge();
-            // Move();
-
-            // todo add ufo/door/tank attraction
-            // GreenTankWeight
-            // RedTankWeight
-            // UfoWeight
-            // DoorWeight
             std::vector<movement_helpers::forceFunc> inputForces{
                 {movement_helpers::AvoidBuildings, INT_MAX},
                 {movement_helpers::AvoidScreenEdge, INT_MAX},
@@ -90,107 +80,6 @@ void human::act(delta_time dt) {
         t_since_move_ = from_seconds(0);
     }
 }
-// void human::Move() {
-//     if (!isSafeTank) {
-// std::vector<student::movement_helpers::forceFunc> inputForces{
-//     {student::movement_helpers::AvoidBuildings, 10},
-//     {student::movement_helpers::AvoidScreenEdge, 10},
-//     {student::movement_helpers::Separation, 1},
-//     {student::movement_helpers::Alignment, 1},
-//     {student::movement_helpers::Cohesion, 1}};
-// student::movement_helpers::MoveTick(*this, inputForces);
-
-// acceleration *= 0.4;
-
-// velocity += acceleration;
-
-// velocity = ::student::forces::limit(velocity, maxForce);
-
-// math::vector2d nextpos = location() + velocity;
-// location(nextpos);
-// acceleration *= 0;
-//     } else {
-//         location(greentank->location());
-//     }
-// }
-// void human::Forces() {
-//     if (this->removed()) return;
-
-//     math::vector2d s = ::student::forces::separation(*this);
-//     math::vector2d a = ::student::forces::alignment(*this);
-//     math::vector2d c = ::student::forces::cohesion(*this);
-//     math::vector2d greent =
-//         ::student::forces::attacted_to(*this, *greentank,
-//         DesiredTankDistance);
-//     math::vector2d redt =
-//         ::student::forces::attacted_to(*this, *redtank, DesiredTankDistance);
-
-//     math::vector2d ufo{0, 0};
-
-//     for (int i = 0; i < ufos.size(); i++) {
-//         ufo +=
-//             ::student::forces::attacted_to(*this, *ufos[i],
-//             DesiredUfoDistance);
-//     }
-
-//     math::vector2d door{0, 0};
-
-//     for (int i = 0; i < doors.size(); i++) {
-//         door += ::student::forces::attacted_to(*this, *doors[0], 100);
-//     }
-
-//     s = s * SeparationWeight;
-//     a = a * AlignmentWeight;
-//     c = c * CohesionWeight;
-//     greent = greent * GreenTankWeight;
-//     redt = redt * RedTankWeight;
-//     ufo = ufo * UfoWeight;
-//     door = door * DoorWeight;
-
-//     acceleration += s + a + c + greent + redt + ufo + door;
-// }
-
-// void human::MapEdge() {
-//     int TopLeftX = 64;
-//     int TopLeftY = 0;
-//     int BottomRightX = 959;
-//     int BottomRightY = 703;
-
-//     int edgeboundary = 5;
-
-//     // Map borders
-//     if (location().x() < TopLeftX + edgeboundary) {
-//         if (velocity.x() < 0) {
-//             acceleration += math::vector2d{-velocity.x() * 2, 0};
-//         }
-
-//     } else if (location().x() > BottomRightX - edgeboundary) {
-//         if (velocity.x() > 0) {
-//             acceleration += math::vector2d{-velocity.x() * 2, 0};
-//         }
-//     }
-
-//     if (location().y() < TopLeftY + edgeboundary) {
-//         if (velocity.y() < 0) {
-//             acceleration += math::vector2d{0, -velocity.y() * 2};
-//         }
-
-//     } else if (location().y() > BottomRightY - edgeboundary) {
-//         if (velocity.y() > 0) {
-//             acceleration += math::vector2d{0, -velocity.y() * 2};
-//         }
-//     }
-// }
-
-// void human::Buildings() {
-//     for (auto b : buildings) {
-//         if (location().x() > b.TopLeftX && location().x() < b.BottomRightX &&
-//             location().y() > b.TopLeftY && location().y() < b.BottomRightY) {
-//             drawable_.set_tint({0, 0, 0});
-//             acceleration *= -2;
-//         }
-//     }
-// }
 
 math::vector2d human::CanSpawnHere(math::vector2d location) {
     for (auto b : buildings) {

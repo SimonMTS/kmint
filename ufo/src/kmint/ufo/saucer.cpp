@@ -33,18 +33,6 @@ char const *color_for(saucer_type type) {
 }
 
 math::vector2d location_for(saucer_type type) {
-    // switch (type) {
-    //     case saucer_type::blue:
-    //         return {30.f, 30.f};
-    //     case saucer_type::green:
-    //         return {994.f, 30.f};
-    //     case saucer_type::beige:
-    //         return {994.f, 738.f};
-    //     case saucer_type::yellow:
-    //     default:
-    //         return {30.f, 738.f};
-    // }
-
     float x = (int)student::fsm_actions::RandomInt(0, 1024);
     float y = (int)student::fsm_actions::RandomInt(0, 768);
     return {x, y};
@@ -79,13 +67,9 @@ saucer::saucer(saucer_type type, math::vector2d location)
       drawable_{*this, image_for(type)},
       type_{type} {
     EntityType = "ufo";
-    // velocity = velocity_for(type);
-    // velocity = {0, 0};
 
-    // SetWanderDirection();
     float xspeed = student::fsm_actions::RandomInt(-3, 3);
     float yspeed = student::fsm_actions::RandomInt(-3, 3);
-    // WanderDirection = {xspeed, yspeed};
     velocity = {xspeed, yspeed};
 }
 
@@ -98,32 +82,6 @@ void saucer::act(delta_time dt) {
         t_since_move_ = from_seconds(0);
     }
 }
-
-// void saucer::Move() {
-// {  // stay on map (not great, but it works?)
-// check position in 100 steps
-// math::vector2d futPos = location() + (velocity * 100);
-
-// calulate repulsion
-// float xRep =
-//     (futPos.x() < 0 ? std::abs(futPos.x()) : futPos.x() - 1024) / 5;
-// float yRep =
-//     (futPos.y() < 0 ? std::abs(futPos.y()) : futPos.y() - 768) / 5;
-
-// if out of bound, apply opposite force
-// if (futPos.x() < 0) WanderDirection += {xRep, 0};
-// if (futPos.x() > 1024) WanderDirection += {-xRep, 0};
-// if (futPos.y() < 0) WanderDirection += {0, yRep};
-// if (futPos.y() > 768) WanderDirection += {0, -yRep};
-// }
-
-// velocity += acceleration;
-
-// velocity = limit(velocity);
-// math::vector2d nextpos = location() + velocity;
-// location(nextpos);
-// acceleration *= 0;
-// }
 
 #pragma region moreHelpers
 

@@ -30,6 +30,6 @@ void Doors::act(delta_time dt) {
             human1->location(location());
         }
     }
-};
+}
 
 }  // namespace kmint::ufo
