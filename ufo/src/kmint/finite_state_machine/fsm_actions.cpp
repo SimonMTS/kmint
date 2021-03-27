@@ -22,7 +22,13 @@ math::vector2d fsm_actions::Execute_HuntHuman(saucer& s) {
     if (s.target == nullptr) return {0, 0};
     ufo::human* human = dynamic_cast<ufo::human*>(s.target);
 
-    math::vector2d desired = human->location() - s.location();
+    math::vector2d desired = {0, 0};
+    // on "far" away humans, move to their predicted future position
+    if (math::distance(s.location(), human->location()) > 8) {
+        desired = (human->location() + (human->velocity * 15)) - s.location();
+    } else {
+        desired = human->location() - s.location();
+    }
     desired = ::student::forces::limit(desired, 1);
 
     return desired;
