@@ -1,12 +1,13 @@
 #include "kmint/ufo/tank.hpp"
 
-// #include <bits/stdc++.h>  // do not remove
+#include <bits/stdc++.h>  // do not remove
 
 #include <iostream>
 
 #include "kmint/a_star/a_star.hpp"
 #include "kmint/a_star/heuristics.hpp"
 #include "kmint/graphics.hpp"
+#include "kmint/prob_fsm/pfsm_actions.hpp"
 #include "kmint/random.hpp"
 #include "kmint/ufo/node_algorithm.hpp"
 namespace kmint::ufo {
@@ -44,38 +45,37 @@ void tank::act(delta_time dt) {
     if (to_seconds(t_since_move_) >= 1) {
         if (this->type_ == tank_type::red) {
             graph.untag_all();
-            // for (int i = 0; i < graph.num_nodes() - 1; i++) {
-            //     if (graph[i].tag() == kmint::graph::node_tag::visited) {
-            //         graph[i].tag(kmint::graph::node_tag::normal);
-            //     }
-            // }
         }
 
-        if (damage >= 100) {
-            state = repair;
-        }
+        student::pfsm_transitions::TransitionCheck(this->globalState, *this);
+        student::pfsm_transitions::TransitionCheck(this->state, *this);
+        student::pfsm_actions::ExecuteAction(*this);
 
-        if (state == wander) {
-            SenseUFO();
-        }
+        // if (damage >= 100) {
+        //     state = repair;
+        // }
 
-        switch (state) {
-            case wander:
-                Wander();
-                break;
-            case flee:
-                Flee();
-                break;
-            case gotoEMP:
-                GoToEMP();
-                break;
-            case gotoShield:
-                GoToShield();
-                break;
-            case repair:
-                Repair();
-                break;
-        }
+        // if (state == wander) {
+        //     SenseUFO();
+        // }
+
+        // switch (state) {
+        //     case wander:
+        //         Wander();
+        //         break;
+        //     case flee:
+        //         Flee();
+        //         break;
+        //     case gotoEMP:
+        //         GoToEMP();
+        //         break;
+        //     case gotoShield:
+        //         GoToShield();
+        //         break;
+        //     case repair:
+        //         Repair();
+        //         break;
+        // }
 
         Move();
         RoadkillOrSave();
@@ -91,101 +91,101 @@ void tank::act(delta_time dt) {
     }
 }
 
-void tank::Wander() {
-    state = wander;
-    if (weight < 1) {
-        next_edge = &node()[random_int(0, node().num_edges())];
-    }
-};
+// void tank::Wander() {
+//     // state = wander;
+//     if (weight < 1) {
+//         next_edge = &node()[random_int(0, node().num_edges())];
+//     }
+// };
 
-void tank::SenseUFO() {
-    this->ufos.clear();
-    std::vector<play::actor *> ufos;
-    for (auto i = begin_perceived(); i != end_perceived(); ++i) {
-        if (i->EntityType == "ufo") {
-            play::actor &ufo = *i;
-            ufos.push_back(&ufo);
-        }
-    }
-    if (ufos.size() == 0) return;
+// void tank::SenseUFO() {
+//     this->ufos.clear();
+//     std::vector<play::actor *> ufos;
+//     for (auto i = begin_perceived(); i != end_perceived(); ++i) {
+//         if (i->EntityType == "ufo") {
+//             play::actor &ufo = *i;
+//             ufos.push_back(&ufo);
+//         }
+//     }
+//     if (ufos.size() == 0) return;
 
-    this->ufos = ufos;
+//     this->ufos = ufos;
 
-    int number = RandomInt(0, 100);
-    if (number >= 100 - FleeChance) {
-        Flee();
-    } else if (number >= 100 - FleeChance - EMPChance) {
-        GoToEMP();
-    } else if (number <= ShieldChance) {
-        GoToShield();
-    }
-}
+//     int number = RandomInt(0, 100);
+//     if (number >= 100 - FleeChance) {
+//         Flee();
+//     } else if (number >= 100 - FleeChance - EMPChance) {
+//         GoToEMP();
+//     } else if (number <= ShieldChance) {
+//         GoToShield();
+//     }
+// }
 
-void tank::Flee() {
-    state = flee;
-    play::actor *ToFleeFrom = GetNearestUFO(ufos);
+// void tank::Flee() {
+//     // state = flee;
+//     play::actor *ToFleeFrom = GetNearestUFO(ufos);
 
-    if (fleecount < 10) {
-        MoveAwayFrom(ToFleeFrom);
-        fleecount++;
-    } else {
-        lastchoice = flee;
-        fleecount = 0;
-        Wander();
-    }
-}
+//     if (fleecount < 10) {
+//         MoveAwayFrom(ToFleeFrom);
+//         fleecount++;
+//     } else {
+//         lastchoice = flee;
+//         fleecount = 0;
+//         Wander();
+//     }
+// }
 
-void tank::GoToEMP() {
-    state = gotoEMP;
+// void tank::GoToEMP() {
+//     state = gotoEMP;
 
-    GoTo(pickup_type::EMP);
+//     GoTo(pickup_type::EMP);
 
-    if (this->path.size() == 0 && target != nullptr) {
-        // target->available = false;
-        // target->remove();
-        target->NewLocation();
-        lastchoice = gotoEMP;
+//     if (this->path.size() == 0 && target != nullptr) {
+//         // target->available = false;
+//         // target->remove();
+//         target->NewLocation();
+//         lastchoice = gotoEMP;
 
-        state = wander;
-        LaserShieldCount++;
-        target = nullptr;
-        // std::cout << "Picked up EMP" << std::endl;
+//         state = wander;
+//         LaserShieldCount++;
+//         target = nullptr;
+//         // std::cout << "Picked up EMP" << std::endl;
 
-        return;
-    }
-}
+//         return;
+//     }
+// }
 
-void tank::GoToShield() {
-    state = gotoShield;
+// void tank::GoToShield() {
+//     state = gotoShield;
 
-    GoTo(pickup_type::SHIELD);
+//     GoTo(pickup_type::SHIELD);
 
-    if (this->path.size() == 0 && target != nullptr) {
-        // target->available = false;
-        // target->remove();
-        target->NewLocation();
-        state = wander;
-        LaserShieldCount++;
-        target = nullptr;
-        lastchoice = gotoShield;
+//     if (this->path.size() == 0 && target != nullptr) {
+//         // target->available = false;
+//         // target->remove();
+//         target->NewLocation();
+//         state = wander;
+//         LaserShieldCount++;
+//         target = nullptr;
+//         lastchoice = gotoShield;
 
-        // std::cout << "Picked up shield" << std::endl;
-        return;
-    }
-}
+//         // std::cout << "Picked up shield" << std::endl;
+//         return;
+//     }
+// }
 
-void tank::Repair() {
-    // std::cout << "Repair" << std::endl;
-    state = repair;
+// void tank::Repair() {
+//     // std::cout << "Repair" << std::endl;
+//     state = repair;
 
-    if (this->node().node_id() == Andre->node().node_id()) {
-        state = wander;
-        damage = 0;
-        return;
-    }
+//     if (this->node().node_id() == Andre->node().node_id()) {
+//         state = wander;
+//         damage = 0;
+//         return;
+//     }
 
-    GoToRepair();
-}
+//     GoToRepair();
+// }
 
 void tank::GoToRepair() {
     // if (Andre->path.size() == 0) return;
@@ -406,39 +406,39 @@ void tank::UpdateChances() {
     avgdamage /= DamageHistory.size();
 
     if (lastdamage < avgdamage) {
-        if (lastchoice == State::flee && EMPChance > 0 && ShieldChance > 0) {
+        if (lastchoice == tState::flee && EMPChance > 0 && ShieldChance > 0) {
             FleeChance += 2;
             EMPChance--;
             ShieldChance--;
         }
 
-        if (lastchoice == State::gotoEMP && FleeChance > 0 &&
+        if (lastchoice == tState::gotoEMP && FleeChance > 0 &&
             ShieldChance > 0) {
             FleeChance--;
             EMPChance += 2;
             ShieldChance--;
         }
 
-        if (lastchoice == State::gotoShield && FleeChance > 0 &&
+        if (lastchoice == tState::gotoShield && FleeChance > 0 &&
             EMPChance > 0) {
             FleeChance--;
             EMPChance--;
             ShieldChance += 2;
         }
     } else if (lastdamage >= avgdamage) {
-        if (lastchoice == State::flee && (EMPChance + ShieldChance < 99)) {
+        if (lastchoice == tState::flee && (EMPChance + ShieldChance < 99)) {
             FleeChance -= 2;
             EMPChance++;
             ShieldChance++;
         }
 
-        if (lastchoice == State::gotoEMP && (FleeChance + ShieldChance < 99)) {
+        if (lastchoice == tState::gotoEMP && (FleeChance + ShieldChance < 99)) {
             FleeChance++;
             EMPChance -= 2;
             ShieldChance++;
         }
 
-        if (lastchoice == State::gotoShield && (FleeChance + EMPChance < 99)) {
+        if (lastchoice == tState::gotoShield && (FleeChance + EMPChance < 99)) {
             FleeChance++;
             EMPChance++;
             ShieldChance -= 2;

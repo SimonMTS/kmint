@@ -28,6 +28,8 @@ add_library(ufo-common STATIC
   src/kmint/finite_state_machine/finite_state_machine.cpp
   src/kmint/finite_state_machine/fsm_actions.cpp
   src/kmint/finite_state_machine/fsm_transitions.cpp
+  src/kmint/prob_fsm/pfsm_actions.cpp
+  src/kmint/prob_fsm/pfsm_transitions.cpp
   src/kmint/ufo/doors.cpp)
 
 target_compile_features(ufo-common PUBLIC cxx_std_17)
