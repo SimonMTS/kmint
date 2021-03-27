@@ -77,7 +77,9 @@ void saucer::act(delta_time dt) {
     t_since_move_ += dt;
 
     if (to_seconds(t_since_move_) >= 0.1) {
-        student::finite_state_machine::StateTransitionCheck(*this);
+        student::finite_state_machine::StateTransitionCheck(this->globalState,
+                                                            *this);
+        student::finite_state_machine::StateTransitionCheck(this->state, *this);
         student::finite_state_machine::ExecuteStateAction(*this);
         t_since_move_ = from_seconds(0);
     }

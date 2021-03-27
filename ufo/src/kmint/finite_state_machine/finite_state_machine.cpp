@@ -13,36 +13,40 @@
 
 namespace kmint::ufo::student {
 
-void finite_state_machine::StateTransitionCheck(saucer& s) {
-    fsm_transitions::GlobalStateTransitionCheck(s);
-
-    switch (s.state) {
+void finite_state_machine::StateTransitionCheck(State state, saucer& saucer) {
+    switch (state) {
         case wander:
-            fsm_transitions::TransitionCheck_Wander(s);
+            fsm_transitions::TransitionCheck_Wander(saucer);
             break;
         case hunthuman:
-            fsm_transitions::TransitionCheck_HuntHuman(s);
+            fsm_transitions::TransitionCheck_HuntHuman(saucer);
             break;
         case hunttank:
-            fsm_transitions::TransitionCheck_HuntTank(s);
+            fsm_transitions::TransitionCheck_HuntTank(saucer);
             break;
         case nomove:
-            fsm_transitions::TransitionCheck_NoMove(s);
+            fsm_transitions::TransitionCheck_NoMove(saucer);
+            break;
+        case tanklookout:
+            fsm_transitions::TransitionCheck_TankLookout(saucer);
             break;
     }
 
-    switch (s.state) {
+    switch (state) {
         case wander:
-            s.drawable_.set_tint({255, 0, 0});
+            saucer.drawable_.set_tint({255, 0, 0});
             break;
         case hunthuman:
-            s.drawable_.set_tint({0, 255, 0});
+            saucer.drawable_.set_tint({0, 255, 0});
             break;
         case hunttank:
-            s.drawable_.set_tint({0, 0, 255});
+            saucer.drawable_.set_tint({0, 0, 255});
             break;
         case nomove:
-            s.drawable_.set_tint({200, 200, 0});
+            saucer.drawable_.set_tint({200, 200, 0});
+            break;
+        case tanklookout:
+            // no need to tint
             break;
     }
 }
@@ -63,6 +67,8 @@ void finite_state_machine::ExecuteStateAction(saucer& s) {
         case nomove:
             force = fsm_actions::Execute_NoMove(s);
             break;
+        case tanklookout:
+            return;
     }
 
     fsm_actions::BeamHumans(s);

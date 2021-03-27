@@ -6,7 +6,7 @@
 
 namespace kmint::ufo::student {
 
-void fsm_transitions::GlobalStateTransitionCheck(saucer& s) {
+void fsm_transitions::TransitionCheck_TankLookout(saucer& s) {
     if (s.state != State::nomove && fsm_transitions::TankNearby(s)) {
         s.state = State::hunttank;
     }

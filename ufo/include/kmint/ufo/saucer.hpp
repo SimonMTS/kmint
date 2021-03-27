@@ -9,11 +9,11 @@
 namespace kmint::ufo {
 
 enum class saucer_type { blue, green, beige, yellow };
-enum State { hunttank, hunthuman, wander, nomove };
 
 class saucer : public student::force_driven_entity {
    public:
-    State state = wander;
+    student::State globalState = student::State::tanklookout;
+    student::State state = student::State::wander;
 
     saucer(saucer_type type, math::vector2d location);
 
@@ -26,7 +26,7 @@ class saucer : public student::force_driven_entity {
     bool perceptive() const override { return true; }
 
     scalar collision_range() const override { return 32.0; }
-    scalar perception_range() const override { return 200.0f; } 
+    scalar perception_range() const override { return 200.0f; }
 
     int seconds_since_move() const { return to_seconds(t_since_move_); }
 
@@ -35,6 +35,7 @@ class saucer : public student::force_driven_entity {
     play::actor *target;
     // void Move();
     int NoMoveCount = 0;
+
    private:
     saucer_type type_;
 

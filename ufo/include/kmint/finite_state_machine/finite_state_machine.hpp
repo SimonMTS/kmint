@@ -10,9 +10,11 @@ class saucer;
 using kmint::map::map_node;
 
 namespace kmint::ufo::student {
+enum State { hunttank, hunthuman, wander, nomove, tanklookout };
+
 class finite_state_machine {
    public:
-    static void StateTransitionCheck(saucer& s);
+    static void StateTransitionCheck(State state, saucer& saucer);
     static void ExecuteStateAction(saucer& s);
 };
 }  // namespace kmint::ufo::student

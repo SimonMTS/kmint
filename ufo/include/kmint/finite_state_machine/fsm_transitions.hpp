@@ -12,12 +12,11 @@ using kmint::map::map_node;
 namespace kmint::ufo::student {
 class fsm_transitions {
    public:
-    static void GlobalStateTransitionCheck(saucer& s);
-
     static void TransitionCheck_Wander(saucer& s);
     static void TransitionCheck_HuntHuman(saucer& s);
     static void TransitionCheck_HuntTank(saucer& s);
     static void TransitionCheck_NoMove(saucer& s);
+    static void TransitionCheck_TankLookout(saucer& s);
 
    private:
     // helpers
