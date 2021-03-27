@@ -51,35 +51,8 @@ void tank::act(delta_time dt) {
         student::pfsm_transitions::TransitionCheck(this->state, *this);
         student::pfsm_actions::ExecuteAction(*this);
 
-        // if (damage >= 100) {
-        //     state = repair;
-        // }
-
-        // if (state == wander) {
-        //     SenseUFO();
-        // }
-
-        // switch (state) {
-        //     case wander:
-        //         Wander();
-        //         break;
-        //     case flee:
-        //         Flee();
-        //         break;
-        //     case gotoEMP:
-        //         GoToEMP();
-        //         break;
-        //     case gotoShield:
-        //         GoToShield();
-        //         break;
-        //     case repair:
-        //         Repair();
-        //         break;
-        // }
-
         Move();
         RoadkillOrSave();
-        SetSprite();
         TagPath();
         t_since_move_ = from_seconds(0);
     }
@@ -90,102 +63,6 @@ void tank::act(delta_time dt) {
         t_since_attack_ = from_seconds(0);
     }
 }
-
-// void tank::Wander() {
-//     // state = wander;
-//     if (weight < 1) {
-//         next_edge = &node()[random_int(0, node().num_edges())];
-//     }
-// };
-
-// void tank::SenseUFO() {
-//     this->ufos.clear();
-//     std::vector<play::actor *> ufos;
-//     for (auto i = begin_perceived(); i != end_perceived(); ++i) {
-//         if (i->EntityType == "ufo") {
-//             play::actor &ufo = *i;
-//             ufos.push_back(&ufo);
-//         }
-//     }
-//     if (ufos.size() == 0) return;
-
-//     this->ufos = ufos;
-
-//     int number = RandomInt(0, 100);
-//     if (number >= 100 - FleeChance) {
-//         Flee();
-//     } else if (number >= 100 - FleeChance - EMPChance) {
-//         GoToEMP();
-//     } else if (number <= ShieldChance) {
-//         GoToShield();
-//     }
-// }
-
-// void tank::Flee() {
-//     // state = flee;
-//     play::actor *ToFleeFrom = GetNearestUFO(ufos);
-
-//     if (fleecount < 10) {
-//         MoveAwayFrom(ToFleeFrom);
-//         fleecount++;
-//     } else {
-//         lastchoice = flee;
-//         fleecount = 0;
-//         Wander();
-//     }
-// }
-
-// void tank::GoToEMP() {
-//     state = gotoEMP;
-
-//     GoTo(pickup_type::EMP);
-
-//     if (this->path.size() == 0 && target != nullptr) {
-//         // target->available = false;
-//         // target->remove();
-//         target->NewLocation();
-//         lastchoice = gotoEMP;
-
-//         state = wander;
-//         LaserShieldCount++;
-//         target = nullptr;
-//         // std::cout << "Picked up EMP" << std::endl;
-
-//         return;
-//     }
-// }
-
-// void tank::GoToShield() {
-//     state = gotoShield;
-
-//     GoTo(pickup_type::SHIELD);
-
-//     if (this->path.size() == 0 && target != nullptr) {
-//         // target->available = false;
-//         // target->remove();
-//         target->NewLocation();
-//         state = wander;
-//         LaserShieldCount++;
-//         target = nullptr;
-//         lastchoice = gotoShield;
-
-//         // std::cout << "Picked up shield" << std::endl;
-//         return;
-//     }
-// }
-
-// void tank::Repair() {
-//     // std::cout << "Repair" << std::endl;
-//     state = repair;
-
-//     if (this->node().node_id() == Andre->node().node_id()) {
-//         state = wander;
-//         damage = 0;
-//         return;
-//     }
-
-//     GoToRepair();
-// }
 
 void tank::GoToRepair() {
     // if (Andre->path.size() == 0) return;
@@ -338,20 +215,6 @@ void tank::MoveAwayFrom(play::actor *actor) {
         next_edge = edge;
     } else {
         throw "MoveAwayFrom nullptr";
-    }
-}
-
-void tank::SetSprite() {
-    if (state == wander) {
-        drawable_.set_tint({255, 255, 255});
-    }
-
-    else if (state == flee) {
-        drawable_.set_tint({0, 0, 0});
-    } else if (state == gotoEMP) {
-        drawable_.set_tint({255, 140, 0});
-    } else if (state == gotoShield) {
-        drawable_.set_tint({0, 0, 255});
     }
 }
 
