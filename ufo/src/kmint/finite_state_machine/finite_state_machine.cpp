@@ -52,8 +52,9 @@ void finite_state_machine::StateTransitionCheck(State state, saucer& saucer) {
 }
 
 void finite_state_machine::ExecuteStateAction(saucer& s) {
-    math::vector2d force = {0, 0};
+    fsm_actions::BeamHumans(s);
 
+    math::vector2d force = {0, 0};
     switch (s.state) {
         case wander:
             force = fsm_actions::Execute_Wander(s);
@@ -66,12 +67,10 @@ void finite_state_machine::ExecuteStateAction(saucer& s) {
             break;
         case nomove:
             force = fsm_actions::Execute_NoMove(s);
-            break;
+            return;
         case tanklookout:
             return;
     }
-
-    fsm_actions::BeamHumans(s);
 
     movement_helpers::forceFunc stateForceFunc = {
         [force](force_driven_entity& e) { return force; }, 1};

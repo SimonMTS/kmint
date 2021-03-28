@@ -19,7 +19,7 @@ void fsm_transitions::TransitionCheck_Wander(saucer& s) {
 }
 
 void fsm_transitions::TransitionCheck_HuntHuman(saucer& s) {
-    if (!fsm_transitions::HumanNearby(s)) {
+    if (!fsm_transitions::HumanNearby(s) || s.target == nullptr) {
         s.state = State::wander;
     }
 }
@@ -59,7 +59,7 @@ bool fsm_transitions::HumanNearby(saucer& s) {
             play::actor& human = *it;
 
             ufo::human* human1 = dynamic_cast<ufo::human*>(&human);
-            if (human1->isSafeTank) continue;
+            if (human1->isSafeTank || human1->isSafeHouse) continue;
 
             return true;
         }
