@@ -21,7 +21,16 @@ add_library(ufo-common STATIC
   src/kmint/ufo/play.cpp
   src/kmint/a_star/a_star.cpp
   src/kmint/a_star/heuristics.cpp
-  src/kmint/force_driven_entities/forces.cpp)
+  src/kmint/force_driven_entities/forces.cpp
+  src/kmint/ufo/pickup.cpp
+  src/kmint/force_driven_entities/population.cpp
+  src/kmint/force_driven_entities/movement_helpers.cpp
+  src/kmint/finite_state_machine/finite_state_machine.cpp
+  src/kmint/finite_state_machine/fsm_actions.cpp
+  src/kmint/finite_state_machine/fsm_transitions.cpp
+  src/kmint/prob_fsm/pfsm_actions.cpp
+  src/kmint/prob_fsm/pfsm_transitions.cpp
+  src/kmint/ufo/doors.cpp)
 
 target_compile_features(ufo-common PUBLIC cxx_std_17)
 target_link_libraries(ufo-common PRIVATE kmint)

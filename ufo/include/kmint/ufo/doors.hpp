@@ -1,20 +1,20 @@
-#ifndef KMINT_UFO_ANDRE_HPP
-#define KMINT_UFO_ANDRE_HPP
+﻿#pragma once
 
-#include "kmint/a_star/a_star.hpp"
-#include "kmint/a_star/heuristics.hpp"
 #include "kmint/map/map.hpp"
-#include "kmint/play.hpp"
 #include "kmint/primitives.hpp"
+#include "kmint/play.hpp"
 
 namespace kmint::ufo {
 
-class andre : public play::map_bound_actor {
+class Doors : public kmint::play::free_roaming_actor {
    public:
-    andre(map::map_graph &g, map::map_node &initial_node);
+    Doors(map::map_graph &g, math::vector2d location);
     // wordt elke game tick aangeroepen
     void act(delta_time dt) override;
     ui::drawable const &drawable() const override { return drawable_; }
+
+    bool must_draw() const override { return true; }
+
     // als incorporeal false is, doet de actor mee aan collision detection
     bool incorporeal() const override { return false; }
     // geeft de lengte van een zijde van de collision box van deze actor terug.
@@ -22,8 +22,9 @@ class andre : public play::map_bound_actor {
     scalar collision_range() const override { return 16.0; }
     // geeft aan dat andr� andere actors kan zien
     bool perceptive() const override { return true; }
-    student::node_list path;
-    int totalsteps = 0;
+    scalar perception_range() const override { return 30.f; }
+
+
    private:
     // hoeveel tijd is verstreken sinds de laatste beweging
     delta_time t_since_move_{};
@@ -31,11 +32,7 @@ class andre : public play::map_bound_actor {
     play::image_drawable drawable_;
 
     map::map_graph &graph_;
-    char goal_node = '1';
-    void TagPath();
-    void UntagPath();
 };
 
 }  // namespace kmint::ufo
 
-#endif /* KMINT_UFO_ANDRE_HPP */

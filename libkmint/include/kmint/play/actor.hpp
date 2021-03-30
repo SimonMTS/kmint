@@ -310,6 +310,7 @@ public:
     return add_perceived_iterator { *this };
   }
 
+  std::string EntityType;
   private:
     std::vector<actor *> collision_set_;
     std::vector<actor *> perceived_set_;

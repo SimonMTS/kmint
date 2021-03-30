@@ -1,6 +1,6 @@
 #include "kmint/a_star/heuristics.hpp"
 
-namespace student {
+namespace kmint::ufo::student {
 
 int heuristics::manhattan_distance(map_node &start, const map_node &end) {
     int pxdist = 16;

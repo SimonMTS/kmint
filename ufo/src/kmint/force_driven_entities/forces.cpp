@@ -25,81 +25,180 @@ kmint::math::vector2d forces::wander(const kmint::ufo::human &human) {
     return {distribution(generator), distribution(generator)};
 }
 
-kmint::math::vector2d forces::normalize(const kmint::math::vector2d &vector) {
-    auto len = sqrt((vector.x() * vector.x()) + (vector.y() * vector.y()));
-
-    // if (len <= 1) {
-    //     return vector;
-    // } else {
-    return vector / len;
-    // }
-}
-
-// todo this is just a tmp implementation, should be redone properly
 kmint::math::vector2d forces::cohesion(const kmint::ufo::human &human) {
     kmint::math::vector2d sum = kmint::math::vector2d{0, 0};
     int count = 0;
-
-    for (auto &other_human : *human.other_humans) {
-        if (other_human.get().location() == human.location()) continue;
-
-        int dist;
-        {
-            int pxdist = 16;
-            int x = other_human.get().location().x() - human.location().x();
-            int y = other_human.get().location().y() - human.location().y();
-            int res = sqrt(pow(x, 2) + pow(y, 2));  // / pxdist;
-            dist = res;
-        }
-
-        if (dist < 50) {
-            sum += other_human.get().location() - human.location();
-            count++;
+    for (unsigned long i = 0; i < human.population->humans.size(); i++) {
+        // the memory in other can be corrupted
+        kmint::ufo::human &other = *human.population->humans[i];
+        // this prevents most crashes, but is not a real fix
+        if (!human.removed() && !other.removed() && human.id != other.id &&
+            &other.graph_ == &human.graph_) {
+            float d = distance(human, other.location());
+            if ((d > 0) && (d < human.DesiredCohesionDistance)) {
+                sum += other.location();
+                count++;
+            }
         }
     }
-
     if (count > 0) {
-        sum /= count;
-        return sum;
-    } else {
-        return {0, 0};
+        sum = sum / count;
+        return seek(human, sum);
     }
+    return kmint::math::vector2d{0, 0};
 }
 
-// todo this is just a tmp implementation, should be redone properly
 kmint::math::vector2d forces::separation(const kmint::ufo::human &human) {
-    kmint::math::vector2d sum = kmint::math::vector2d{0, 0};
+    kmint::math::vector2d steer{0, 0};
     int count = 0;
 
-    for (auto &other_human : *human.other_humans) {
-        if (other_human.get().location() == human.location()) continue;
+    for (unsigned long i = 0; i < human.population->humans.size(); i++) {
+        // the memory in other can be corrupted
+        kmint::ufo::human &other = *human.population->humans[i];
+        // this prevents most crashes, but is not a real fix
+        if (!human.removed() && !other.removed() && human.id != other.id &&
+            &other.graph_ == &human.graph_) {
+            float d = distance(human, other.location());
 
-        int dist;
-        {
-            int pxdist = 16;
-            int x = other_human.get().location().x() - human.location().x();
-            int y = other_human.get().location().y() - human.location().y();
-            int res = sqrt(pow(x, 2) + pow(y, 2));  // / pxdist;
-            dist = res;
+            if ((d > 0) && (d < human.DesiredSeparationDistance)) {
+                kmint::math::vector2d diff = kmint::math::vector2d{0, 0};
+                diff = human.location() - other.location();
+                diff = normalize(diff);
+                diff = diff / d;
+                steer += diff;
+                count++;
+            }
         }
+    }
+    if (count > 0) {
+        steer = steer / float(count);
+    }
 
-        if (dist < 15) {
-            sum -= (other_human.get().location() - human.location()) * 2;
-            count++;
+    auto steermag = sqrt(steer.x() * steer.x() + steer.y() * steer.y());
+
+    if (steermag > 0) {
+        steer = normalize(steer);
+        steer *= human.maxSpeed;
+        steer -= human.velocity;
+        steer = limit(steer, human.maxForce);
+    }
+    return steer;
+}
+
+kmint::math::vector2d forces::alignment(const kmint::ufo::human &human) {
+    kmint::math::vector2d sum{0, 0};
+
+    int count = 0;
+    for (unsigned long i = 0; i < human.population->humans.size(); i++) {
+        // the memory in other can be corrupted
+        kmint::ufo::human &other = *human.population->humans[i];
+        // this prevents most crashes, but is not a real fix
+        if (!human.removed() && !other.removed() && human.id != other.id &&
+            &other.graph_ == &human.graph_) {
+            float d = distance(human, other.location());
+
+            if ((d > 0) && (d < human.DesiredAlignmentDistance)) {
+                sum += other.velocity;
+                count++;
+            }
         }
     }
 
     if (count > 0) {
-        sum /= count;
-        return sum;
+        sum = sum / (float)count;
+        sum = normalize(sum);
+        sum = sum * human.maxSpeed;
+
+        kmint::math::vector2d steer;
+        steer = sum - human.velocity;
+        steer = limit(steer, human.maxForce);
+        return steer;
     } else {
-        return {0, 0};
+        return kmint::math::vector2d{0, 0};
     }
 }
 
-// todo
-kmint::math::vector2d forces::alignment(const kmint::ufo::human &human) {
-    return {0, 0};
+kmint::math::vector2d forces::attacted_to(const kmint::ufo::human &human,
+                                          const kmint::play::actor &actor,
+                                          float range) {
+    kmint::math::vector2d steer{0, 0};
+    int count = 0;
+
+    float d = distance(human, actor);
+
+    if ((d > 0) && (d < range)) {
+        kmint::math::vector2d diff = kmint::math::vector2d{0, 0};
+        diff = human.location() - actor.location();
+        diff *= 900;
+        steer += diff;
+        count++;
+    }
+
+    if (count > 0) {
+        steer = steer / float(count);
+    }
+
+    auto steermag = sqrt(steer.x() * steer.x() + steer.y() * steer.y());
+
+    if (steermag > 0) {
+        steer = normalize(steer);
+        steer *= human.maxSpeed;
+        steer -= human.velocity;
+        steer = limit(steer, human.maxForce);
+        steer = steer * 3;
+    }
+
+    return steer * -1;
+}
+
+kmint::math::vector2d forces::limit(const kmint::math::vector2d &v,
+                                    float maxforce) {
+    kmint::math::vector2d temp = v;
+    float m = sqrt(v.x() * v.x() + v.y() * v.y());
+    if (m > maxforce) {
+        temp = {v.x() / m, v.y() / m};
+    }
+    return temp;
+}
+
+float forces::distance(const kmint::ufo::human &human,
+                       const kmint::play::actor &actor) {
+    float dx = human.location().x() - actor.location().x();
+    float dy = human.location().y() - actor.location().y();
+    float dist = sqrt(dx * dx + dy * dy);
+    return dist;
+}
+
+float forces::distance(const kmint::play::free_roaming_actor &human,
+                       const kmint::math::vector2d &v) {
+    float dx = human.location().x() - v.x();
+    float dy = human.location().y() - v.y();
+    float dist = sqrt(dx * dx + dy * dy);
+    return dist;
+}
+kmint::math::vector2d forces::normalize(const kmint::math::vector2d &v) {
+    float m = sqrt(v.x() * v.x() + v.y() * v.y());
+    kmint::math::vector2d temp;
+    if (m > 0) {
+        temp = kmint::math::vector2d{v.x() / m, v.y() / m};
+    } else {
+        temp = kmint::math::vector2d{v.x(), v.y()};
+    }
+    return temp;
+}
+
+kmint::math::vector2d forces::seek(const kmint::ufo::human &human,
+                                   const kmint::math::vector2d &v) {
+    kmint::math::vector2d desired = v - human.location();
+
+    desired = normalize(desired);
+
+    desired = desired * human.maxSpeed;
+
+    kmint::math::vector2d steer = desired - human.velocity;
+
+    steer = limit(steer, human.maxForce);
+    return steer;
 }
 
 }  // namespace student

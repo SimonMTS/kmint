@@ -1,20 +1,23 @@
-#ifndef KMINT_UFO_ANDRE_HPP
-#define KMINT_UFO_ANDRE_HPP
+﻿#ifndef KMINT_UFO_PICKUP_HPP
+#define KMINT_UFO_PICKUP_HPP
 
-#include "kmint/a_star/a_star.hpp"
-#include "kmint/a_star/heuristics.hpp"
 #include "kmint/map/map.hpp"
 #include "kmint/play.hpp"
 #include "kmint/primitives.hpp"
+#include <random>
 
 namespace kmint::ufo {
 
-class andre : public play::map_bound_actor {
+enum class pickup_type { EMP, SHIELD};
+class Pickup : public play::map_bound_actor {
    public:
-    andre(map::map_graph &g, map::map_node &initial_node);
+    Pickup(map::map_graph &g, map::map_node &initial_node, pickup_type type);
     // wordt elke game tick aangeroepen
     void act(delta_time dt) override;
     ui::drawable const &drawable() const override { return drawable_; }
+
+    bool must_draw() const override { return true; }
+
     // als incorporeal false is, doet de actor mee aan collision detection
     bool incorporeal() const override { return false; }
     // geeft de lengte van een zijde van de collision box van deze actor terug.
@@ -22,18 +25,26 @@ class andre : public play::map_bound_actor {
     scalar collision_range() const override { return 16.0; }
     // geeft aan dat andr� andere actors kan zien
     bool perceptive() const override { return true; }
-    student::node_list path;
-    int totalsteps = 0;
-   private:
+    scalar perception_range() const override { return 200.f; }
+
+    pickup_type type;
+    bool available = true;
+
+    void NewLocation();
+    private:
     // hoeveel tijd is verstreken sinds de laatste beweging
     delta_time t_since_move_{};
     // weet hoe de koe getekend moet worden
     play::image_drawable drawable_;
 
     map::map_graph &graph_;
-    char goal_node = '1';
-    void TagPath();
-    void UntagPath();
+
+    int RandomInt(float Min, float Max) {
+      std::random_device rd;
+      std::mt19937 gen(rd());
+      std::uniform_int_distribution<> distr(Min, Max);
+      return distr(gen);
+  }
 };
 
 }  // namespace kmint::ufo

@@ -5,3 +5,6 @@ build/
 compile_commands.json
 .cache/*
 .vscode/*
+CMakeFiles/*
+*/CMakeFiles/*
+out/*

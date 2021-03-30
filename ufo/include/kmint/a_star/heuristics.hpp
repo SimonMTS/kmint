@@ -4,7 +4,7 @@
 #include "kmint/map/map.hpp"
 using kmint::map::map_node;
 
-namespace student {
+namespace kmint::ufo::student {
 class heuristics {
    public:
     static int manhattan_distance(map_node &start, const map_node &end);
